@@ -40,7 +40,7 @@ yarn start
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-Note: In production the Next.js server and any other api (in our case, our Django backend) are hosted seperately. The Next.js server is only responsible for prerendering and serving the results to the client. Its typical for a domain, say example.com, to point the the Next.js server and the subdomain, say api.example.com, to point to the api server. Data from the Django backend is fetched in the React app by making REST API calls to the subdomain api.example.com
+Note: In production the Next.js server and any other api (in our case, our Django backend) are hosted seperately. The Next.js server is only responsible for prerendering and serving the results to the client.
 
 ## Next.js Tips
 
