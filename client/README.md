@@ -42,6 +42,22 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 Note: In production the Next.js server and any other api (in our case, our Django backend) are hosted seperately. The Next.js server is only responsible for prerendering and serving the results to the client.
 
+## Styling
+
+The frontend uses [Chakra-UI](https://chakra-ui.com/) for styling (we can change this to a different styling framework later if we decide too). Chakra-UI is a really popular and customizable component library for React.
+
+### Chakra Styling System
+
+In Chakra-UI, instead of writing styles in a CSS file, you supply styles to Chakra Components as props
+
+For example:
+
+```jsx
+<Box maxW='960px' mx='auto' />
+```
+
+You can read about Chakras Styling Props [here](https://chakra-ui.com/docs/features/style-props)
+
 ## Next.js Tips
 
 Next.js is a relatively simple and very popular framework (Used by TikTok, Netflix, Twitch, GitHub and [more](https://nextjs.org/showcase)) that is built ontop of React. Next.js allows us use use pre-rendering (Static Generation and Server-side Rendering) with React, allowing for greater performance and SEO than a traditional react app.
