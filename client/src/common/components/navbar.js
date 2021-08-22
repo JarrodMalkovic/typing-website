@@ -17,6 +17,7 @@ import DarkModeToggle from './dark-mode-toggle-button';
 import Logo from './logo-svg';
 
 const Links = [
+  { name: 'Menu', href: '/menu'},
   { name: 'Practice', href: '/practice' },
   { name: 'Challenge', href: '/challenge' },
   { name: 'Keyboard Setup', href: '/setup' },
