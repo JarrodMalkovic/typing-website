@@ -26,7 +26,11 @@ const Step1 = (
       viverra dapibus ante; condimentum dictum porta. Urna volutpat eleifend
       praesent maximus iaculis litora posuere. Adipiscing nec dictumst dignissim
       et egestas bibendum placerat.
+      
     </Text>
+
+    
+
   </Flex>
 );
 
