@@ -21,9 +21,7 @@ const SignupSchema = Yup.object({
     .min(2, 'Too short!')
     .max(20, 'Too long!')
     .required('Required'),
-  email: Yup.string()
-    .email('Invalid email')
-    .required('Required'),
+  email: Yup.string().email('Invalid email').required('Required'),
   password: Yup.string()
     .min(8, 'Too short!')
     .max(50, 'Too long!')
@@ -71,37 +69,37 @@ const SignupForm = () => {
         {({ isSubmitting }) => (
           <Form>
             <Stack spacing={4}>
-              <Field name='username'>
+              <Field name="username">
                 {({ field, form }) => (
                   <FormControl
                     isInvalid={form.errors.username && form.touched.username}>
                     <FormLabel>Username {console.log(form)}</FormLabel>
-                    <Input {...field} id='username' type='text' />
+                    <Input {...field} id="username" type="text" />
                     <FormErrorMessage>{form.errors.username}</FormErrorMessage>
                   </FormControl>
                 )}
               </Field>
-              <Field name='email'>
+              <Field name="email">
                 {({ field, form }) => (
                   <FormControl
                     isInvalid={form.errors.email && form.touched.email}>
                     <FormLabel>Email address</FormLabel>
-                    <Input {...field} id='email' />
+                    <Input {...field} id="email" />
                     <FormErrorMessage>{form.errors.email}</FormErrorMessage>
                   </FormControl>
                 )}
               </Field>
-              <Field name='password'>
+              <Field name="password">
                 {({ field, form }) => (
                   <FormControl
                     isInvalid={form.errors.password && form.touched.password}>
                     <FormLabel>Password</FormLabel>
-                    <Input {...field} id='password' type='password' />
+                    <Input {...field} id="password" type="password" />
                     <FormErrorMessage>{form.errors.password}</FormErrorMessage>
                   </FormControl>
                 )}
               </Field>
-              <Field name='confirmPassword'>
+              <Field name="confirmPassword">
                 {({ field, form }) => (
                   <FormControl
                     isInvalid={
@@ -109,7 +107,7 @@ const SignupForm = () => {
                       form.touched.confirmPassword
                     }>
                     <FormLabel>Confirm Password</FormLabel>
-                    <Input {...field} id='confirmPassword' type='password' />
+                    <Input {...field} id="confirmPassword" type="password" />
                     <FormErrorMessage>
                       {form.errors.confirmPassword}
                     </FormErrorMessage>
@@ -118,7 +116,7 @@ const SignupForm = () => {
               </Field>
               <Button
                 isLoading={isSubmitting}
-                type='submit'
+                type="submit"
                 bg={'blue.400'}
                 color={'white'}
                 _hover={{

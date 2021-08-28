@@ -18,6 +18,7 @@ build
 # misc
 .DS_Store
 *.pem
+.Rhistory
 
 # debug
 npm-debug.log*
@@ -32,3 +33,6 @@ yarn-error.log*
 
 # vercel
 .vercel
+
+# python
+__pycache__

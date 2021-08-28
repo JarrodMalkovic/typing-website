@@ -24,7 +24,7 @@ import { linuxSteps } from '../modules/keyboard-setup/contstants/linux-steps';
 import { macSteps } from '../modules/keyboard-setup/contstants/mac-steps';
 import { windowsSteps } from '../modules/keyboard-setup/contstants/windows-steps';
 
-const getSteps = os => {
+const getSteps = (os) => {
   switch (os) {
     case WINDOWS:
       return windowsSteps;
@@ -55,11 +55,12 @@ const Setup = () => {
   }, [os]);
 
   return (
-    <Container pt='8' maxW='container.xl'>
-      <VStack spacing={5} width='100%' align='stretch'>
+    <Container pt="8" maxW="container.xl">
+      <VStack spacing={5} width="100%" align="stretch">
         {os ? (
           <>
             <Heading>Setup Hangul Keyboard on {os}</Heading>
+
             <Steps activeStep={activeStep}>
               {steps.map(({ label, content, description }) => (
                 <Step label={label} key={label} description={description}>
@@ -83,7 +84,7 @@ const Setup = () => {
           </>
         ) : (
           <Center>
-            <Spinner color='blue.500' />
+            <Spinner color="blue.500" />
           </Center>
         )}
       </VStack>
