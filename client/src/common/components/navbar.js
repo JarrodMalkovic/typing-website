@@ -16,6 +16,7 @@ import ActiveNavLink from './active-nav-link';
 import DarkModeToggle from './dark-mode-toggle-button';
 import Logo from './logo-svg';
 import UserProfileDropdown from './user-profile-dropdown';
+import { useAuth } from '../../modules/auth/hooks/use-auth';
 
 const Links = [
   { name: 'Practice', href: '/practice' },
@@ -26,8 +27,7 @@ const Links = [
 // Adapted from: https://chakra-templates.dev/navigation/navbar
 const Navbar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const isAuthenticated = true;
+  const { state } = useAuth();
 
   return (
     <Box
@@ -62,7 +62,7 @@ const Navbar = () => {
           <Flex alignItems={'center'}>
             <HStack as={'nav'} spacing={4}>
               <DarkModeToggle />
-              {isAuthenticated ? (
+              {state.isAuthenticated ? (
                 <UserProfileDropdown />
               ) : (
                 <>

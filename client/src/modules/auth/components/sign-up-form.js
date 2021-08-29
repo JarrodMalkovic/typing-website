@@ -1,7 +1,10 @@
 import * as React from 'react';
 import * as Yup from 'yup';
+import { useMutation } from 'react-query';
 
 import {
+  Alert,
+  AlertIcon,
   Box,
   Button,
   FormControl,
@@ -14,7 +17,9 @@ import {
 } from '@chakra-ui/react';
 import { Field, Form, Formik } from 'formik';
 
-import { useRouter } from 'next/router';
+import axios from 'axios';
+import { BASE_API_URL } from '../../../common/contstants/base-api-url';
+import { useAuth } from '../hooks/use-auth';
 
 const SignupSchema = Yup.object({
   username: Yup.string()
@@ -32,10 +37,31 @@ const SignupSchema = Yup.object({
   ),
 });
 
+const SignUp = async (data) => {
+  const res = await axios.post(`${BASE_API_URL}/api/auth/register/`, data);
+  return res.data;
+};
+
 // Adapted from: https://chakra-templates.dev/forms/authentication
 const SignupForm = () => {
-  const router = useRouter();
   const toast = useToast();
+  const { dispatch } = useAuth();
+
+  const { mutate, isError, error, isLoading } = useMutation(SignUp, {
+    onSuccess: (data) => {
+      dispatch({ type: 'login', payload: data.user });
+      localStorage.setItem('access-token', data.access);
+      localStorage.setItem('refresh-token', data.refresh);
+      toast({
+        title: 'Account created.',
+        description: 'You have successfully signed up for KeyKorea.',
+        status: 'success',
+        position: 'top-right',
+        duration: 9000,
+        isClosable: true,
+      });
+    },
+  });
 
   return (
     <Box
@@ -44,21 +70,14 @@ const SignupForm = () => {
       w={{ base: 'sm', md: 'md' }}
       boxShadow={'lg'}
       p={8}>
+      {isError && (
+        <Alert marginBottom="6" status="error">
+          <AlertIcon />
+          Something went wrong!
+        </Alert>
+      )}
       <Formik
-        onSubmit={(_, actions) => {
-          setTimeout(() => {
-            router.push('/practice');
-            toast({
-              title: 'Account created.',
-              description: "We've created your account for you.",
-              status: 'success',
-              position: 'top-right',
-              duration: 9000,
-              isClosable: true,
-            });
-            actions.setSubmitting(false);
-          }, 1000);
-        }}
+        onSubmit={mutate}
         initialValues={{
           username: '',
           email: '',
@@ -66,14 +85,14 @@ const SignupForm = () => {
           confirmPassword: '',
         }}
         validationSchema={SignupSchema}>
-        {({ isSubmitting }) => (
+        {() => (
           <Form>
             <Stack spacing={4}>
               <Field name="username">
                 {({ field, form }) => (
                   <FormControl
                     isInvalid={form.errors.username && form.touched.username}>
-                    <FormLabel>Username {console.log(form)}</FormLabel>
+                    <FormLabel>Username</FormLabel>
                     <Input {...field} id="username" type="text" />
                     <FormErrorMessage>{form.errors.username}</FormErrorMessage>
                   </FormControl>
@@ -115,7 +134,7 @@ const SignupForm = () => {
                 )}
               </Field>
               <Button
-                isLoading={isSubmitting}
+                isLoading={isLoading}
                 type="submit"
                 bg={'blue.400'}
                 color={'white'}

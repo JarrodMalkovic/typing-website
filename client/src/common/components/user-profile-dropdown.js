@@ -17,29 +17,30 @@ import {
 import { FiChevronDown } from 'react-icons/fi';
 
 import Link from 'next/link';
+import { useAuth } from '../../modules/auth/hooks/use-auth';
 
 // Adapated from: https://chakra-templates.dev/navigation/sidebar
 const UserProfileDropdown = () => {
+  const { state, dispatch } = useAuth();
+
+  const logout = () => {
+    dispatch({ type: 'logout' });
+    localStorage.removeItem('refresh-token');
+    localStorage.removeItem('access-token');
+  };
+
   return (
     <>
       <Menu>
         <MenuButton py={2} transition="all 0.3s" _focus={{ boxShadow: 'none' }}>
           <HStack>
-            <Avatar
-              size={'sm'}
-              src={
-                'https://t4.ftcdn.net/jpg/02/15/84/43/240_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg'
-              }
-            />
+            <Avatar size={'sm'} src={state.user.avatar} />
             <VStack
               display={{ base: 'none', md: 'flex' }}
               alignItems="flex-start"
               spacing="1px"
               ml="2">
-              <Text fontSize="sm">Username Here</Text>
-              <Text fontSize="xs" color="gray.600">
-                Admin
-              </Text>
+              <Text>{state.user.username}</Text>
             </VStack>
             <Box display={{ base: 'none', md: 'flex' }}>
               <FiChevronDown />
@@ -59,7 +60,7 @@ const UserProfileDropdown = () => {
             <MenuItem>Past Attempts</MenuItem>
           </Link>
           <MenuDivider />
-          <MenuItem>Sign out</MenuItem>
+          <MenuItem onClick={logout}>Sign out</MenuItem>
         </MenuList>
       </Menu>
     </>
