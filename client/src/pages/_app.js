@@ -10,9 +10,9 @@ import theme from '../theme';
 const MyApp = ({ Component, pageProps }) => {
   return (
     <ChakraProvider theme={theme}>
-      <Flex flexDirection="column" height="100vh" justifyContent="between">
+      <Flex flexDirection='column' height='100vh' justifyContent='between'>
         <Navbar />
-        <Box marginBottom="auto">
+        <Box marginBottom='auto'>
           <Component {...pageProps} />
         </Box>
         <Footer />

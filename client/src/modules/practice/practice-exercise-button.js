@@ -16,25 +16,24 @@ import {
   useColorModeValue,
   ModalHeader,
   useDisclosure,
+  Container,
 } from '@chakra-ui/react';
 
 import Link from 'next/link';
 
 import PropTypes from 'prop-types';
 
-const PracticeExerciseButton = ({ name, subExercises }) => {
+const PracticeExerciseButton = ({ name,img, subExercises }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
       <WrapItem onClick={onOpen} as="button">
         <VStack>
-          <Image
-            borderRadius="full"
-            boxSize="150px"
-            src="https://via.placeholder.com/150"
-          />
-          <Text color={useColorModeValue('gray.600', 'gray.200')}>{name}</Text>
+          <Container padding = "20px" justify="center">
+            <Image src = {img}boxSize="100px"/>
+            <Text color={useColorModeValue('gray.600', 'gray.200')}>{name}</Text>
+          </Container>
         </VStack>
       </WrapItem>
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
