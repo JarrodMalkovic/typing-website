@@ -23,8 +23,10 @@ const Menu = () => {
 
                 <VStack>
                     <Heading fontSize = "25px" padding = "20px"> 
-                        Begin Your Journey! 
+                        Begin Your Journey!
                     </Heading>
+
+                    <p>test</p>
 
                     <Divider/>
 
