@@ -9,8 +9,12 @@ import {
   Box,
   useColorModeValue,
   Text,
+  Button,
+  Flex,
 } from '@chakra-ui/react';
 import { Grid, Row, Col } from 'react-bootstrap';
+import { ArrowForwardIcon } from '@chakra-ui/icons';
+import Link from 'next/link';
 
 const Home = (props) => {
   return (
@@ -46,6 +50,17 @@ const Home = (props) => {
             textColor="white">
             {props.username}
           </Text>
+          <Link href="/menu">
+            <Button
+              bgColor="blue.400"
+              _hover={{
+                bg: 'blue.500',
+              }}
+              color="white"
+              rightIcon={<ArrowForwardIcon />}>
+              Get Started!
+            </Button>
+          </Link>
         </Box>
       </VStack>
     </Box>

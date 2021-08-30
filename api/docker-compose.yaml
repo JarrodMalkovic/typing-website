@@ -1,0 +1,31 @@
+version: "3"
+
+services:
+  django:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    environment:
+      - PORT=3000
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PW=development
+      - DB_NAME=postgres
+    ports:
+      - 8000:8000
+    depends_on:
+      - postgres
+    links:
+      - postgres:postgres
+    volumes:
+      - .:/app
+
+  postgres:
+    image: postgres:alpine
+    restart: always
+    ports:
+      - 3001:5432
+    environment:
+      - DB_USER=postgres
+      - POSTGRES_PASSWORD=development

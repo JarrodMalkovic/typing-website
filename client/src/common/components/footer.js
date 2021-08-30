@@ -27,8 +27,16 @@ const Footer = () => {
         align={{ base: 'center', md: 'center' }}>
         <Text>© 2021 Korean Typing Website. All rights reserved</Text>
         <Stack direction={'row'} spacing={6}>
+<<<<<<< HEAD
           <ActiveNavLink name="Terms of Service" href="/terms-of-service" />
           <ActiveNavLink name="Privacy Policy" href="/privacy-policy" />
+=======
+          <ActiveNavLink
+            name="Terms of Service"
+            href="/legal/terms-of-service"
+          />
+          <ActiveNavLink name="Privacy Policy" href="/legal/privacy-policy" />
+>>>>>>> 160acadb600748519c7845f81fbefdd4192cbc4f
           <ActiveNavLink name="Contact Us" href="/contact-us" />
         </Stack>
       </Container>

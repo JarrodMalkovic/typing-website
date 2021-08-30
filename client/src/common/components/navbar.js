@@ -15,9 +15,10 @@ import { CloseIcon, HamburgerIcon } from '@chakra-ui/icons';
 import ActiveNavLink from './active-nav-link';
 import DarkModeToggle from './dark-mode-toggle-button';
 import Logo from './logo-svg';
+import UserProfileDropdown from './user-profile-dropdown';
+import { useAuth } from '../../modules/auth/hooks/use-auth';
 
 const Links = [
-  { name: 'Menu', href: '/menu'},
   { name: 'Practice', href: '/practice' },
   { name: 'Challenge', href: '/challenge' },
   { name: 'Keyboard Setup', href: '/setup' },
@@ -26,6 +27,7 @@ const Links = [
 // Adapted from: https://chakra-templates.dev/navigation/navbar
 const Navbar = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { state } = useAuth();
 
   return (
     <Box
@@ -33,7 +35,7 @@ const Navbar = () => {
       borderColor={useColorModeValue('gray.200', 'gray.700')}
       bg={useColorModeValue('white', 'gray.900')}
       px={4}>
-      <Container maxW='container.xl'>
+      <Container maxW="container.xl">
         <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
           <IconButton
             size={'md'}
@@ -48,7 +50,7 @@ const Navbar = () => {
               as={'nav'}
               spacing={4}
               display={{ base: 'none', md: 'flex' }}>
-              {Links.map(link => (
+              {Links.map((link) => (
                 <ActiveNavLink
                   name={link.name}
                   href={link.href}
@@ -60,10 +62,16 @@ const Navbar = () => {
           <Flex alignItems={'center'}>
             <HStack as={'nav'} spacing={4}>
               <DarkModeToggle />
-              <ActiveNavLink name={'Sign In'} href={'/auth/sign-in'} />
-              <Box display={{ base: 'none', md: 'flex' }}>
-                <ActiveNavLink name={'Sign Up'} href={'/auth/sign-up'} />
-              </Box>
+              {state.isAuthenticated ? (
+                <UserProfileDropdown />
+              ) : (
+                <>
+                  <ActiveNavLink name={'Sign In'} href={'/auth/sign-in'} />
+                  <Box display={{ base: 'none', md: 'flex' }}>
+                    <ActiveNavLink name={'Sign Up'} href={'/auth/sign-up'} />
+                  </Box>
+                </>
+              )}
             </HStack>
           </Flex>
         </Flex>
@@ -71,7 +79,7 @@ const Navbar = () => {
         {isOpen && (
           <Box pb={4} display={{ md: 'none' }}>
             <Stack as={'nav'} spacing={4}>
-              {Links.map(link => (
+              {Links.map((link) => (
                 <ActiveNavLink
                   name={link.name}
                   href={link.href}
