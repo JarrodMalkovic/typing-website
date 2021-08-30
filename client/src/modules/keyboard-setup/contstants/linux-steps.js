@@ -7,7 +7,7 @@ const Step1 = (
     <Text>
       Open System Settings, and select "Input" and click "Korean".
                
-      Click Install Beside "Input method framework" at the top, select "Fcitx" from the dropdown
+      Click Install Beside "Input method framework" at the top, select "Fcitx" from the dropdown.
     </Text>
   </Flex>
 );
