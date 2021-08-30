@@ -3,3 +3,4 @@ djangorestframework_simplejwt==4.8.0
 Django==2.2.12
 djangorestframework==3.12.4
 psycopg2-binary==2.9.1
+django-cors-headers==3.8.0

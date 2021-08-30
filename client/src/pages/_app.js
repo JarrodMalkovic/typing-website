@@ -6,18 +6,32 @@ import Footer from '../common/components/footer';
 import Navbar from '../common/components/navbar';
 import PropTypes from 'prop-types';
 import theme from '../theme';
+import AuthProvider from '../modules/auth/context/auth-context';
+import { QueryClient, QueryClientProvider } from 'react-query';
+import { Hydrate, Hyrade } from 'react-query/hydration';
 
 const MyApp = ({ Component, pageProps }) => {
+  const [queryClient] = React.useState(() => new QueryClient());
+
   return (
-    <ChakraProvider theme={theme}>
-      <Flex flexDirection='column' height='100vh' justifyContent='between'>
-        <Navbar />
-        <Box marginBottom='auto'>
-          <Component {...pageProps} />
-        </Box>
-        <Footer />
-      </Flex>
-    </ChakraProvider>
+    <QueryClientProvider client={queryClient}>
+      <Hydrate state={pageProps.dehyrdaedState}>
+        <AuthProvider>
+          <ChakraProvider theme={theme}>
+            <Flex
+              flexDirection="column"
+              height="100vh"
+              justifyContent="between">
+              <Navbar />
+              <Box marginBottom="auto">
+                <Component {...pageProps} />
+              </Box>
+              <Footer />
+            </Flex>
+          </ChakraProvider>
+        </AuthProvider>
+      </Hydrate>
+    </QueryClientProvider>
   );
 };
 
