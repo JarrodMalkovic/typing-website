@@ -13,7 +13,7 @@ class UserManager(BaseUserManager):
         if email is None:
             raise TypeError('Users must have an email.')
 
-        avatar = Gravatar(email).get_image(size=80, default='https://cdn.business2community.com/wp-content/uploads/2017/08/blank-profile-picture-973460_640.png', force_default=False, use_ssl=True)
+        avatar = Gravatar(email).get_image(size=80, default='identicon', force_default=False, use_ssl=True)
 
         user = self.model(username=username, email=self.normalize_email(email), avatar=avatar)
         user.set_password(password)

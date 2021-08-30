@@ -11,8 +11,11 @@ import {
 
 import NavLink from 'next/link';
 import SignupForm from '../../modules/auth/components/sign-up-form';
+import { useAuthorizedRedirect } from '../../modules/auth/hooks/use-authorized-redirect';
 
 const SignUp = () => {
+  useAuthorizedRedirect();
+
   return (
     <Flex align={'center'} justify={'center'}>
       <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
@@ -22,7 +25,7 @@ const SignUp = () => {
             fontSize={'lg'}
             color={useColorModeValue('gray.600', 'gray.200')}>
             Already have an account?{' '}
-            <NavLink href='/auth/sign-in'>
+            <NavLink href="/auth/sign-in">
               <Link color={'blue.400'}>Sign in</Link>
             </NavLink>
           </Text>
