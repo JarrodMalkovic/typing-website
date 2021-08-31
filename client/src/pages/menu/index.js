@@ -25,9 +25,7 @@ const Menu = () => {
                     <Heading fontSize = "25px" padding = "20px"> 
                         Begin Your Journey!
                     </Heading>
-
-                    <p>test</p>
-
+                    
                     <Divider/>
 
                     <Wrap spacing="30px" justify="center">
