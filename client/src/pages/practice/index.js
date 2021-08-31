@@ -10,6 +10,7 @@ import {
   Button,
   Image,
   Box,
+  Divider,
   useColorModeValue,
 } from '@chakra-ui/react';
 
@@ -19,6 +20,7 @@ import PracticeExerciseButton from '../../modules/practice/practice-exercise-but
 const sampleData = [
   {
     name: 'Letters',
+    img: '/images/Letters.png',
     subExercises: [
       { name: 'test', slug: 'test', disabled: false },
       { name: 'test', slug: 'test', disabled: false },
@@ -29,6 +31,7 @@ const sampleData = [
   },
   {
     name: 'Syllables',
+    img: '/images/Syllable.png',
     subExercises: [
       { name: 'test', slug: 'test', disabled: false },
       { name: 'test', slug: 'test', disabled: false },
@@ -39,6 +42,7 @@ const sampleData = [
   },
   {
     name: 'Words',
+    img: '/images/Words.png',
     subExercises: [
       { name: 'test', slug: 'test', disabled: false },
       { name: 'test', slug: 'test', disabled: false },
@@ -49,6 +53,7 @@ const sampleData = [
   },
   {
     name: 'Short Sentences',
+    img: '/images/Short-Sentences.png',
     subExercises: [
       { name: 'test', slug: 'test', disabled: false },
       { name: 'test', slug: 'test', disabled: false },
@@ -59,6 +64,7 @@ const sampleData = [
   },
   {
     name: 'Long Sentences',
+    img: '/images/Long-Sentences.png',
     subExercises: [
       { name: 'test', slug: 'test', disabled: false },
       { name: 'test', slug: 'test', disabled: false },
@@ -69,6 +75,7 @@ const sampleData = [
   },
   {
     name: 'Diction',
+    img: '/images/Dictation.png',
     subExercises: [
       { name: 'test', slug: 'test', disabled: false },
       { name: 'test', slug: 'test', disabled: false },
@@ -81,26 +88,35 @@ const sampleData = [
 
 const Practice = () => {
   return (
-    <Container pt="8" maxW="container.xl">
-      <VStack spacing={8}>
+    <Container maxW="xl" mt = "50px">
+      <VStack>
         <VStack>
-          <Heading>Practice Mode</Heading>
+          <Heading fontSize = "25px" padding = "10px">
+            Practice Mode
+          </Heading>
+        </VStack>
+
+        <Divider/>
+
+        <VStack>
           <Text
-            fontSize={'lg'}
+            fontSize= "20px"
             color={useColorModeValue('gray.600', 'gray.200')}>
             Choose Your Path!
           </Text>
         </VStack>
-        <Wrap spacing={8} justify="center" maxW="container.md">
+        <Wrap spacing="30px" justify="center" maxW="container.md">
           {sampleData.map((data) => (
             <PracticeExerciseButton
               key={data.name}
               name={data.name}
+              img = {data.img}
               subExercises={data.subExercises}
             />
           ))}
         </Wrap>
-      </VStack>
+        </VStack>
+      
     </Container>
   );
 };

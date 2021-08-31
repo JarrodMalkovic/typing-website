@@ -1,78 +1,64 @@
 import React from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
-import { Flex, Heading, Box, HStack, Button } from '@chakra-ui/react';
-import * as FaIcons from 'react-icons/fa';
+import {Container, 
+        Flex, 
+        Heading, 
+        Box, 
+        HStack,
+        VStack,
+        Divider,
+        Image,
+        Wrap,
+        Button,
+        } from "@chakra-ui/react";
+
 
 const ColoredLine = ({ color }) => (
-  <hr
-    style={{
-      backgroundColor: color,
-      height: 2,
-    }}
-  />
+    <hr style={{backgroundColor: color,height: 2}}/>
 );
 
 const Menu = () => {
-  return (
-    <>
-      <Flex background="white" height="auto">
-        <Flex
-          margin="auto"
-          padding="50"
-          height="300"
-          align
-          boxShadow="lg"
-          direction="column"
-          background="black"
-          p={70}
-          rounded={50}
-          color="white">
-          <Heading mb={3}> Begin Your Journey </Heading>
-          <ColoredLine color="white" />
+    return (
+        <>
+            <Container maxW = "xl" centerContent mt = "50px">
 
-          <HStack>
-            <Box
-              as="button"
-              className="KeyboardSetup"
-              alignitems="center"
-              margin="10px"
-              padding="20px"
-              border>
-              <img src="/images/Keyboard.png" height={100} width={100} />
-              <Box fontWeight="extrabold" alignitems="center">
-                {' '}
-                Keyboard Setup{' '}
-              </Box>
-            </Box>
+                <VStack>
+                    <Heading fontSize = "25px" padding = "20px"> 
+                        Begin Your Journey!
+                    </Heading>
 
-            <Box
-              className="KeyboardSetup"
-              alignitems="center"
-              margin="10px"
-              padding="20px"
-              border>
-              <img
-                src="/images/greetings-course.png"
-                height={100}
-                width={100}
-              />
-              <Box fontWeight="extrabold"> Practice Mode </Box>
-            </Box>
+                    <p>test</p>
 
-            <Box
-              className="KeyboardSetup"
-              alignitems="center"
-              margin="10px"
-              padding="20px"
-              border>
-              <img src="/images/why.png" height={100} width={100} />
-              <Box fontWeight="extrabold"> Challenge Mode </Box>
-            </Box>
-          </HStack>
-        </Flex>
-      </Flex>
-    </>
-  );
-};
+                    <Divider/>
+
+                    <Wrap spacing="30px" justify="center">
+                        <HStack>    
+                            <Container padding = "10px" justify="center">
+                                <Image src="/images/alphabet-course.png"  boxSize="100px"/>
+                                <p> Keyboard Setup</p>
+                            </Container>
+                        </HStack>
+
+                        <HStack>
+                            <Container  padding = "10px" justify="center">
+                                <Image src="/images/greetings-course.png"  boxSize="100px"/>
+                                <p> Practice Mode</p>
+                            </Container>
+                        </HStack>
+
+                        <HStack>
+                            <Container padding = "10px" justify="center">
+                                <Image src="/images/why.png"  boxSize="100px"/>
+                                <p> Challenge Mode</p>
+                            </Container>
+                        </HStack>
+                    </Wrap>
+
+                </VStack>
+
+            </Container>
+        </>
+    )
+}
 
 export default Menu;
+
