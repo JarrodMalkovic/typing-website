@@ -29,7 +29,6 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -46,7 +45,10 @@ INSTALLED_APPS = [
 
     # Local Apps (Your project's apps)
     'core',
-    'core.user'
+    'core.user',
+    'core.exercises',
+    'core.subexercises',
+    'core.questions'
 ]
 
 MIDDLEWARE = [
