@@ -1,60 +1,75 @@
 import React from 'react';
 import {Container, 
-        Flex, 
         Heading, 
-        Box, 
         HStack,
         VStack,
         Divider,
         Image,
         Wrap,
-        Button,
+        Text,
+        Center
         } from "@chakra-ui/react";
 
-
-const ColoredLine = ({ color }) => (
-    <hr style={{backgroundColor: color,height: 2}}/>
-);
+import Link from 'next/link';
 
 const Menu = () => {
     return (
-        <>
-            <Container maxW = "xl" centerContent mt = "50px">
-
+        
+            <Container mt = "50px" maxW="container.lg" centerContent>
                 <VStack>
-                    <Heading fontSize = "25px" padding = "20px"> 
+                    <Heading fontSize = "45px" padding = "20px"> 
                         Begin Your Journey!
                     </Heading>
-                    
                     <Divider/>
+                    
+                    <Wrap spacing="30px" justify="center" mt = "50px">
+                        <HStack >
+                            <Link href = "/setup">
+                                <a>
+                                <Container padding = "20px">
+                                    <Image src="/images/alphabet-course.png"  boxSize="150px"/>
+                                    <Text textAlign="center" mt="10px" fontWeight =  "bold" fontSize = "2xl"> 
+                                        Keyboard Setup
+                                    </Text>
+                                </Container>
+                                </a>
+                            </Link>
+                        </HStack>
+                      
 
-                    <Wrap spacing="30px" justify="center">
-                        <HStack>    
-                            <Container padding = "10px" justify="center">
-                                <Image src="/images/alphabet-course.png"  boxSize="100px"/>
-                                <p> Keyboard Setup</p>
-                            </Container>
+                        <HStack>
+                            <Link href = "/practice">
+                                <a>
+                                    <Container  padding = "10px" justify="center">
+                                        <Image src="/images/greetings-course.png"  boxSize="150px"/>
+                                        <Text textAlign="center" mt="10px" fontWeight =  "bold" fontSize = "2xl"> 
+                                            Practice
+                                        </Text>
+                                    </Container>
+                                </a>
+                            </Link>
                         </HStack>
 
                         <HStack>
-                            <Container  padding = "10px" justify="center">
-                                <Image src="/images/greetings-course.png"  boxSize="100px"/>
-                                <p> Practice Mode</p>
-                            </Container>
-                        </HStack>
 
-                        <HStack>
-                            <Container padding = "10px" justify="center">
-                                <Image src="/images/why.png"  boxSize="100px"/>
-                                <p> Challenge Mode</p>
-                            </Container>
+                            <Link href = "/challenge">
+                                <a>
+                                    <Container padding = "10px" justify="center">
+                                        <Image src="/images/why.png"  boxSize="150px"/>
+                                        <Text textAlign="center" mt="10px" fontWeight =  "bold" fontSize = "2xl"> 
+                                            Challenge
+                                        </Text>
+                                    </Container>
+                                </a>
+                            </Link>
+
                         </HStack>
                     </Wrap>
 
                 </VStack>
 
             </Container>
-        </>
+        
     )
 }
 

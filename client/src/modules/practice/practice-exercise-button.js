@@ -30,9 +30,10 @@ const PracticeExerciseButton = ({ name,img, subExercises }) => {
     <>
       <WrapItem onClick={onOpen} as="button">
         <VStack>
-          <Container padding = "20px" justify="center">
-            <Image src = {img}boxSize="100px"/>
-            <Text color={useColorModeValue('gray.600', 'gray.200')}>{name}</Text>
+          
+          <Container padding = "20px" maxW="container.lg">
+            <Image src = {img} boxSize="150px"/>
+            <Text mt="10px" fontWeight =  "bold" fontSize = "xl">{name}</Text>
           </Container>
         </VStack>
       </WrapItem>
