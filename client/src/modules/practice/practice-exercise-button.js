@@ -8,6 +8,8 @@ import {
   Image,
   Modal,
   ModalOverlay,
+  Box,
+  Flex,
   Center,
   ModalContent,
   ModalCloseButton,
@@ -17,13 +19,18 @@ import {
   ModalHeader,
   useDisclosure,
   Container,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon
 } from '@chakra-ui/react';
 
 import Link from 'next/link';
 
 import PropTypes from 'prop-types';
 
-const PracticeExerciseButton = ({ name,img, subExercises }) => {
+const PracticeExerciseButton = ({ name,img, subExercises,dscrpt }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -40,20 +47,50 @@ const PracticeExerciseButton = ({ name,img, subExercises }) => {
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>
+          <ModalHeader fontSize = "30px">
             <Center>{name}</Center>
           </ModalHeader>
+          <ModalBody>
+            <Text textAlign = "center">{dscrpt}</Text>
+          </ModalBody>
           <ModalCloseButton />
           <ModalBody>
+            
             <VStack spacing="3">
               {subExercises.map((subExercise) => (
-                <Link
-                  key={subExercise.slug}
-                  href={`/practice/${subExercise.slug}`}>
-                  <Button disabled={subExercise.disabled} width="100%">
-                    {subExercise.name}
-                  </Button>
-                </Link>
+                <>
+                  <Accordion 
+                    allowMultiple 
+                    allowToggle 
+                    width="100%"
+  >
+                    <AccordionItem>
+                      <h2>
+                        <AccordionButton sx={{}}>
+                          <Link href={`/practice/${subExercise.slug}`}>
+                              <Button
+                                disabled={subExercise.disabled} 
+                                width="100%" 
+                                flex = "1" 
+                                textAlign = "left"
+                                justify
+                                _hover={{
+                                  background: "white",
+                                  color: "teal.500",
+                                }}>
+                                {subExercise.name}
+                              </Button>
+                          </Link>
+                          <AccordionIcon />
+                        </AccordionButton>
+                      </h2>
+
+                      <AccordionPanel pb={4} textAlign = "center">
+                        {subExercise.description}
+                      </AccordionPanel>
+                    </AccordionItem>
+                  </Accordion>
+                </> 
               ))}
             </VStack>
           </ModalBody>
