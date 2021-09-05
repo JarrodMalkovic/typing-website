@@ -10,13 +10,21 @@ A short (2 minutes) explanation of Docker can be found on YouTube [here](https:/
 
 ## Getting started in development
 
-Start the postgres database and the django app by running:
+### Setting environment variables
+
+- Create an account on cloudinary.com
+- Create a copy of the file `.env.example` within the `/api` directory and rename the copy to `.env`
+- Fill out the `.env` file using your cloudinary credentials (This `.env` file is in `.gitignore` so your credentials wont be pushed to the main repository on github)
+
+### Start the Django App and the Postgres Database
 
 ```bash
 docker-compose up
 ```
 
 Note: The first time you run this command it will take a while to execute, but on future runs it will be much faster due to caching
+
+### Running Django Migrations
 
 On the first time running `docker-compose up`, you will also have to execute commands inside the container to create database migrations for Django
 
@@ -36,6 +44,24 @@ and finally:
 
 ```bash
 python3 manage.py migrate --run-syncdb
+```
+
+### Running Django Fixtures
+
+Fixtures allow us to populate the initial empty database with some initial data
+
+Refer to ["Executing commands within the container"](###-executing-commands-within-the-container) and then run the following commands from within the django api container:
+
+First run the exercises fixture:
+
+```bash
+python3 manage.py loaddata exercises.json
+```
+
+and then the subexercises fixture:
+
+```bash
+python3 manage.py loaddata subexercises.json
 ```
 
 ## Docker and Docker Compose Basics
