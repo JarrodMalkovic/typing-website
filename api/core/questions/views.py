@@ -1,11 +1,18 @@
 from re import sub
 from rest_framework import serializers
 from rest_framework.views import APIView
-from .serializers import QuestionSerializer
+from .serializers import QuestionSerializer, PracticeAttemptSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Question
 from django.http import HttpResponse
+<<<<<<< Updated upstream
+=======
+from django.shortcuts import get_object_or_404
+from .mixin import SuperUserRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+>>>>>>> Stashed changes
 
 # /api/questions/subexercise/<slug:subexercise>/
 class QuestionSubexerciseAPIView(APIView):
@@ -82,10 +89,16 @@ class QuestionAPIView(APIView):
 
 # /api/questions/subexercise/attempt
 # OR /api/practice/attempt
-class QuestionSubexerciseAttemptAPIView(APIView):
+class QuestionSubexerciseAttemptAPIView(LoginRequiredMixin, APIView):
     # POST - Saves a users attempt for a given subexercisie - Auth Required
     def post(self, request):
-        return Response()
+        serializer = PracticeAttemptSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # /api/questions/subexercise/<slug:subexercise>/attempts
 # OR /api/practice/subexercise/<slug:subexercise>/attempts
