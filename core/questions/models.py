@@ -17,22 +17,22 @@ class PracticeAttempt(models.Model):
     subexercise_slug = models.ForeignKey(Subexercise, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     wpm = models.FloatField()
-    time_elapsed = models.DateTimeField()
+    time_elapsed = models.TimeField()
     accuracy = models.FloatField()
     score = models.FloatField()
     
     def __str__(self):
-        return f"{self.attempt}"
+        return f"{self.user.username} practice attempt: {self.attempt}"
     
 
 class ChallengeAttempt(models.Model):
     attempt = models.IntegerField()
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     wpm = models.FloatField()
-    time_elapsed = models.DateTimeField()
+    time_elapsed = models.TimeField()
     accuracy = models.FloatField()
     score = models.FloatField()
     
     
     def __str__(self):
-        return f"{self.attempt}"
+        return f"{self.user.username} challenge attempt: {self.attempt}"
