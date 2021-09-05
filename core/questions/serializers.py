@@ -1,11 +1,27 @@
 from rest_framework import serializers
-from .models import Question
+from .models import Question, Subexercise
+
+
+class SubexerciseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subexercise
+        fields = ['subexercise_slug', 'subexercise_name']
+
+
+class GetQuestionsSerializer(serializers.ModelSerializer):
+    subexercise_slug = SubexerciseSerializer()
+
+    class Meta:
+        model = Question
+        fields = ['id', 'question', 'subexercise_slug',
+                  'audio_url', 'created_at']
 
 
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
-        fields = ['id', 'question', 'audio_url']
+        fields = ['id', 'question', 'audio_url',
+                  'subexercise_slug', 'created_at']
 
     def create(self, validatted_data):
         return Question.objects.create(**validatted_data)
