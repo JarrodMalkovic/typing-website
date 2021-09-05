@@ -19,9 +19,9 @@ import UserProfileDropdown from './user-profile-dropdown';
 import { useAuth } from '../../modules/auth/hooks/use-auth';
 
 const Links = [
-  { name: 'Practice', href: '/practice' },
-  { name: 'Challenge', href: '/challenge' },
   { name: 'Keyboard Setup', href: '/setup' },
+  { name: 'Practice', href: '/practice' },
+  { name: 'Challenge', href: '/challenge' }
 ];
 
 // Adapted from: https://chakra-templates.dev/navigation/navbar

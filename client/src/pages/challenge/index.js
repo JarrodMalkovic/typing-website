@@ -14,7 +14,7 @@ import NextLink from 'next/link';
 
 const Challenge = () => {
   return (
-    <Container pt="8" maxW="container.md">
+    <Container pt="8" maxW="container.lg">
       <VStack spacing={8}>
         <VStack>
           <Heading>Challenge Mode</Heading>

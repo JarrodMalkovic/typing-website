@@ -88,10 +88,10 @@ const sampleData = [
 
 const Practice = () => {
   return (
-    <Container maxW="xl" mt = "50px">
+    <Container mt = "50px" maxW="container.lg" centerContent>
       <VStack>
         <VStack>
-          <Heading fontSize = "25px" padding = "10px">
+          <Heading fontSize = "45px" padding = "20px">
             Practice Mode
           </Heading>
         </VStack>
