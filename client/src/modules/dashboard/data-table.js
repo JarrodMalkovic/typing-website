@@ -12,12 +12,24 @@ import {
   Td,
   chakra,
   AlertIcon,
+  Spinner,
   Checkbox,
 } from '@chakra-ui/react';
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
-import { useTable, useSortBy, useRowSelect } from 'react-table';
+import {
+  useTable,
+  useSortBy,
+  useRowSelect,
+  useGlobalFilter,
+} from 'react-table';
 import DeleteSelectedItemsButton from './delete-selected-items-button';
-import EditExerciseButton from './edit-exercise-button';
+import EditQuestionButton from './edit-question-button';
+import axios from 'axios';
+import { BASE_API_URL } from '../../common/contstants/base-api-url';
+import { useQuery } from 'react-query';
+import NoQuestionsPanel from './no-questions-panel';
+import PropTypes from 'prop-types';
+import { isDictionSlug } from '../exercises/utils/is-diction-slug';
 
 const IndeterminateCheckbox = React.forwardRef(
   ({ indeterminate, ...rest }, ref) => {
@@ -28,49 +40,33 @@ const IndeterminateCheckbox = React.forwardRef(
   },
 );
 
-const DataTable = () => {
-  // Random Placeholder data for now - eventually this will be fetched from the backend
-  const data = React.useMemo(
-    () => [
-      {
-        subexercise: 'Left Handed',
-        question: 'hello',
-        dateCreated: '2/14/2019',
-      },
-      {
-        subexercise: 'Right Handed',
-        question: 'hello',
-        dateCreated: '2/14/2019',
-      },
-      {
-        subexercise: 'Test',
-        question: 'hello',
-        dateCreated: '2/14/2019',
-      },
-      {
-        subexercise: 'Sample',
-        question: 'hello',
-        dateCreated: '2/14/2019',
-      },
-      {
-        subexercise: 'Sample',
-        question: 'hello',
-        dateCreated: '2/14/2019',
-      },
-      {
-        subexercise: 'Sample',
-        question: 'hello',
-        dateCreated: '2/14/2019',
-      },
-    ],
-    [],
+const getQuestions = async (exercise_slug) => {
+  const res = await axios.get(
+    `${BASE_API_URL}/api/questions/exercise/${exercise_slug}/`,
   );
 
-  const columns = React.useMemo(
-    () => [
+  return res.data;
+};
+
+const DataTable = ({ exercise_slug, filter }) => {
+  const [tableData, setTableData] = React.useState([]);
+  const { data: apiResponse, isLoading } = useQuery(exercise_slug, () =>
+    getQuestions(exercise_slug),
+  );
+
+  React.useEffect(() => {
+    setTableData(apiResponse || []);
+  }, [apiResponse]);
+
+  React.useEffect(() => {
+    setGlobalFilter(filter);
+  }, [filter]);
+
+  const [columns, data] = React.useMemo(() => {
+    const columns = [
       {
         Header: 'Subexercise',
-        accessor: 'subexercise',
+        accessor: 'subexercise_slug.subexercise_name',
       },
       {
         Header: 'Question',
@@ -78,17 +74,37 @@ const DataTable = () => {
       },
       {
         Header: 'Date Created',
-        accessor: 'dateCreated',
+        accessor: 'created_at',
+        Cell: ({ cell }) => {
+          const date = new Date(cell.value);
+          return date.toDateString();
+        },
       },
       {
         Header: '',
         accessor: 'editButton',
-        Cell: () => <EditExerciseButton />,
+        Cell: ({ cell }) => (
+          <EditQuestionButton
+            row={cell.row.original}
+            exercise={exercise_slug}
+          />
+        ),
         disableSortBy: true,
       },
-    ],
-    [],
-  );
+    ];
+
+    if (isDictionSlug(exercise_slug)) {
+      columns.splice(columns.length - 1, 0, {
+        Header: 'Audio',
+        accessor: 'audio_url',
+        Cell: ({ cell }) => {
+          return <audio controls="controls" src={cell.value} />;
+        },
+      });
+    }
+
+    return [columns, tableData];
+  }, [tableData]);
 
   const {
     getTableProps,
@@ -97,22 +113,29 @@ const DataTable = () => {
     rows,
     prepareRow,
     selectedFlatRows,
-  } = useTable({ columns, data }, useSortBy, useRowSelect, (hooks) => {
-    hooks.visibleColumns.push((columns) => [
-      {
-        id: 'selection',
-        // eslint-disable-next-line react/display-name
-        Header: ({ getToggleAllRowsSelectedProps }) => (
-          <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
-        ),
-        // eslint-disable-next-line react/display-name
-        Cell: ({ row }) => (
-          <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
-        ),
-      },
-      ...columns,
-    ]);
-  });
+    setGlobalFilter,
+  } = useTable(
+    { columns, data },
+    useGlobalFilter,
+    useSortBy,
+    useRowSelect,
+    (hooks) => {
+      hooks.visibleColumns.push((columns) => [
+        {
+          id: 'selection',
+          // eslint-disable-next-line react/display-name
+          Header: ({ getToggleAllRowsSelectedProps }) => (
+            <IndeterminateCheckbox {...getToggleAllRowsSelectedProps()} />
+          ),
+          // eslint-disable-next-line react/display-name
+          Cell: ({ row }) => (
+            <IndeterminateCheckbox {...row.getToggleRowSelectedProps()} />
+          ),
+        },
+        ...columns,
+      ]);
+    },
+  );
 
   return (
     <VStack spacing="4">
@@ -124,7 +147,10 @@ const DataTable = () => {
             You have selected {selectedFlatRows.length}{' '}
             {selectedFlatRows.length > 1 ? 'items' : 'item'} to be permanently
             deleted.{' '}
-            <DeleteSelectedItemsButton selectedItems={selectedFlatRows} />
+            <DeleteSelectedItemsButton
+              exercise_slug={exercise_slug}
+              selectedItems={selectedFlatRows}
+            />
           </Text>
         </Alert>
       )}
@@ -152,26 +178,38 @@ const DataTable = () => {
             </Tr>
           ))}
         </Thead>
-        <Tbody {...getTableBodyProps()}>
-          {rows.map((row, idx) => {
-            prepareRow(row);
-            return (
-              <Tr key={idx} {...row.getRowProps()}>
-                {row.cells.map((cell, idx) => (
-                  <Td
-                    key={idx}
-                    {...cell.getCellProps()}
-                    isNumeric={cell.column.isNumeric}>
-                    {cell.render('Cell')}
-                  </Td>
-                ))}
-              </Tr>
-            );
-          })}
-        </Tbody>
+        {!isLoading && data.length > 0 && (
+          <Tbody {...getTableBodyProps()}>
+            {rows.map((row, idx) => {
+              prepareRow(row);
+              return (
+                <Tr key={idx} {...row.getRowProps()}>
+                  {row.cells.map((cell, idx) => (
+                    <Td
+                      key={idx}
+                      {...cell.getCellProps()}
+                      isNumeric={cell.column.isNumeric}>
+                      {cell.render('Cell')}
+                    </Td>
+                  ))}
+                </Tr>
+              );
+            })}
+          </Tbody>
+        )}
       </Table>
+      {apiResponse.length > 0 ? null : isLoading ? (
+        <Spinner color="blue.400" />
+      ) : (
+        <NoQuestionsPanel />
+      )}
     </VStack>
   );
+};
+
+DataTable.propTypes = {
+  exercise_slug: PropTypes.string,
+  filter: PropTypes.string,
 };
 
 export default DataTable;
