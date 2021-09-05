@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Question
+from .models import Question, PracticeAttempt, ChallengeAttempt
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -21,3 +21,20 @@ class QuestionSerializer(serializers.ModelSerializer):
 
         instance.save()
         return instance
+
+class PracticeAttemptSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PracticeAttempt
+        fields = ['id', 'subexercise_slug', 'user', 'wpm', 'time_elapsed', 'accuracy', 'score']
+        
+    def create(self, validated_data):
+        return PracticeAttempt.objects.create(**validated_data)
+        
+
+class ChallengeAttemptSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ChallengeAttempt
+        fields = ['id', 'user', 'wpm', 'time_elapsed', 'accuracy', 'score']
+        
+    def create(self, validated_data):
+        return ChallengeAttempt.objects.create(**validated_data)

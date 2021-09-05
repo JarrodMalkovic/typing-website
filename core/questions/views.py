@@ -6,13 +6,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Question
 from django.http import HttpResponse
-<<<<<<< Updated upstream
-=======
 from django.shortcuts import get_object_or_404
 from .mixin import SuperUserRequiredMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 
->>>>>>> Stashed changes
 
 # /api/questions/subexercise/<slug:subexercise>/
 class QuestionSubexerciseAPIView(APIView):
@@ -41,12 +38,11 @@ class QuestionExerciseAPIView(APIView):
 
 
 # /api/questions/<int:id>/
-class QuestionIdAPIView(APIView):
+# ADMIN ONLY
+class QuestionIdAPIView(SuperUserRequiredMixin, APIView):
     def get_object(self, id):
-        try:
-            return Question.objects.get(id=id)
-        except Question.DoesNotExist:
-            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+        # If question id does not exist, returns 404 NOT FOUND
+        return get_object_or_404(Question, id=id)
     
     # GET - Gets the specific question by its id
     def get(self, request, id):
@@ -59,7 +55,6 @@ class QuestionIdAPIView(APIView):
         return Response()
 
     # PUT - Edits a question by ID - Admin Only
-    # TODO Add the ADMIN only feature
     def put(self, request, id):
         question = self.get_object(id)
         serializer = QuestionSerializer(question, data=request.data)
@@ -71,13 +66,13 @@ class QuestionIdAPIView(APIView):
 
 
 # /api/questions/
-class QuestionAPIView(APIView):
-    # DELETE - Deletes many questions (Body will contain an array of the ID's to delete) - Admin Only
+# ADMIN ONLY
+class QuestionAPIView(SuperUserRequiredMixin, APIView):
+    # DELETE - Deletes many questions (Body will contain an array of the ID's to delete)
     def delete(self, request):
         return Response()
 
-    # POST - Creates a question - Admin Only
-    # TODO: Make it so only admins can access this route and upload audio file to cloudinary
+    # POST - Creates a question
     def post(self, request):
         serializer = QuestionSerializer(data=request.data)
 
