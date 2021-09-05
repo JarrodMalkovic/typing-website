@@ -1,0 +1,50 @@
+[
+    {
+        "pk": "diction",
+        "model": "exercises.exercise",
+        "fields": {
+            "exercise_slug": "diction",
+            "exercise_name": "Diction"
+        }
+    },   
+    {
+        "pk": "letters",
+        "model": "exercises.exercise",
+        "fields": {
+            "exercise_slug": "letters",
+            "exercise_name": "Letters"
+        }
+    },
+    {
+        "pk": "syllables",
+        "model": "exercises.exercise",
+        "fields": {
+            "exercise_slug": "syllables",
+            "exercise_name": "Syllables"
+        }
+    },
+    {
+        "pk": "words",
+        "model": "exercises.exercise",
+        "fields": {
+            "exercise_slug": "words",
+            "exercise_name": "Words"
+        }
+    },
+    {
+        "pk": "short-sentences",
+        "model": "exercises.exercise",
+        "fields": {
+            "exercise_slug": "short-sentences",
+            "exercise_name": "Short Sentences"
+        }
+    },
+    {
+        "pk": "long-sentences",
+        "model": "exercises.exercise",
+        "fields": {
+            "exercise_slug": "long-sentences",
+            "exercise_name": "Long Sentences"
+        }
+    }
+]
