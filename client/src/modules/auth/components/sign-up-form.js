@@ -20,6 +20,7 @@ import { Field, Form, Formik } from 'formik';
 import axios from 'axios';
 import { BASE_API_URL } from '../../../common/contstants/base-api-url';
 import { useAuth } from '../hooks/use-auth';
+import { setAuthToken } from '../utils/set-auth-token';
 
 const SignupSchema = Yup.object({
   username: Yup.string()
@@ -52,6 +53,7 @@ const SignupForm = () => {
       dispatch({ type: 'login', payload: data.user });
       localStorage.setItem('access-token', data.access);
       localStorage.setItem('refresh-token', data.refresh);
+      setAuthToken(data.access);
       toast({
         title: 'Account created.',
         description: 'You have successfully signed up for KeyKorea.',
