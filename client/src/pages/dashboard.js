@@ -10,46 +10,62 @@ import {
   TabPanels,
   TabPanel,
   Flex,
+  Input,
+  InputGroup,
+  InputLeftElement,
   Spacer,
-  Button,
+  Box,
   Text,
 } from '@chakra-ui/react';
-import { AddIcon } from '@chakra-ui/icons';
 import DataTable from '../modules/dashboard/data-table';
-import AddExerciseButton from '../modules/dashboard/add-exercise-button';
-
-const tabData = [
-  { label: 'Letters' },
-  { label: 'Syllables' },
-  { label: 'Words' },
-  { label: 'Short Sentences' },
-  { label: 'Long Sentences' },
-  { label: 'Diction' },
-];
+import AddQuestionButton from '../modules/dashboard/add-question-button';
+import { exercises } from '../common/contstants/exercises';
+import { SearchIcon } from '@chakra-ui/icons';
 
 const Dashboard = () => {
+  const [filter, setFilter] = React.useState('');
+
+  const handleChange = (event) => {
+    setFilter(event.target.value);
+  };
+
   return (
     <Container pt="8" maxW="container.xl">
       <VStack spacing={2} width="100%" align="stretch">
         <Flex>
           <Heading>Admin Dashboard</Heading>
           <Spacer />
-          <AddExerciseButton />
+          <Box>
+            <InputGroup>
+              <InputLeftElement
+                pointerEvents="none"
+                children={<SearchIcon />}
+              />
+              <Input
+                w="xs"
+                mr="4"
+                placeholder="Search rows..."
+                value={filter}
+                onChange={handleChange}
+              />
+            </InputGroup>
+          </Box>
+          <AddQuestionButton />
         </Flex>
         <Text>
           This is a short sentence which describes what this dashboard is all
           about
         </Text>
-        <Tabs variant="enclosed">
+        <Tabs isLazy variant="enclosed">
           <TabList>
-            {tabData.map((tab, idx) => (
-              <Tab key={idx}>{tab.label}</Tab>
+            {Object.entries(exercises).map(([key, value], idx) => (
+              <Tab key={idx}>{value.name}</Tab>
             ))}
           </TabList>
           <TabPanels>
-            {tabData.map((tab, idx) => (
+            {Object.entries(exercises).map(([key, value], idx) => (
               <TabPanel paddingX="0" key={idx}>
-                <DataTable />
+                <DataTable exercise_slug={value.slug} filter={filter} />
               </TabPanel>
             ))}
           </TabPanels>

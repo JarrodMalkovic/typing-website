@@ -8,6 +8,8 @@ from core.user.serializers import UserSerializer
 from core.user.models import User
 
 # Adapted from: https://dev.to/koladev/django-rest-authentication-cmh
+
+
 class LoginSerializer(TokenObtainPairSerializer):
 
     def validate(self, attrs):
@@ -24,13 +26,18 @@ class LoginSerializer(TokenObtainPairSerializer):
         return data
 
 # Adapted from: https://dev.to/koladev/django-rest-authentication-cmh
+
+
 class RegisterSerializer(UserSerializer):
-    password = serializers.CharField(max_length=128, min_length=8, write_only=True, required=True)
-    email = serializers.EmailField(required=True, write_only=True, max_length=128)
+    password = serializers.CharField(
+        max_length=128, min_length=8, write_only=True, required=True)
+    email = serializers.EmailField(
+        required=True, write_only=True, max_length=128)
 
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'password', 'is_active', 'created', 'updated']
+        fields = ['id', 'username', 'email', 'password',
+                  'is_active', 'created', 'updated']
 
     def create(self, validated_data):
         try:
