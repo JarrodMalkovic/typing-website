@@ -198,7 +198,7 @@ const DataTable = ({ exercise_slug, filter }) => {
           </Tbody>
         )}
       </Table>
-      {apiResponse.length > 0 ? null : isLoading ? (
+      {apiResponse && apiResponse.length > 0 ? null : isLoading ? (
         <Spinner color="blue.400" />
       ) : (
         <NoQuestionsPanel />
