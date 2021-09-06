@@ -6,6 +6,9 @@ from .models import Question
 from django.http import HttpResponse
 from rest_framework.parsers import MultiPartParser, JSONParser
 import cloudinary.uploader
+from django.shortcuts import get_object_or_404
+from .mixin import SuperUserRequiredMixin
+
 
 # /api/questions/subexercise/<slug:subexercise>/
 
@@ -39,12 +42,11 @@ class QuestionExerciseAPIView(APIView):
 
 
 # /api/questions/<int:id>/
-class QuestionIdAPIView(APIView):
+# ADMIN ONLY
+class QuestionIdAPIView(SuperUserRequiredMixin, APIView):
     def get_object(self, id):
-        try:
-            return Question.objects.get(id=id)
-        except Question.DoesNotExist:
-            return HttpResponse(status=status.HTTP_404_NOT_FOUND)
+        # If question id does not exist, returns 404 NOT FOUND
+        return get_object_or_404(Question, id=id)
 
     # GET - Gets the specific question by its id
     def get(self, request, id):
@@ -57,7 +59,6 @@ class QuestionIdAPIView(APIView):
         return Response()
 
     # PUT - Edits a question by ID - Admin Only
-    # TODO Add the ADMIN only feature
     def put(self, request, id):
         question = self.get_object(id)
         serializer = QuestionSerializer(question, data=request.data)
@@ -70,11 +71,12 @@ class QuestionIdAPIView(APIView):
 
 
 # /api/questions/
-class QuestionAPIView(APIView):
+# ADMIN ONLY
+class QuestionAPIView(SuperUserRequiredMixin, APIView):
     # permission_classes = [IsAdminUser]
     parser_classes = (MultiPartParser, JSONParser)
-
-    # DELETE - Deletes many questions (Body will contain an array of the ID's to delete) - Admin Only
+    
+    # DELETE - Deletes many questions (Body will contain an array of the ID's to delete)
     def delete(self, request):
         for id in request.data.get('questions'):
             Question.objects.filter(id=id).delete()
