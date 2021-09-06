@@ -1,78 +1,77 @@
 import React from 'react';
-import { Container, Row, Col } from 'react-bootstrap';
-import { Flex, Heading, Box, HStack, Button } from '@chakra-ui/react';
-import * as FaIcons from 'react-icons/fa';
+import {Container, 
+        Heading, 
+        HStack,
+        VStack,
+        Divider,
+        Image,
+        Wrap,
+        Text,
+        Center
+        } from "@chakra-ui/react";
 
-const ColoredLine = ({ color }) => (
-  <hr
-    style={{
-      backgroundColor: color,
-      height: 2,
-    }}
-  />
-);
+import Link from 'next/link';
 
 const Menu = () => {
-  return (
-    <>
-      <Flex background="white" height="auto">
-        <Flex
-          margin="auto"
-          padding="50"
-          height="300"
-          align
-          boxShadow="lg"
-          direction="column"
-          background="black"
-          p={70}
-          rounded={50}
-          color="white">
-          <Heading mb={3}> Begin Your Journey </Heading>
-          <ColoredLine color="white" />
+    return (
+        
+            <Container mt = "50px" maxW="container.lg" centerContent>
+                <VStack>
+                    <Heading fontSize = "45px" padding = "20px"> 
+                        Begin Your Journey!
+                    </Heading>
+                    <Divider/>
+                    
+                    <Wrap spacing="30px" justify="center" mt = "50px">
+                        <HStack >
+                            <Link href = "/setup">
+                                <a>
+                                <Container padding = "20px">
+                                    <Image src="/images/alphabet-course.png"  boxSize="150px"/>
+                                    <Text textAlign="center" mt="10px" fontWeight =  "bold" fontSize = "2xl"> 
+                                        Keyboard Setup
+                                    </Text>
+                                </Container>
+                                </a>
+                            </Link>
+                        </HStack>
+                      
 
-          <HStack>
-            <Box
-              as="button"
-              className="KeyboardSetup"
-              alignitems="center"
-              margin="10px"
-              padding="20px"
-              border>
-              <img src="/images/Keyboard.png" height={100} width={100} />
-              <Box fontWeight="extrabold" alignitems="center">
-                {' '}
-                Keyboard Setup{' '}
-              </Box>
-            </Box>
+                        <HStack>
+                            <Link href = "/practice">
+                                <a>
+                                    <Container  padding = "10px" justify="center">
+                                        <Image src="/images/greetings-course.png"  boxSize="150px"/>
+                                        <Text textAlign="center" mt="10px" fontWeight =  "bold" fontSize = "2xl"> 
+                                            Practice
+                                        </Text>
+                                    </Container>
+                                </a>
+                            </Link>
+                        </HStack>
 
-            <Box
-              className="KeyboardSetup"
-              alignitems="center"
-              margin="10px"
-              padding="20px"
-              border>
-              <img
-                src="/images/greetings-course.png"
-                height={100}
-                width={100}
-              />
-              <Box fontWeight="extrabold"> Practice Mode </Box>
-            </Box>
+                        <HStack>
 
-            <Box
-              className="KeyboardSetup"
-              alignitems="center"
-              margin="10px"
-              padding="20px"
-              border>
-              <img src="/images/why.png" height={100} width={100} />
-              <Box fontWeight="extrabold"> Challenge Mode </Box>
-            </Box>
-          </HStack>
-        </Flex>
-      </Flex>
-    </>
-  );
-};
+                            <Link href = "/challenge">
+                                <a>
+                                    <Container padding = "10px" justify="center">
+                                        <Image src="/images/why.png"  boxSize="150px"/>
+                                        <Text textAlign="center" mt="10px" fontWeight =  "bold" fontSize = "2xl"> 
+                                            Challenge
+                                        </Text>
+                                    </Container>
+                                </a>
+                            </Link>
+
+                        </HStack>
+                    </Wrap>
+
+                </VStack>
+
+            </Container>
+        
+    )
+}
 
 export default Menu;
+

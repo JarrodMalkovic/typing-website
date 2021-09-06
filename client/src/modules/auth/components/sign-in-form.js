@@ -24,6 +24,7 @@ import NavLink from 'next/link';
 import { useRouter } from 'next/router';
 import { BASE_API_URL } from '../../../common/contstants/base-api-url';
 import { useAuth } from '../hooks/use-auth';
+import { setAuthToken } from '../utils/set-auth-token';
 
 const SigninSchema = Yup.object({
   email: Yup.string().email('Invalid email').required('Required'),
@@ -35,6 +36,7 @@ const SigninSchema = Yup.object({
 
 const SignIn = async (data) => {
   const res = await axios.post(`${BASE_API_URL}/api/auth/login/`, data);
+
   return res.data;
 };
 
@@ -49,6 +51,7 @@ const SigninForm = () => {
       dispatch({ type: 'login', payload: data.user });
       localStorage.setItem('access-token', data.access);
       localStorage.setItem('refresh-token', data.refresh);
+      setAuthToken(data.access);
       toast({
         title: 'Signed in.',
         description: 'You have successfully signed into KeyKorea.',
