@@ -21,7 +21,7 @@ const sampleData = [
   {
     name: 'Letters',
     img: '/images/Letters.png',
-    dscrpt: 'Description',
+    dscrpt: 'Get familiar with the korean letters on the keyboard!',
     subExercises: [
       { name: 'Left Hand', slug: 'test', disabled: false, description: "Practice your consonants!"},
       { name: 'Right Hand', slug: 'test', disabled: false },

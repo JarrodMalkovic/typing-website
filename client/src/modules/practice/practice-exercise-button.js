@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import {
   VStack,
+  HStack,
   Text,
   WrapItem,
   Button,
@@ -44,49 +45,59 @@ const PracticeExerciseButton = ({ name,img, subExercises,dscrpt }) => {
           </Container>
         </VStack>
       </WrapItem>
+
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
+
+        
         <ModalOverlay />
         <ModalContent>
           <ModalHeader fontSize = "30px">
             <Center>{name}</Center>
           </ModalHeader>
           <ModalBody>
-            <Text textAlign = "center">{dscrpt}</Text>
+            <Box textAlign = "center" padding = "0px 20px">{dscrpt}</Box>
           </ModalBody>
           <ModalCloseButton />
           <ModalBody>
             
-            <VStack spacing="3">
+            <VStack margin = "10px">
               {subExercises.map((subExercise) => (
                 <>
                   <Accordion 
-                    allowMultiple 
+                    
                     allowToggle 
-                    width="100%"
-  >
+                    width="90%">
                     <AccordionItem>
+
                       <h2>
-                        <AccordionButton sx={{}}>
-                          <Link href={`/practice/${subExercise.slug}`}>
-                              <Button
-                                disabled={subExercise.disabled} 
-                                width="100%" 
-                                flex = "1" 
-                                textAlign = "left"
-                                justify
-                                _hover={{
-                                  background: "white",
-                                  color: "teal.500",
-                                }}>
-                                {subExercise.name}
-                              </Button>
-                          </Link>
+                        <AccordionButton width="100%">
+                          <Box flex="1" textAlign="left">
+                            {subExercise.name}
+                          </Box>
                           <AccordionIcon />
                         </AccordionButton>
                       </h2>
+                        
+                     
 
                       <AccordionPanel pb={4} textAlign = "center">
                         {subExercise.description}
+
+                        <Link href={`/practice/${subExercise.slug}`}>
+                              <Button
+                                disabled={subExercise.disabled} 
+                                width="50%" 
+                                flex = "1" 
+                                textAlign = "left"
+                                justify
+                                margin = "10px"
+                                _hover={{
+                                  color: "teal.500",
+                                }}>
+                                Begin
+                              </Button>
+                          </Link>
+
                       </AccordionPanel>
                     </AccordionItem>
                   </Accordion>
@@ -95,7 +106,7 @@ const PracticeExerciseButton = ({ name,img, subExercises,dscrpt }) => {
             </VStack>
           </ModalBody>
           <ModalFooter />
-        </ModalContent>
+        </ModalContent> 
       </Modal>
     </>
   );
