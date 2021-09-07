@@ -28,11 +28,13 @@ const getCompletionPercentage = (currentQuestionIndex, totalQuestions) =>
 
 const Exercise = () => {
   const theme = useTheme();
-
+  const [accuracy, setAccuracy] = React.useState(100);
+  const [wordsTyped, setWordsTyped] = React.useState(0);
+  const [startDate] = React.useState(new Date());
   const [currentQuestionIndex, setCurrentQuestionIndex] = React.useState(0);
 
   return (
-    <Container pt='8' maxW='container.xl'>
+    <Container pt="8" maxW="container.xl">
       <ProgressBar
         bgColor={theme.colors.blue['400']}
         baseBgColor={useColorModeValue(
@@ -50,12 +52,22 @@ const Exercise = () => {
       />
       <Stack spacing={8} mx={'auto'} maxW={'3xl'} py={12} px={6}>
         {currentQuestionIndex >= sampleExercise.length ? (
-          <ExerciseSummary setCurrentQuestionIndex={setCurrentQuestionIndex} />
+          <ExerciseSummary
+            setCurrentQuestionIndex={setCurrentQuestionIndex}
+            startDate={startDate}
+            wordsTyped={wordsTyped}
+            accuracy={accuracy}
+          />
         ) : (
           <ExerciseContent
             sampleExercise={sampleExercise}
             setCurrentQuestionIndex={setCurrentQuestionIndex}
             currentQuestionIndex={currentQuestionIndex}
+            startDate={startDate}
+            wordsTyped={wordsTyped}
+            setWordsTyped={setWordsTyped}
+            accuracy={accuracy}
+            setAccuracy={setAccuracy}
           />
         )}
       </Stack>

@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
 
   React.useEffect(async () => {
     try {
-      createAuthRefreshInterceptor(axios, refreshAuthLogic);
+      // createAuthRefreshInterceptor(axios, refreshAuthLogic);
       setAuthToken(localStorage.getItem('access-token'));
       const res = await axios.get(`${BASE_API_URL}/api/auth/current-user/`);
       dispatch({ type: 'login', payload: res.data });

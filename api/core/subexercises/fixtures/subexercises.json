@@ -1,0 +1,191 @@
+[
+    {
+        "pk": "basic-left-hand",
+        "model": "subexercises.subexercise",
+        "fields": {
+            "subexercise_slug": "basic-left-hand",
+            "subexercise_name": "Basic Left Hand",
+            "exercise_slug": "letters"
+        }
+    },
+    {
+        "pk": "basic-right-hand",
+        "model": "subexercises.subexercise",
+        "fields": {
+            "subexercise_slug": "basic-right-hand",
+            "subexercise_name": "Basic Right Hand",
+            "exercise_slug": "letters"
+        }
+    },
+    {
+        "pk": "left-and-right-handed",
+        "model": "subexercises.subexercise",
+        "fields": {
+            "subexercise_slug": "left-and-right-handed",
+            "subexercise_name": "Left and Right Handed",
+            "exercise_slug": "letters"
+        }
+    },
+    {
+        "pk": "shift-left-hand",
+        "model": "subexercises.subexercise",
+        "fields": {
+            "subexercise_slug": "shift-left-hand",
+            "subexercise_name": "Shift Left Hand",
+            "exercise_slug": "letters"
+        }
+    },
+    {
+        "pk": "shift-right-hand",
+        "model": "subexercises.subexercise",
+        "fields": {
+            "subexercise_slug": "shift-right-hand",
+            "subexercise_name": "Shift Right Hand",
+            "exercise_slug": "letters"
+        }
+    },
+    {
+        "pk": "all-letters",
+        "model": "subexercises.subexercise",
+        "fields": {
+            "subexercise_slug": "all-letters",
+            "subexercise_name": "All Letters",
+            "exercise_slug": "letters"
+        }
+    },
+    {
+        "pk": "consonant-vowel",
+        "model": "subexercises.subexercise",
+        "fields": {
+            "subexercise_slug": "consonant-vowel",
+            "subexercise_name": "C + V",
+            "exercise_slug": "syllables"
+        }
+    },    
+    {
+        "pk": "shift-consonant-vowel",
+        "model": "subexercises.subexercise",
+        "fields": {
+            "subexercise_slug": "shift-consonant-vowel",
+            "subexercise_name": "Shift C + V",
+            "exercise_slug": "syllables"
+        }
+    },
+    {
+        "pk": "consonant-vowel-consonant",
+        "model": "subexercises.subexercise",
+        "fields": {
+            "subexercise_slug": "consonant-vowel-consonant",
+            "subexercise_name": "C + V + C",
+            "exercise_slug": "syllables"
+        }
+    },
+    {
+        "pk": "shift-consonant-vowel-consonant",
+        "model": "subexercises.subexercise",
+        "fields": {
+            "subexercise_slug": "shift-consonant-vowel-consonant",
+            "subexercise_name": "Shift C + V + C",
+            "exercise_slug": "syllables"
+        }
+    },
+    {
+        "pk": "consonant-vowel-consonant-consonant",
+        "model": "subexercises.subexercise",
+        "fields": {
+            "subexercise_slug": "consonant-vowel-consonant-consonant",
+            "subexercise_name": "C + V + CC",
+            "exercise_slug": "syllables"
+        }
+    },
+    {
+        "pk": "two-syllables-without-ending-consonant",
+        "model": "subexercises.subexercise",
+        "fields": {
+            "subexercise_slug": "two-syllables-without-ending-consonant",
+            "subexercise_name": "Two Syllables Without Ending Consonant",
+            "exercise_slug": "words"
+        }
+    },
+    {
+        "pk": "three-syllables-without-ending-consonant",
+        "model": "subexercises.subexercise",
+        "fields": {
+            "subexercise_slug": "three-syllables-without-ending-consonant",
+            "subexercise_name": "Three Syllables Without Ending Consonant",
+            "exercise_slug": "words"
+        }
+    },
+    {
+        "pk": "two-syllables-with-ending-consonant",
+        "model": "subexercises.subexercise",
+        "fields": {
+            "subexercise_slug": "two-syllables-with-ending-consonant",
+            "subexercise_name": "Two Syllables With Ending Consonant",
+            "exercise_slug": "words"
+        }
+    },
+    {
+        "pk": "three-syllables-with-ending-consonant",
+        "model": "subexercises.subexercise",
+        "fields": {
+            "subexercise_slug": "three-syllables-with-ending-consonant",
+            "subexercise_name": "Three Syllables With Ending Consonant",
+            "exercise_slug": "words"
+        }
+    },
+    {
+        "pk": "longer-than-three-syllables",
+        "model": "subexercises.subexercise",
+        "fields": {
+            "subexercise_slug": "longer-than-three-syllables",
+            "subexercise_name": "Longer Than Three Syllables",
+            "exercise_slug": "words"
+        }
+    },
+    {
+        "pk": "short-sentences",
+        "model": "subexercises.subexercise",
+        "fields": {
+            "subexercise_slug": "short-sentences",
+            "subexercise_name": "Short Sentences",
+            "exercise_slug": "short-sentences"
+        }
+    },
+    {
+        "pk": "long-sentences",
+        "model": "subexercises.subexercise",
+        "fields": {
+            "subexercise_slug": "long-sentences",
+            "subexercise_name": "Long Sentences",
+            "exercise_slug": "long-sentences"
+        }
+    },
+    {
+        "pk": "word-diction",
+        "model": "subexercises.subexercise",
+        "fields": {
+            "subexercise_slug": "word-diction",
+            "subexercise_name": "Word Diction",
+            "exercise_slug": "diction"
+        }
+    },
+    {
+        "pk": "short-sentence-diction",
+        "model": "subexercises.subexercise",
+        "fields": {
+            "subexercise_slug": "short-sentence-diction",
+            "subexercise_name": "Short Sentence Diction",
+            "exercise_slug": "diction"
+        }
+    },
+    {
+        "pk": "long-sentence-diction",
+        "model": "subexercises.subexercise",
+        "fields": {
+            "subexercise_slug": "long-sentence-diction",
+            "subexercise_name": "Long Sentence Diction",
+            "exercise_slug": "diction"
+        }
+    }
+]
