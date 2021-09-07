@@ -7,6 +7,9 @@ import {
   Stack,
   Text,
   useColorModeValue,
+  VStack,
+  Box,
+  Image,
 } from '@chakra-ui/react';
 
 import NavLink from 'next/link';
@@ -17,22 +20,32 @@ const SignUp = () => {
   useAuthorizedRedirect();
 
   return (
-    <Flex align={'center'} justify={'center'}>
-      <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
-        <Stack align={'center'}>
-          <Heading fontSize={'4xl'}>Sign up</Heading>
-          <Text
-            fontSize={'lg'}
-            color={useColorModeValue('gray.600', 'gray.200')}>
-            Already have an account?{' '}
-            <NavLink href="/auth/sign-in">
-              <Link color={'blue.400'}>Sign in</Link>
-            </NavLink>
-          </Text>
-        </Stack>
-        <SignupForm />
-      </Stack>
-    </Flex>
+    <Box position="relative">
+      <VStack spacing={5} width="100%">
+        <Image
+          minW="full"
+          opacity="30%"
+          linear-gradient="(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.25))"
+          src="/images/Basic.png"
+        />
+        <Flex align={'center'} justify={'center'} position="absolute">
+          <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
+            <Stack align={'center'}>
+              <Heading fontSize={'4xl'}>Sign up</Heading>
+              <Text
+                fontSize={'lg'}
+                color={useColorModeValue('gray.600', 'gray.200')}>
+                Already have an account?{' '}
+                <NavLink href="/auth/sign-in">
+                  <Link color={'blue.400'}>Sign in</Link>
+                </NavLink>
+              </Text>
+            </Stack>
+            <SignupForm />
+          </Stack>
+        </Flex>
+      </VStack>
+    </Box>
   );
 };
 

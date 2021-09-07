@@ -20,7 +20,7 @@ const Challenge = () => {
       <VStack spacing={5} width="100%">
         <Image
           minW="full"
-          opacity="70%"
+          opacity="30%"
           linear-gradient="(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.25))"
           src="/images/Basic.png"
         />

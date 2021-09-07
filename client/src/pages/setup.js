@@ -8,6 +8,8 @@ import {
   Spacer,
   Spinner,
   VStack,
+  Box,
+  Image,
 } from '@chakra-ui/react';
 import {
   LINUX,
@@ -55,40 +57,55 @@ const Setup = () => {
   }, [os]);
 
   return (
-    <Container pt="8" maxW="container.xl">
-      <VStack spacing={5} width="100%" align="stretch">
+    <Box position="relative">
+      <VStack spacing={5} width="100%">
+        <Image
+          minW="full"
+          opacity="30%"
+          linear-gradient="(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.25))"
+          src="/images/Basic.png"
+        />
         {os ? (
           <>
-            <Heading>Setup Hangul Keyboard on {os}</Heading>
-
-            <Steps activeStep={activeStep}>
-              {steps.map(({ label, content, description }) => (
-                <Step label={label} key={label} description={description}>
-                  {content}
-                </Step>
-              ))}
-            </Steps>
-            {activeStep === steps.length && (
-              <StepsCompletedPrompt os={os} reset={reset} />
-            )}
-            <Flex>
-              <ChangeOsMenu setOs={setOs} resetSteps={reset} />
-              <Spacer />
-              <StepButtons
+            <Heading position="absolute">Setup Hangul Keyboard on {os}</Heading>
+            <Box position="absolute" spacing={5} minW="100%">
+              <Steps
                 activeStep={activeStep}
-                numSteps={steps.length}
-                nextStep={nextStep}
-                prevStep={prevStep}
-              />
-            </Flex>
+                alignContent="center"
+                top="80px"
+                maxW="80%"
+                minW="80%"
+                textAlign="center"
+                position="absolute">
+                {steps.map(({ label, content, description }) => (
+                  <Step label={label} key={label} description={description}>
+                    <br></br>
+                    {content}
+                  </Step>
+                ))}
+              </Steps>
+              {activeStep === steps.length && (
+                <StepsCompletedPrompt os={os} reset={reset} />
+              )}
+              <Flex top="250px" position="absolute">
+                <ChangeOsMenu setOs={setOs} resetSteps={reset} />
+                <Spacer />
+                <StepButtons
+                  activeStep={activeStep}
+                  numSteps={steps.length}
+                  nextStep={nextStep}
+                  prevStep={prevStep}
+                />
+              </Flex>
+            </Box>
           </>
         ) : (
-          <Center>
+          <Center position="absolute">
             <Spinner color="blue.500" />
           </Center>
         )}
       </VStack>
-    </Container>
+    </Box>
   );
 };
 

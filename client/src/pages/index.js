@@ -15,8 +15,11 @@ import {
 import { Grid, Row, Col } from 'react-bootstrap';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
 import Link from 'next/link';
+import { useAuth } from '../modules/auth/hooks/use-auth';
 
 const Home = (props) => {
+  const { state } = useAuth();
+
   return (
     <Box>
       <VStack spacing={5} width="100%">
@@ -49,8 +52,7 @@ const Home = (props) => {
             left="5%"
             trasnform="translate(-50% -50%)"
             textColor="white">
-            {/*{props.username}*/}
-            Username goes here
+            {state.isAuthenticated ? state.username : ''}
           </Text>
           <Link href="/menu">
             <Button

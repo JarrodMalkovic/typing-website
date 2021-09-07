@@ -13,6 +13,7 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
+  Image,
   Spacer,
   Box,
   Text,
@@ -56,7 +57,7 @@ const Dashboard = () => {
           This is a short sentence which describes what this dashboard is all
           about
         </Text>
-        <Tabs isLazy variant="enclosed">
+        <Tabs isLazy variant="enclosed" top={40}>
           <TabList>
             {Object.entries(exercises).map(([key, value], idx) => (
               <Tab key={idx}>{value.name}</Tab>
