@@ -21,12 +21,14 @@ const sampleData = [
   {
     name: 'Letters',
     img: '/images/Letters.png',
+    dscrpt: 'Get familiar with the korean letters on the keyboard!',
     subExercises: [
-      { name: 'test', slug: 'test', disabled: false },
-      { name: 'test', slug: 'test', disabled: false },
-      { name: 'test', slug: 'test', disabled: false },
-      { name: 'test', slug: 'test', disabled: true },
-      { name: 'test', slug: 'test', disabled: true },
+      { name: 'Left Hand', slug: 'test', disabled: false, description: "Practice your consonants!"},
+      { name: 'Right Hand', slug: 'test', disabled: false },
+      { name: 'Right + Left Hands', slug: 'test', disabled: false },
+      { name: 'Shift + Right hands', slug: 'test', disabled: true },
+      { name: 'Shift + Left hands', slug: 'test', disabled: true },
+      { name: 'Complete', slug: 'test', disabled: true },
     ],
   },
   {
@@ -76,6 +78,7 @@ const sampleData = [
   {
     name: 'Diction',
     img: '/images/Dictation.png',
+    dscrpt: 'Hi There',
     subExercises: [
       { name: 'test', slug: 'test', disabled: false },
       { name: 'test', slug: 'test', disabled: false },
@@ -118,7 +121,9 @@ const Practice = () => {
             <PracticeExerciseButton
               key={data.name}
               name={data.name}
-              img={data.img}
+              img = {data.img}
+              description = {data.description}
+              dscrpt = {data.dscrpt}
               subExercises={data.subExercises}
             />
           ))}
