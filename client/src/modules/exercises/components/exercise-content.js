@@ -130,7 +130,7 @@ const ExerciseContent = ({
           </Flex>
           {showVirtualKeyboard && (
             <Box paddingTop="8">
-              <img src="https://images.squarespace-cdn.com/content/v1/53290cd2e4b091b8426b546b/1464209884334-7JR5209WDZ6O9CE36DJC/korean+keyboard+QWERTY?format=1000w" />
+                <script type="text/javascript" src="src/modules/exercises/popup/index.js" ></script>
             </Box>
           )}
         </Box>
