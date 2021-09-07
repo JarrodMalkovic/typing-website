@@ -7,11 +7,12 @@ import theme from '../theme';
 
 // This component has to be a class component to work correctly with Next.js: https://github.com/vercel/next.js/issues/19355
 class Document extends NextDocument {
-  render () {
+  render() {
     return (
-      <Html lang='en'>
+      <Html lang="en">
         <Head />
         <body>
+          <title>KeyKorea</title>
           <ColorModeScript initialColorMode={theme.config.initialColorMode} />
           <Main />
           <NextScript />

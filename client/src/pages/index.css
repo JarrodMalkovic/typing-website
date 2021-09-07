@@ -1,0 +1,7 @@
+@font-face {
+  font-family: 'Homepage';
+  src: local('Homepage'),
+    url(../../public/fonts/BMEuljiro10yearslater.ttf) format('truetype');
+  /* other formats include: 'woff2', 'truetype, 'opentype',
+                              'embedded-opentype', and 'svg' */
+}
