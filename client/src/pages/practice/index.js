@@ -82,24 +82,32 @@ const sampleData = [
 
 const Practice = () => {
   return (
-    <Container mt = "50px" maxW="container.lg" centerContent>
-      <VStack>
-        <VStack>
-          <Heading fontSize = "45px" padding = "20px">
-            Practice Mode
-          </Heading>
-        </VStack>
+    <Box position="relative">
+      <VStack spacing={5} width="100%">
+        <Image
+          minW="full"
+          opacity="30%"
+          linear-gradient="(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.25))"
+          src="/images/Basic.png"
+        />
+        <Heading fontSize="45px" padding="20px" position="absolute" top={0}>
+          Practice Mode
+        </Heading>
+        <Divider />
 
-        <Divider/>
-
-        <VStack>
+        <VStack position="absolute" top={20}>
           <Text
-            fontSize= "20px"
+            fontSize="20px"
             color={useColorModeValue('gray.600', 'gray.200')}>
             Choose Your Path!
           </Text>
         </VStack>
-        <Wrap spacing="30px" justify="center" maxW="container.md">
+        <Wrap
+          spacing="30px"
+          justify="center"
+          maxW="container.md"
+          position="absolute"
+          top={40}>
           {sampleData.map((data) => (
             <PracticeExerciseButton
               key={data.name}
@@ -111,9 +119,8 @@ const Practice = () => {
             />
           ))}
         </Wrap>
-        </VStack>
-      
-    </Container>
+      </VStack>
+    </Box>
   );
 };
 
