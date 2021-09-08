@@ -64,14 +64,15 @@ const PracticeExerciseButton = ({ name,img, subExercises,dscrpt }) => {
               {subExercises.map((subExercise) => (
                 <>
                   <Accordion 
-                    
+                    allowMultiple
                     allowToggle 
-                    width="90%">
-                    <AccordionItem>
+                    width="90%"
+                    >
+                    <AccordionItem>  
 
                       <h2>
                         <AccordionButton width="100%">
-                          <Box flex="1" textAlign="left">
+                          <Box flex="1" textAlign="left" fontWeight = "bold">
                             {subExercise.name}
                           </Box>
                           <AccordionIcon />
@@ -81,7 +82,9 @@ const PracticeExerciseButton = ({ name,img, subExercises,dscrpt }) => {
                      
 
                       <AccordionPanel pb={4} textAlign = "center">
-                        {subExercise.description}
+                        
+                        <Box textAlign = "center" padding = "0px 20px">{subExercise.description}</Box>
+                        
 
                         <Link href={`/practice/${subExercise.slug}`}>
                               <Button
