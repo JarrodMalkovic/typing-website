@@ -1,29 +1,75 @@
 from rest_framework.views import APIView
-from .serializers import QuestionSerializer, PracticeAttemptSerializer, GetQuestionsSerializer
+from .serializers import QuestionSerializer, PracticeAttemptSerializer, GetQuestionsSerializer, SubexerciseSerializer
 from rest_framework.response import Response
-from rest_framework import status
-from .models import Question
+from rest_framework import status, permissions
+from .models import Question, PracticeAttempt
+from core.subexercises.models import Subexercise
 from django.http import HttpResponse
 from rest_framework.parsers import MultiPartParser, JSONParser
 import cloudinary.uploader
 from django.shortcuts import get_object_or_404
-from .mixin import SuperUserRequiredMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 # /api/questions/subexercise/<slug:subexercise>/
-
-
+# AUTHENTICATED USER ONLY
 class QuestionSubexerciseAPIView(APIView):
-    # GET - Returns all questions for a given subexercise - Auth Required
-    # TODO: Make it so auth is required for this route and check that they have completeled the previous subexercise first, if they have not return an error
+    permission_classes = [permissions.IsAuthenticated]
+
+    # GET - Returns all questions for a given subexercise given
+    # it is level 1, or they have completed previous subexercise
     def get(self, request, subexercise):
-        try:
+        # Get the level of subexercise requested
+        current_subexercise = Subexercise.objects.get(
+            subexercise_slug=subexercise)
+        level_request = current_subexercise.level
+        current_exercise_slug = current_subexercise.exercise_slug
+
+        # If user requesting level 1, return all questions
+        # Otherwise, check if there exists an attempt for the previous subexercise
+        if level_request == 1:
             questions = Question.objects.filter(subexercise_slug=subexercise)
             serializers = QuestionSerializer(questions, many=True)
             return Response(serializers.data, status=status.HTTP_200_OK)
-        except Question.DoesNotExist:
-            return Response([], status=status.HTTP_200_OK)
+        else:
+            previous_subexercise = Subexercise.objects.get(
+                level=level_request-1, exercise_slug=current_exercise_slug)
+            
+            try:
+                attempt = PracticeAttempt.objects.get(subexercise_slug=previous_subexercise, user=request.user)
+                questions = Question.objects.filter(subexercise_slug=subexercise)
+                serializers = QuestionSerializer(questions, many=True)
+                return Response(serializers.data, status=status.HTTP_200_OK)
+            except PracticeAttempt.DoesNotExist:
+                context = {"attempted": False}
+                return Response(context, status=status.HTTP_200_OK)
+  
+  
+# /api/subexercises/exercise/<slug:exercise>/ 
+# AUTHENTICAED USER ONLY
+class QuestionSubexerciseOrderedAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    # GET - Return all the subexercises, in order by level.
+    # If they have not completed the previous subexercise, it's
+    # attempted field is set to False.
+    def get(self, request, exercise):
+        subexercises = Subexercise.objects.filter(exercise_slug=exercise).order_by('level')
+        
+        data = []
+        for subexercise in subexercises:
+            sub_data = {}
+            sub_data["subexercise_slug"] = subexercise.subexercise_slug
+            sub_data["subexercise_name"] = subexercise.subexercise_name
+            sub_data["level"] = subexercise.level
+            
+            try:
+                attempt = PracticeAttempt.objects.get(subexercise_slug=subexercise, user=request.user)
+                sub_data["attempt"] = True
+            except PracticeAttempt.DoesNotExist:
+                sub_data["attempt"] = False
+            data.append(sub_data)
+        return Response(data, status=status.HTTP_200_OK)
 
 
 # /api/questions/exercise/<slug:exercise>/
@@ -44,7 +90,9 @@ class QuestionExerciseAPIView(APIView):
 
 # /api/questions/<int:id>/
 # ADMIN ONLY
-class QuestionIdAPIView(SuperUserRequiredMixin, APIView):
+class QuestionIdAPIView(APIView):
+    permission_classes = [permissions.IsAdminUser]
+
     def get_object(self, id):
         # If question id does not exist, returns 404 NOT FOUND
         return get_object_or_404(Question, id=id)
@@ -73,10 +121,10 @@ class QuestionIdAPIView(SuperUserRequiredMixin, APIView):
 
 # /api/questions/
 # ADMIN ONLY
-class QuestionAPIView(SuperUserRequiredMixin, APIView):
-    # permission_classes = [IsAdminUser]
+class QuestionAPIView(APIView):
+    permission_classes = [permissions.IsAdminUser]
     parser_classes = (MultiPartParser, JSONParser)
-    
+
     # DELETE - Deletes many questions (Body will contain an array of the ID's to delete)
     def delete(self, request):
         for id in request.data.get('questions'):
@@ -114,6 +162,8 @@ class QuestionAPIView(SuperUserRequiredMixin, APIView):
 
 # /api/questions/subexercise/attempt
 # OR /api/practice/attempt
+
+
 class QuestionSubexerciseAttemptAPIView(LoginRequiredMixin, APIView):
     # POST - Saves a users attempt for a given subexercisie - Auth Required
     def post(self, request):
@@ -129,7 +179,16 @@ class QuestionSubexerciseAttemptAPIView(LoginRequiredMixin, APIView):
 # OR /api/practice/subexercise/<slug:subexercise>/attempts
 
 
-class QuestionSubexerciseAttemptsAPIView(APIView):
+class QuestionSubexerciseAttemptsAPIView(LoginRequiredMixin, APIView):
+    # def get_object(self, id):
+    #     # If question id does not exist, returns 404 NOT FOUND
+    #     return get_object_or_404(Question, id=id)
+
+    # # GET - Gets the specific question by its id
+    # def get(self, request, id):
+    #     question = self.get_object(id)
+    #     serializer = QuestionSerializer(question)
+    #     return Response(serializer.data)
 
     # GET - Returns a users attempts for a given subexercise - Auth Required
     def get(self, request, subexercise):
@@ -139,7 +198,7 @@ class QuestionSubexerciseAttemptsAPIView(APIView):
 # OR /api/practice/exercise/<slug:exercise>/attempts
 
 
-class QuestionExerciseAttemptAPIView(APIView):
+class QuestionExerciseAttemptAPIView(LoginRequiredMixin, APIView):
     # GET - Returns a users attempts for a given exercise - Auth Required
     def get(self, request, exercise):
         return Response()

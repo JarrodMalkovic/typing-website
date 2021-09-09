@@ -1,5 +1,5 @@
 from django.db.models import base
-from core.questions.views import QuestionSubexerciseAPIView, QuestionIdAPIView, QuestionSubexerciseAttemptAPIView, QuestionExerciseAPIView, QuestionAPIView
+from core.questions.views import QuestionSubexerciseAPIView, QuestionIdAPIView, QuestionSubexerciseAttemptAPIView, QuestionExerciseAPIView, QuestionAPIView, QuestionSubexerciseOrderedAPIView
 from rest_framework.routers import SimpleRouter
 from core.auth.viewsets import LoginViewSet, RegistrationViewSet, RefreshViewSet, CurrentUserViewSet
 from django.urls import path
@@ -22,5 +22,6 @@ urlpatterns = [
     path('questions/', QuestionAPIView.as_view()),
     path('questions/exercise/<slug:exercise>/',
          QuestionExerciseAPIView.as_view()),
+    path('subexercises/exercise/<slug:exercise>/', QuestionSubexerciseOrderedAPIView.as_view()),
     * routes.urls,
 ]

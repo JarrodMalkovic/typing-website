@@ -5,7 +5,7 @@ from .models import Question, PracticeAttempt, ChallengeAttempt, Subexercise
 class SubexerciseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subexercise
-        fields = ['subexercise_slug', 'subexercise_name']
+        fields = ['subexercise_slug', 'subexercise_name', 'level']
 
 
 class GetQuestionsSerializer(serializers.ModelSerializer):
