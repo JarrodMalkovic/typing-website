@@ -19,6 +19,7 @@ const DisplayVirtualKeyboardButton = ({
       <IconButton
         onClick={() => setShowVirtualKeyboard(!showVirtualKeyboard)}
         icon={<Icon as={FaRegKeyboard} />}
+        
       />
     </Tooltip>
   );
