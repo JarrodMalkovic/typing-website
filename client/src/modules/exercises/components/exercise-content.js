@@ -129,7 +129,7 @@ const ExerciseContent = ({
             </ButtonGroup>
           </Flex>
           {showVirtualKeyboard && (
-            <Box paddingTop="8">
+            <Box paddingTop="8" width = "60%">
                 <script type="text/javascript" src="src/modules/exercises/popup/index.js" ></script>
             </Box>
           )}

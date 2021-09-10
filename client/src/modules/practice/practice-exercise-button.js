@@ -39,7 +39,9 @@ const PracticeExerciseButton = ({ name,img, subExercises,dscrpt }) => {
       <WrapItem onClick={onOpen} as="button">
         <VStack>
           
-          <Container padding = "20px" maxW="container.lg">
+          <Container padding = "20px" maxW="container.lg" _hover={{
+                                  color: "teal.500",
+                                }}>
             <Image src = {img} boxSize="150px"/>
             <Text mt="10px" fontWeight =  "bold" fontSize = "xl">{name}</Text>
           </Container>
