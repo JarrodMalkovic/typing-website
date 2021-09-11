@@ -42,7 +42,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 class PracticeAttemptSerializer(serializers.ModelSerializer):
     class Meta:
         model = PracticeAttempt
-        fields = ['id', 'subexercise_slug', 'user',
+        fields = ['id', 'attempt', 'subexercise_slug', 'user',
                   'wpm', 'time_elapsed', 'accuracy', 'score']
 
     def create(self, validated_data):
