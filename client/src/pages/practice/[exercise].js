@@ -14,9 +14,7 @@ import ProgressBar from '@ramonak/react-progress-bar';
 // Just placeholder data, eventually an array of containing the questions for a parcticular exercise will be retrieved from the backend using an API request
 const sampleExercise = [
   { words: 'test word' },
-  {
-    words: '저는 7 살았어요저는 7년 동안 한국에서 살았어요',
-  },
+  { words: '마가' },
   { words: '저는 7년 동안' },
   { words: '저는 7년 동안 한국에서' },
   { words: '저는 7년 동안 한 살았어요' },

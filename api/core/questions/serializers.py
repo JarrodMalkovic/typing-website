@@ -5,7 +5,7 @@ from .models import Question, PracticeAttempt, ChallengeAttempt, Subexercise
 class SubexerciseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subexercise
-        fields = ['subexercise_slug', 'subexercise_name']
+        fields = ['subexercise_slug', 'subexercise_name', 'level']
 
 
 class GetQuestionsSerializer(serializers.ModelSerializer):
@@ -42,7 +42,7 @@ class QuestionSerializer(serializers.ModelSerializer):
 class PracticeAttemptSerializer(serializers.ModelSerializer):
     class Meta:
         model = PracticeAttempt
-        fields = ['id', 'subexercise_slug', 'user',
+        fields = ['id', 'attempt', 'subexercise_slug', 'user',
                   'wpm', 'time_elapsed', 'accuracy', 'score']
 
     def create(self, validated_data):
