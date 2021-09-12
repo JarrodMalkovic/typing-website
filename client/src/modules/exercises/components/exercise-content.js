@@ -12,6 +12,7 @@ import {
   Stack,
   Text,
   useColorModeValue,
+  Image
 } from '@chakra-ui/react';
 
 import DisplayExerciseHelpModalButton from './display-exercise-help-modal-button';
@@ -134,7 +135,7 @@ const ExerciseContent = ({
 
           {showVirtualKeyboard && (
             <Box paddingTop='8' maxW="container.lg" boxSize="150cm">
-            <img src='https://images.squarespace-cdn.com/content/v1/53290cd2e4b091b8426b546b/1464209884334-7JR5209WDZ6O9CE36DJC/korean+keyboard+QWERTY?format=1000w' />
+            <Image src='https://images.squarespace-cdn.com/content/v1/53290cd2e4b091b8426b546b/1464209884334-7JR5209WDZ6O9CE36DJC/korean+keyboard+QWERTY?format=1000w' />
           </Box>
           )}
 
