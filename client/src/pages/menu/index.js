@@ -8,86 +8,71 @@ import {
   Image,
   Wrap,
   Text,
-  Center,
   Box,
+  WrapItem,
+  Flex,
+  useColorModeValue
 } from '@chakra-ui/react';
 
 import Link from 'next/link';
 
+
+import Background from '../../../public/images/Basic.png';
+
+
 const Menu = () => {
+  
+
   return (
+
     <Box position="relative">
-      <VStack spacing={5} width="100%">
-        <Image
-          minW="full"
-          opacity="70%"
-          linear-gradient="(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.25))"
-          src="/images/Basic.png"
-        />
-        <Heading fontSize="45px" padding="20px" position="absolute">
-          Begin Your Journey!
+      
+      <VStack padding = "20px" width="100%">
+
+        <Heading fontSize="45px" padding="20px">
+        Begin Your Journey!
         </Heading>
-        <Divider />
 
-        <Wrap
-          spacing="30px"
-          justify="center"
-          mt="50px"
-          position="absolute"
-          top={40}>
-          <HStack>
-            <Link href="/setup">
-              <a>
-                <Container padding="20px">
-                  <Image src="/images/alphabet-course.png" boxSize="150px" />
-                  <Text
-                    textAlign="center"
-                    mt="10px"
-                    fontWeight="bold"
-                    fontSize="2xl">
-                    Keyboard Setup
-                  </Text>
-                </Container>
-              </a>
-            </Link>
-          </HStack>
+        <Text
+            fontSize="20px"
+            color={useColorModeValue('gray.600', 'gray.200')}>
+            Choose Your Path!
+        </Text>
 
+        <WrapItem>
           <HStack>
-            <Link href="/practice">
-              <a>
-                <Container padding="10px" justify="center">
-                  <Image src="/images/greetings-course.png" boxSize="150px" />
-                  <Text
-                    textAlign="center"
-                    mt="10px"
-                    fontWeight="bold"
-                    fontSize="2xl">
-                    Practice
-                  </Text>
-                </Container>
-              </a>
-            </Link>
-          </HStack>
 
-          <HStack>
-            <Link href="/challenge">
-              <a>
-                <Container padding="10px" justify="center">
-                  <Image src="/images/why.png" boxSize="150px" />
-                  <Text
-                    textAlign="center"
-                    mt="10px"
-                    fontWeight="bold"
-                    fontSize="2xl">
-                    Challenge
-                  </Text>
-                </Container>
-              </a>
-            </Link>
+            <Container padding = "20px" maxW="container.lg" _hover={{color: "#39aae1"}}>
+              <Link href="/setup">
+                <a>
+                  <Image src = "/images/alphabet-course.png" boxSize="150px" margin = "10px"/>
+                  <Text mt="10px" textAlign = "center" fontWeight =  "bold" fontSize = "xl">Keyboard Setup</Text>
+                </a>                        
+              </Link>
+            </Container>
+
+            <Container padding = "20px" maxW="container.lg" _hover={{color: "#39aae1"}}>
+              <Link href="/practice">
+                <a>
+                  <Image src = "/images/greetings-course.png" boxSize="150px" margin = "10px"/>
+                  <Text mt="10px" textAlign = "center" fontWeight =  "bold" fontSize = "xl">Practice</Text>
+                </a>
+              </Link>
+            </Container>
+
+            <Container padding = "20px" maxW="container.lg" _hover={{color: "#39aae1"}}>
+              <Link href="/challenge">
+                <a>
+                  <Image src = "/images/why.png" boxSize="150px" margin = "10px"/>
+                  <Text mt="10px" textAlign = "center" fontWeight =  "bold" fontSize = "xl">Challenge</Text>
+                </a>
+              </Link>
+            </Container>
+
           </HStack>
-        </Wrap>
-      </VStack>
-    </Box>
+        </WrapItem>
+        </VStack>
+        </Box>
   );
 };
 

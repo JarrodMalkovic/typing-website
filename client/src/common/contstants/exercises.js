@@ -15,26 +15,11 @@ const exercises = {
     name: 'Syllables',
     slug: 'syllables',
     subexercises: [
-      {
-        slug: 'consonant-vowel',
-        name: 'C + V',
-      },
-      {
-        slug: 'shift-consonant-vowel',
-        name: 'Shift C + V',
-      },
-      {
-        slug: 'consonant-vowel-consonant',
-        name: 'C + V + C',
-      },
-      {
-        slug: 'shift-consonant-vowel-consonant',
-        name: 'Shift C + V + C',
-      },
-      {
-        slug: 'consonant-vowel-consonant-consonant',
-        name: 'C + V + CC',
-      },
+      {slug: 'consonant-vowel',name: 'C + V'},
+      {slug: 'shift-consonant-vowel',name: 'Shift C + V'},
+      {slug: 'consonant-vowel-consonant',name: 'C + V + C'},
+      {slug: 'shift-consonant-vowel-consonant',name: 'Shift C + V + C'},
+      {slug: 'consonant-vowel-consonant-consonant',name: 'C + V + CC'},
     ],
   },
   words: {

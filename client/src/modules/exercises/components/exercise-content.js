@@ -101,47 +101,44 @@ const ExerciseContent = ({
         </Box>
       </Center>
       <Center>
-        <Box position="relative">
+        <Box w={{ base: 'sm', md: 'md' }}>
           <Flex>
             <HStack spacing={'8'}>
-                <Text
-                  fontSize={'sm'}
-                  color={useColorModeValue('gray.600', 'gray.200')}>
-                  WPM: <WPM startDate={startDate} wordsTyped={wordsTyped} />
-                </Text>
-                <Text
-                  fontSize={'sm'}
-                  color={useColorModeValue('gray.600', 'gray.200')}>
-                  Accuracy: {accuracy}%
-                </Text>
-                <Text
-                  fontSize={'sm'}
-                  color={useColorModeValue('gray.600', 'gray.200')}>
-                  Elapsed: <Timer startDate={startDate} />
-                </Text>
-              
-                <Spacer />
-              <ButtonGroup>
-                <DisplayExerciseHelpModalButton inputRef={inputRef} />
-                <DisplayVirtualKeyboardButton
-                  setShowVirtualKeyboard={setShowVirtualKeyboard}
-                  showVirtualKeyboard={showVirtualKeyboard}
-                />
-              </ButtonGroup>
+              <Text
+                fontSize={'sm'}
+                color={useColorModeValue('gray.600', 'gray.200')}>
+                WPM: {Math.round(Math.random() * 100)}
+              </Text>
+              <Text
+                fontSize={'sm'}
+                color={useColorModeValue('gray.600', 'gray.200')}>
+                Accuracy: {Math.round(Math.random() * 100)}%
+              </Text>
+              <Text
+                fontSize={'sm'}
+                color={useColorModeValue('gray.600', 'gray.200')}>
+                Elapsed: 0:00
+              </Text>
             </HStack>
+            <Spacer />
+            <ButtonGroup>
+              <DisplayExerciseHelpModalButton inputRef={inputRef} />
+              <DisplayVirtualKeyboardButton
+                setShowVirtualKeyboard={setShowVirtualKeyboard}
+                showVirtualKeyboard={showVirtualKeyboard}
+              />
+            </ButtonGroup>
           </Flex>
-
-          <HStack>
-
-          {showVirtualKeyboard && (
-            <Box paddingTop='8' maxW="container.lg" boxSize="150cm">
-            <Image src='https://images.squarespace-cdn.com/content/v1/53290cd2e4b091b8426b546b/1464209884334-7JR5209WDZ6O9CE36DJC/korean+keyboard+QWERTY?format=1000w' />
-          </Box>
-          )}
-
-          </HStack>
         </Box>
+        
       </Center>
+      <Flex>
+          {showVirtualKeyboard && (
+            <Box paddingTop='8' width = "100%">
+              <img src='https://images.squarespace-cdn.com/content/v1/53290cd2e4b091b8426b546b/1464209884334-7JR5209WDZ6O9CE36DJC/korean+keyboard+QWERTY?format=1000w' />
+            </Box>
+          )}
+          </Flex>
     </>
   );
 };

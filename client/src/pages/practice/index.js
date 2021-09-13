@@ -6,8 +6,6 @@ import {
   VStack,
   Text,
   Wrap,
-  WrapItem,
-  Button,
   Image,
   Box,
   Divider,
@@ -21,7 +19,7 @@ const sampleData = [
   {
     name: 'Letters',
     img: '/images/Letters.png',
-    dscrpt: 'Practice your korean letters on the keyboard!',
+    dscrpt: 'Practice the alphabets on keyboard!',
     subExercises: [
       { name: 'Left Hand', slug: 'test', disabled: false, description: "Practice your consonants!"},
       { name: 'Right Hand', slug: 'test', disabled: false, description: "Practice your vowels!"},
@@ -34,17 +32,24 @@ const sampleData = [
   {
     name: 'Syllables',
     img: '/images/Syllable.png',
+    dscrpt: 'Create words using the letters introduced in previous module!',
     subExercises: [
-      { name: 'C + V', slug: 'test', disabled: false },
-      { name: 'Shift C + V', slug: 'test', disabled: false },
-      { name: 'C + V + C', slug: 'test', disabled: false },
-      { name: 'Shift C + V + C', slug: 'test', disabled: false },
-      { name: 'C + V + CC', slug: 'test', disabled: false },
+      { name: 'C + V', slug: 'test', disabled: false, 
+        description: "This exercise will focus on words with a consonant and a vowel."},
+      { name: 'Shift C + V', slug: 'test', disabled: false, 
+        description: "This exercise will focus on words with a double consontant and a vowel."},
+      { name: 'C + V + C', slug: 'test', disabled: false,
+        description: "This exercise will focus on words with a consonant, a vowel, then another consonant." },
+      { name: 'Shift C + V + C', slug: 'test', disabled: false,
+        description: "This exercise will focus on words with a double consonant, a vowel, then a consonant." },
+      { name: 'C + V + CC', slug: 'test', disabled: false,
+        description: "This exercise will focus on words with a consonant, a vowel, then followed by two consonants." },
     ],
   },
   {
     name: 'Words',
     img: '/images/Words.png',
+    dscrpt: 'Practice basic Korean words!',
     subExercises: [
       { name: '2 Syllables With Ending Consonant', slug: 'test', disabled: false },
       { name: '2 Syllables Without Ending Consonant', slug: 'test', disabled: false },
@@ -56,25 +61,30 @@ const sampleData = [
   {
     name: 'Short Sentences',
     img: '/images/Short-Sentences.png',
+    dscrpt: 'Learn these basic Korean phrases!',
     subExercises: [
-      { name: 'Complete', slug: 'test', disabled: false }
+      { name: 'Short Sentences', slug: 'test', disabled: false }
     ],
   },
   {
     name: 'Long Sentences',
     img: '/images/Long-Sentences.png',
+    dscrpt: 'Feeling confident with your progress so far? Attempt this module to expand your horizon!',
     subExercises: [
-      { name: 'Complete', slug: 'test', disabled: false }
+      { name: 'Long Sentences', slug: 'test', disabled: false }
     ],
   },
   {
     name: 'Diction',
     img: '/images/Dictation.png',
-    dscrpt: 'Description',
+    dscrpt: 'Practice your listening skills!',
     subExercises: [
-      { name: 'Word Dictation', slug: 'test', disabled: false },
-      { name: 'Short Sentence Dictation', slug: 'test', disabled: false },
-      { name: 'Long Sentence Dictation', slug: 'test', disabled: false },
+      { name: 'Dictation', slug: 'test', disabled: false, 
+        description: 'Practice listening to words!'},
+      { name: 'Short Sentence Dictation', slug: 'test', disabled: false, 
+        description: 'Practice listening to short sentences!' },
+      { name: 'Long Sentence Dictation', slug: 'test', disabled: false, 
+        description: 'Practice listening to long sentences!'},
       
     ],
   },

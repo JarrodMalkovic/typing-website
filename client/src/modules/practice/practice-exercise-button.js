@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import {
   VStack,
-  HStack,
   Text,
   WrapItem,
   Button,
@@ -10,13 +9,11 @@ import {
   Modal,
   ModalOverlay,
   Box,
-  Flex,
   Center,
   ModalContent,
   ModalCloseButton,
   ModalBody,
   ModalFooter,
-  useColorModeValue,
   ModalHeader,
   useDisclosure,
   Container,
@@ -40,7 +37,7 @@ const PracticeExerciseButton = ({ name,img, subExercises,dscrpt }) => {
         <VStack>
           
           <Container padding = "20px" maxW="container.lg" _hover={{
-                                  color: "teal.500",
+                                  color: "#39aae1",
                                 }}>
             <Image src = {img} boxSize="150px"/>
             <Text mt="10px" fontWeight =  "bold" fontSize = "xl">{name}</Text>
