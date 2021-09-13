@@ -2,10 +2,22 @@ import * as React from 'react';
 
 import { Flex, Text } from '@chakra-ui/react';
 
+
+const stylesCss = {
+  center: {
+    display: " -webkit-box",
+    "-webkit-box-align": "center",
+    "-webkit-box-pack": "center",
+  },
+  textCenter: {
+    textAlign: 'center'
+  }
+}
+
 const Step1 = (
   <Flex>
     <Text>
-      Click on the ‘’magnifying glass icon’’ or ‘’Search Windows box’’ on the left side of your taskbar. (If you can’t find it, right-click on the taskbar and choose Search -> Show search icon).
+      Click on the ‘’magnifying glass icon’’ or ‘’Search Windows box’’ on the left side of your taskbar. (If you can’t find it, right-click on the taskbar and choose Search -{'>'} Show search icon).
     </Text>
   </Flex>
 );
@@ -19,17 +31,21 @@ const Step2 = (
 );
 
 const Step3 = (
-  <Flex>
-    <Text>
+  <div>
+    <div style={stylesCss.center}>
+      <Flex>
+
+        <img src="/images/windows 1.png" height={500} width={500} />
+        <img src="/images/windows 2.png" height={500} width={500} />
+      </Flex>
+    </div>
+
+    <div style={stylesCss.textCenter}>
       Under “Region & language” tab click the “+ Add a language”.
-               
+
       In "ADD A LANGUAGE" settings choose “한국어 Korean” or any other language you desire.
-    </Text>
-               
-    <img src="/images/windows 1.png" height={500} width={500}/>
-               
-    <img src="/images/windows 2.png" height={500} width={500}/>
-  </Flex>
+    </div>
+  </div>
 );
 
 const Step4 = (
@@ -42,9 +58,9 @@ const Step4 = (
 
 const windowsSteps = [
   { label: 'Step 1', description: 'Starting', content: Step1 },
-  { label: 'Step 2', description: 'Setting', content: Step2 },
-  { label: 'Step 3', description: 'Setting', content: Step3 },
-  { label: 'Step 4', description: 'final', content: Step4 },
+  { label: 'Step 2', description: 'Add a language', content: Step2 },
+  { label: 'Step 3', description: 'Set Korean keyboard', content: Step3 },
+  { label: 'Step 4', description: 'Congratulation', content: Step4 },
 ];
 
 export { windowsSteps };

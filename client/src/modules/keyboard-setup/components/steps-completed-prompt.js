@@ -6,7 +6,7 @@ import {
   Input,
   Stack,
   Text,
-  VStack,
+  VStack, Button,
   useColorModeValue,
 } from '@chakra-ui/react';
 
@@ -24,7 +24,7 @@ const StepsCompletedPrompt = ({ os }) => {
       ? setIsKoreanText(Boolean(lastKeyPressed.match(HANGUL_REGEX)))
       : setIsKoreanText(null);
   };
-
+  // 노ㅕㅑㅗㅕㅜ
   return (
     <Box>
       <Confetti numberOfPieces={500} gravity={0.1} recycle={false} />
@@ -35,7 +35,7 @@ const StepsCompletedPrompt = ({ os }) => {
         {isKoreanText !== null ? (
           isKoreanText ? (
             <Text>
-              Everything looks setup correctly! Have fun practicing your korean
+              Your keyboard is all setup! Have fun practicing your korean
               typing skills!
             </Text>
           ) : (
@@ -60,6 +60,16 @@ const StepsCompletedPrompt = ({ os }) => {
             <Input onChange={handleChange} />
           </Stack>
         </Box>
+
+        {
+          isKoreanText &&
+          <Button >
+            <a href="/practice">
+
+              Continue
+            </a>
+          </Button>
+        }
       </VStack>
     </Box>
   );

@@ -55,7 +55,10 @@ const Setup = () => {
   }, [os]);
 
   return (
-    <Container pt="8" maxW="container.xl">
+    <Container pt="8" maxW="container.xl" style={{
+      height: 'calc(100vh - 210px)',
+      position: 'relative'
+    }}>
       <VStack spacing={5} width="100%" align="stretch">
         {os ? (
           <>
@@ -71,6 +74,11 @@ const Setup = () => {
             {activeStep === steps.length && (
               <StepsCompletedPrompt os={os} reset={reset} />
             )}
+            <div style={{
+              position: 'absolute',
+              bottom: '-50px',
+              width: 'calc( 100% -  50px )'
+            }}>
             <Flex>
               <ChangeOsMenu setOs={setOs} resetSteps={reset} />
               <Spacer />
@@ -81,6 +89,7 @@ const Setup = () => {
                 prevStep={prevStep}
               />
             </Flex>
+            </div>
           </>
         ) : (
           <Center>
