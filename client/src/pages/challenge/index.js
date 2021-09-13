@@ -16,14 +16,23 @@ import NextLink from 'next/link';
 
 const Challenge = () => {
   return (
-    <Box position="relative">
+
+//     <Box
+//   bgImage="url('/images/gaara.png')"
+//   bgPosition="center"
+//   bgRepeat="no-repeat"
+// />
+
+    
+    <Box position="relative" mt = {10}>
+
       <VStack spacing={5} width="100%">
-        <Image
+        {/* <Image
           minW="full"
           opacity="30%"
           linear-gradient="(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.25))"
           src="/images/Basic.png"
-        />
+        /> */}
         <Heading position="absolute" top={0}>
           Challenge Mode
         </Heading>
