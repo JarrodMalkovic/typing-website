@@ -94,7 +94,7 @@ const PracticeExerciseButton = ({ name,img, subExercises,dscrpt }) => {
                                 justify
                                 margin = "10px"
                                 _hover={{
-                                  color: "teal.500",
+                                  color: "#39aae1",
                                 }}>
                                 Begin
                               </Button>
