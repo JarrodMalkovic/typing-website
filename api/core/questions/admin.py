@@ -1,6 +1,4 @@
 from django.contrib import admin
-from .models import Question, PracticeAttempt, ChallengeAttempt
+from .models import Question
 
 admin.site.register(Question)
-admin.site.register(PracticeAttempt)
-admin.site.register(ChallengeAttempt)

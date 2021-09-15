@@ -8,7 +8,8 @@ import PropTypes from 'prop-types';
 import theme from '../theme';
 import AuthProvider from '../modules/auth/context/auth-context';
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { Hydrate, Hyrade } from 'react-query/hydration';
+import { Hydrate } from 'react-query/hydration';
+import '../common/styles/index.css';
 
 const MyApp = ({ Component, pageProps }) => {
   const [queryClient] = React.useState(() => new QueryClient());

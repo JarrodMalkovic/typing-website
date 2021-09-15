@@ -2,6 +2,7 @@ const exercises = {
   letters: {
     name: 'Letters',
     slug: 'letters',
+    img: '/images/Letters.png',
     subexercises: [
       { slug: 'basic-left-hand', name: 'Basic Left Hand' },
       { slug: 'basic-right-hand', name: 'Basic Right Hand' },
@@ -14,6 +15,7 @@ const exercises = {
   syllables: {
     name: 'Syllables',
     slug: 'syllables',
+    img: '/images/Syllable.png',
     subexercises: [
       {
         slug: 'consonant-vowel',
@@ -40,6 +42,7 @@ const exercises = {
   words: {
     name: 'Words',
     slug: 'words',
+    img: '/images/Words.png',
     subexercises: [
       {
         slug: 'two-syllables-without-ending-consonant',
@@ -66,16 +69,19 @@ const exercises = {
   'short-sentences': {
     name: 'Short Sentences',
     slug: 'short-sentences',
+    img: '/images/Short-Sentences.png',
     subexercises: [{ name: 'Short Sentences', slug: 'short-sentences' }],
   },
   'long-sentences': {
     name: 'Long Sentences',
     slug: 'long-sentences',
+    img: '/images/Long-Sentences.png',
     subexercises: [{ name: 'Long Sentences', slug: 'long-sentences' }],
   },
   diction: {
     name: 'Diction',
     slug: 'diction',
+    img: '/images/Dictation.png',
     subexercises: [
       { slug: 'word-diction', name: 'Word Diction' },
       { slug: 'short-sentence-diction', name: 'Short Sentence Diction' },
