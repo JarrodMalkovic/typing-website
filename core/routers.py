@@ -1,5 +1,5 @@
 from core.practice.views import PracticeAttemptAPIView
-from core.questions.views import QuestionSubexerciseAPIView, QuestionIdAPIView, QuestionExerciseAPIView, QuestionAPIView, QuestionSubexerciseOrderedAPIView
+from core.questions.views import QuestionSubexerciseAPIView, QuestionIdAPIView, QuestionExerciseAPIView, QuestionAPIView, QuestionSubexerciseOrderedAPIView, QuestionSubexerciseAttemptAPIView
 from core.challenge.views import ChallengeAPIView, ChallengeAttemptsAPIView
 from rest_framework.routers import SimpleRouter
 from core.auth.viewsets import LoginViewSet, RegistrationViewSet, RefreshViewSet, CurrentUserViewSet
@@ -19,6 +19,7 @@ urlpatterns = [
     path('questions/subexercise/<slug:subexercise>/',
          QuestionSubexerciseAPIView.as_view()),
     path('questions/<int:id>/', QuestionIdAPIView.as_view()),
+    path('practice/attempt/', QuestionSubexerciseAttemptAPIView.as_view()),
     path('questions/', QuestionAPIView.as_view()),
     path('questions/exercise/<slug:exercise>/',
          QuestionExerciseAPIView.as_view()),
