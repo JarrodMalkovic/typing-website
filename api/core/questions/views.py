@@ -1,6 +1,8 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
+from rest_framework import permissions
 from rest_framework.exceptions import APIException
 from rest_framework.views import APIView
-from .serializers import QuestionSerializer, GetQuestionsSerializer
+from .serializers import QuestionSerializer, PracticeAttemptSerializer, GetQuestionsSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Question
@@ -9,7 +11,6 @@ from core.subexercises.models import Subexercise
 from rest_framework.parsers import MultiPartParser, JSONParser
 import cloudinary.uploader
 from django.shortcuts import get_object_or_404
-from rest_framework import permissions
 
 
 class QuestionSubexerciseAPIView(APIView):
@@ -176,3 +177,37 @@ class QuestionAPIView(APIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# /api/questions/subexercise/attempt
+# OR /api/practice/attempt
+
+
+class QuestionSubexerciseAttemptAPIView(LoginRequiredMixin, APIView):
+    # POST - Saves a users attempt for a given subexercisie - Auth Required
+    def post(self, request):
+        serializer = PracticeAttemptSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# /api/questions/subexercise/<slug:subexercise>/attempts
+# OR /api/practice/subexercise/<slug:subexercise>/attempts
+
+
+class QuestionSubexerciseAttemptsAPIView(APIView):
+
+    # GET - Returns a users attempts for a given subexercise - Auth Required
+    def get(self, request, subexercise):
+        return Response()
+
+# /api/questions/exercise/<slug:exercise>/attempts
+# OR /api/practice/exercise/<slug:exercise>/attempts
+
+
+class QuestionExerciseAttemptAPIView(APIView):
+    # GET - Returns a users attempts for a given exercise - Auth Required
+    def get(self, request, exercise):
+        return Response()

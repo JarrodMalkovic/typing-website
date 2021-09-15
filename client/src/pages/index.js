@@ -10,15 +10,19 @@ import {
 } from '@chakra-ui/react';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
 import Link from 'next/link';
+import { useAuth } from '../modules/auth/hooks/use-auth';
 
 const Home = (props) => {
+  const { state } = useAuth();
+
   return (
     <Box>
       <VStack spacing={5} width="100%">
         <Box position="relative">
           <Image
             minW="full"
-            opacity="90%"
+            opacity="70%"
+            linear-gradient="(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.25))"
             src={useColorModeValue(
               '/images/HomeDay.png',
               '/images/HomeNight.png',
@@ -39,17 +43,21 @@ const Home = (props) => {
             position="absolute"
             fontSize="6vw"
             fontWeight="bold"
-            top="30%"
+            top="40%"
             left="5%"
             trasnform="translate(-50% -50%)"
             textColor="white">
-            {props.username}
+            {state.isAuthenticated ? state.username : ''}
           </Text>
           <Link href="/menu">
             <Button
-              bgColor="blue.400"
+              bgColor="rgba(200,16,46,0.7)"
+              position="absolute"
+              top="60%"
+              left="6%"
+              size="lg"
               _hover={{
-                bg: 'blue.500',
+                bg: 'rgba(0,47,108,0.7)',
               }}
               color="white"
               rightIcon={<ArrowForwardIcon />}>

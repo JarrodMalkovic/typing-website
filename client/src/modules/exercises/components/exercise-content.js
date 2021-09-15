@@ -70,7 +70,6 @@ const ExerciseContent = ({
   }, [skipRender]);
 
   const handleChange = (event) => {
-    console.log(event.target.value);
     setWord(event.target.value);
   };
 

@@ -2,12 +2,15 @@ import * as React from 'react';
 
 import {
   VStack,
+  HStack,
   Text,
   WrapItem,
   Button,
   Image,
   Modal,
   ModalOverlay,
+  Box,
+  Flex,
   Center,
   ModalContent,
   ModalCloseButton,
@@ -16,6 +19,12 @@ import {
   ModalFooter,
   ModalHeader,
   useDisclosure,
+  Container,
+  Accordion,
+  AccordionItem,
+  AccordionButton,
+  AccordionPanel,
+  AccordionIcon,
 } from '@chakra-ui/react';
 import Link from 'next/link';
 import PropTypes from 'prop-types';
@@ -61,33 +70,56 @@ const PracticeExerciseButton = ({ name, img, slug }) => {
           </Center>
         </VStack>
       </WrapItem>
+
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>
+          <ModalHeader fontSize="30px">
             <Center>{name}</Center>
           </ModalHeader>
+          <ModalBody></ModalBody>
           <ModalCloseButton />
           <ModalBody>
-            <VStack spacing="3">
-              {isLoading || !data ? (
-                <Center>
-                  <Spinner />
-                </Center>
-              ) : (
-                data.map((subExercise, idx) => (
-                  <Link
-                    key={subExercise.subexercise_slug}
-                    href={`/practice/${subExercise.subexercise_slug}`}>
-                    <Button
-                      disabled={isSubexerciseDisabled(data, subExercise, idx)}
-                      width="100%">
-                      {subExercise.subexercise_name}
-                    </Button>
-                  </Link>
-                ))
-              )}
-            </VStack>
+            {isLoading || !data ? (
+              <Center>
+                <Spinner />
+              </Center>
+            ) : (
+              <Accordion allowToggle>
+                {data.map((subExercise, idx) => (
+                  <AccordionItem
+                    isDisabled={isSubexerciseDisabled(data, subExercise, idx)}>
+                    <h2>
+                      <AccordionButton>
+                        <Box flex="1" textAlign="left">
+                          {subExercise.subexercise_name}
+                        </Box>
+                        <AccordionIcon />
+                      </AccordionButton>
+                    </h2>
+                    <AccordionPanel>
+                      <Box textAlign="center" padding="0px 20px">
+                        Placeholder description
+                        <Link
+                          href={`/practice/${subExercise.subexercise_slug}`}>
+                          <Button
+                            width="50%"
+                            flex="1"
+                            textAlign="left"
+                            justify
+                            margin="10px"
+                            _hover={{
+                              color: 'teal.500',
+                            }}>
+                            Begin
+                          </Button>
+                        </Link>
+                      </Box>
+                    </AccordionPanel>
+                  </AccordionItem>
+                ))}
+              </Accordion>
+            )}
           </ModalBody>
           <ModalFooter />
         </ModalContent>
@@ -103,4 +135,62 @@ PracticeExerciseButton.propTypes = {
   slug: PropTypes.string,
 };
 
+// {/* <Link
+//                   key={subExercise.subexercise_slug}
+//                   href={`/practice/${subExercise.subexercise_slug}`}>
+//                   <Button
+//                     disabled={isSubexerciseDisabled(data, subExercise, idx)}
+//                     width="100%">
+//                     {subExercise.subexercise_name}
+//                   </Button>
+//                 </Link> */}
+
 export default PracticeExerciseButton;
+{
+  /* <VStack margin = "10px">
+{subExercises.map((subExercise) => (
+  <>
+    <Accordion 
+      allowMultiple
+      allowToggle 
+      width="90%"
+      >
+      <AccordionItem>  
+
+        <h2>
+          <AccordionButton width="100%">
+            <Box flex="1" textAlign="left" fontWeight = "bold">
+              {subExercise.name}
+            </Box>
+            <AccordionIcon />
+          </AccordionButton>
+        </h2>
+          
+       
+
+        <AccordionPanel pb={4} textAlign = "center">
+          
+          <Box textAlign = "center" padding = "0px 20px">{subExercise.description}</Box>
+          
+
+          <Link href={`/practice/${subExercise.slug}`}>
+                <Button
+                  disabled={subExercise.disabled} 
+                  width="50%" 
+                  flex = "1" 
+                  textAlign = "left"
+                  justify
+                  margin = "10px"
+                  _hover={{
+                    color: "teal.500",
+                  }}>
+                  Begin
+                </Button>
+            </Link>
+
+        </AccordionPanel>
+      </AccordionItem>
+    </Accordion>
+  </> 
+))} */
+}

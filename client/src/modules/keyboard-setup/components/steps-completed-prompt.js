@@ -17,34 +17,34 @@ import PropTypes from 'prop-types';
 const StepsCompletedPrompt = ({ os }) => {
   const [isKoreanText, setIsKoreanText] = React.useState(null);
 
-  const handleChange = event => {
+  const handleChange = (event) => {
     const lastKeyPressed = event.target.value[event.target.value.length - 1];
 
     lastKeyPressed
       ? setIsKoreanText(Boolean(lastKeyPressed.match(HANGUL_REGEX)))
       : setIsKoreanText(null);
   };
-
+  //Make Confetti cover thr whole screen!!!!
   return (
     <Box>
       <Confetti numberOfPieces={500} gravity={0.1} recycle={false} />
       <VStack>
-        <Heading as='h2' size='md'>
+        <Heading as="h2" size="md" position="relative" top="200px">
           Woohoo! You have completed the keyboard setup instructions for {os} 🥳
         </Heading>
         {isKoreanText !== null ? (
           isKoreanText ? (
-            <Text>
+            <Text position="relative" top="200px">
               Everything looks setup correctly! Have fun practicing your korean
               typing skills!
             </Text>
           ) : (
-            <Text>
+            <Text position="relative" top="200px">
               Oh no! Looks like the was an error setting up your keyboard 😞
             </Text>
           )
         ) : (
-          <Text>
+          <Text position="relative" top="200px">
             Type in the text box below to check your keyboard is setup properly!
           </Text>
         )}
@@ -55,7 +55,9 @@ const StepsCompletedPrompt = ({ os }) => {
           boxShadow={'lg'}
           paddingBottom={4}
           px={4}
-          paddingTop={4}>
+          paddingTop={4}
+          position="relative"
+          top="200px">
           <Stack spacing={4}>
             <Input onChange={handleChange} />
           </Stack>
