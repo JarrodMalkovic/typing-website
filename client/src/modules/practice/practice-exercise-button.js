@@ -12,29 +12,53 @@ import {
   ModalContent,
   ModalCloseButton,
   ModalBody,
+  Spinner,
   ModalFooter,
-  useColorModeValue,
   ModalHeader,
   useDisclosure,
-  Container,
 } from '@chakra-ui/react';
-
 import Link from 'next/link';
-
 import PropTypes from 'prop-types';
+import { useQuery } from 'react-query';
+import axios from 'axios';
+import { BASE_API_URL } from '../../common/contstants/base-api-url';
 
-const PracticeExerciseButton = ({ name,img, subExercises }) => {
+const isSubexerciseDisabled = (subexercises, subexercise, idx) => {
+  if (subexercise.attempt) return false;
+  if (subexercise.level === 1) return false;
+  if (subexercises[idx - 1] && subexercises[idx - 1].attempt) return false;
+
+  return true;
+};
+
+const getSubexercises = async (slug) => {
+  const res = await axios.get(
+    `${BASE_API_URL}/api/subexercises/exercise/${slug}/`,
+  );
+
+  return res.data;
+};
+
+const PracticeExerciseButton = ({ name, img, slug }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { data, isLoading, isFetching } = useQuery(
+    slug,
+    () => getSubexercises(slug),
+    {
+      enabled: isOpen,
+    },
+  );
 
   return (
     <>
-      <WrapItem onClick={onOpen} as="button">
-        <VStack>
-          
-          <Container padding = "20px" maxW="container.lg">
-            <Image src = {img} boxSize="150px"/>
-            <Text mt="10px" fontWeight =  "bold" fontSize = "xl">{name}</Text>
-          </Container>
+      <WrapItem paddingX="50px">
+        <VStack onClick={onOpen} as="button">
+          <Image src={img} boxSize="135px" />
+          <Center>
+            <Text mt="10px" width="130px" fontWeight="bold" fontSize="xl">
+              {name}
+            </Text>
+          </Center>
         </VStack>
       </WrapItem>
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
@@ -46,15 +70,23 @@ const PracticeExerciseButton = ({ name,img, subExercises }) => {
           <ModalCloseButton />
           <ModalBody>
             <VStack spacing="3">
-              {subExercises.map((subExercise) => (
-                <Link
-                  key={subExercise.slug}
-                  href={`/practice/${subExercise.slug}`}>
-                  <Button disabled={subExercise.disabled} width="100%">
-                    {subExercise.name}
-                  </Button>
-                </Link>
-              ))}
+              {isLoading || !data ? (
+                <Center>
+                  <Spinner />
+                </Center>
+              ) : (
+                data.map((subExercise, idx) => (
+                  <Link
+                    key={subExercise.subexercise_slug}
+                    href={`/practice/${subExercise.subexercise_slug}`}>
+                    <Button
+                      disabled={isSubexerciseDisabled(data, subExercise, idx)}
+                      width="100%">
+                      {subExercise.subexercise_name}
+                    </Button>
+                  </Link>
+                ))
+              )}
             </VStack>
           </ModalBody>
           <ModalFooter />
@@ -67,6 +99,8 @@ const PracticeExerciseButton = ({ name,img, subExercises }) => {
 PracticeExerciseButton.propTypes = {
   name: PropTypes.string,
   subExercises: PropTypes.array,
+  img: PropTypes.string,
+  slug: PropTypes.string,
 };
 
 export default PracticeExerciseButton;
