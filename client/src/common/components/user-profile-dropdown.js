@@ -53,11 +53,24 @@ const UserProfileDropdown = () => {
           <Link href="/profile/username">
             <MenuItem>Profile</MenuItem>
           </Link>
-          <Link href="/dashboard">
-            <MenuItem>Admin Dashboard</MenuItem>
-          </Link>
           <Link href="/past-attempts">
             <MenuItem>Past Attempts</MenuItem>
+          </Link>
+          <Link href="/leaderboard">
+            <MenuItem>Leaderboard</MenuItem>
+          </Link>
+          <Link href="/settings">
+            <MenuItem>Settings</MenuItem>
+          </Link>
+          <MenuDivider />
+          <Link href="/dashboard">
+            <MenuItem>Exercise Dashboard</MenuItem>
+          </Link>
+          <Link href="/statistics">
+            <MenuItem>Exercise Statistics</MenuItem>
+          </Link>
+          <Link href="/users">
+            <MenuItem>User Management</MenuItem>
           </Link>
           <MenuDivider />
           <MenuItem onClick={logout}>Sign out</MenuItem>

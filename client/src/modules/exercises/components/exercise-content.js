@@ -13,7 +13,7 @@ import {
   Text,
   useColorModeValue,
 } from '@chakra-ui/react';
-
+import { useRouter } from 'next/router';
 import DisplayExerciseHelpModalButton from './display-exercise-help-modal-button';
 import DisplayVirtualKeyboardButton from './display-virtual-keyboard-button';
 import PropTypes from 'prop-types';
@@ -21,33 +21,66 @@ import { showTextDifference } from '../utils/show-text-difference';
 import Timer from '../../../common/components/timer';
 import WPM from './wpm';
 import { calculateAccuracy } from '../utils/calculate-accuracy';
+import VirtualKeyboard from './virtual-keyboard';
 
 const ExerciseContent = ({
   setCurrentQuestionIndex,
   currentQuestionIndex,
-  sampleExercise,
+  questions,
   startDate,
   wordsTyped,
   setWordsTyped,
   accuracy,
+  exercise,
   setAccuracy,
 }) => {
   const inputRef = React.useRef();
-
   const [word, setWord] = React.useState('');
   const [showVirtualKeyboard, setShowVirtualKeyboard] = React.useState(false);
+  const [skipRender, setSkipRender] = React.useState(true);
+
+  React.useEffect(() => {
+    if (skipRender) {
+      return setSkipRender(false);
+    }
+
+    if (!exercise) {
+      return;
+    }
+
+    localStorage.setItem(`${exercise}-accuracy`, accuracy);
+    localStorage.setItem(`${exercise}-words-typed`, wordsTyped);
+    localStorage.setItem(
+      `${exercise}-current-question-index`,
+      currentQuestionIndex,
+    );
+    localStorage.setItem(`${exercise}-time-elapsed`, new Date() - startDate);
+  }, [currentQuestionIndex, accuracy, wordsTyped]);
+
+  React.useEffect(() => {
+    if (skipRender) {
+      return;
+    }
+
+    const interval = setInterval(() => {
+      localStorage.setItem(`${exercise}-time-elapsed`, new Date() - startDate);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [skipRender]);
 
   const handleChange = (event) => {
+    console.log(event.target.value);
     setWord(event.target.value);
   };
 
   const handleKeyDown = (event) => {
-    if (event.key === 'Enter' && currentQuestionIndex < sampleExercise.length) {
+    if (event.key === 'Enter' && currentQuestionIndex < questions.length) {
       event.preventDefault();
 
       const currentQuestionAccuracy = calculateAccuracy(
         word,
-        sampleExercise[currentQuestionIndex].words,
+        questions[currentQuestionIndex].question,
       );
 
       setAccuracy(
@@ -59,6 +92,7 @@ const ExerciseContent = ({
       );
 
       setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setWordsTyped(wordsTyped + 1);
       setWord('');
     }
 
@@ -74,11 +108,15 @@ const ExerciseContent = ({
   return (
     <>
       <Stack align={'center'}>
-        <Heading fontSize={'4xl'}>Type the following in Korean </Heading>
+        <Center>
+          <Heading textAlign="center" fontSize={'4xl'}>
+            Type the following in Korean{' '}
+          </Heading>
+        </Center>
         <Text
           fontSize={'2xl'}
           color={useColorModeValue('gray.600', 'gray.200')}>
-          {showTextDifference(word, sampleExercise[currentQuestionIndex].words)}
+          {showTextDifference(word, questions[currentQuestionIndex].question)}
         </Text>
       </Stack>
       <Center>
@@ -128,19 +166,15 @@ const ExerciseContent = ({
               />
             </ButtonGroup>
           </Flex>
-          {showVirtualKeyboard && (
-            <Box paddingTop="8">
-              <img src="https://images.squarespace-cdn.com/content/v1/53290cd2e4b091b8426b546b/1464209884334-7JR5209WDZ6O9CE36DJC/korean+keyboard+QWERTY?format=1000w" />
-            </Box>
-          )}
         </Box>
       </Center>
+      {showVirtualKeyboard && <VirtualKeyboard inputRef={inputRef} />}
     </>
   );
 };
 
 ExerciseContent.propTypes = {
-  sampleExercise: PropTypes.object,
+  questions: PropTypes.object,
   currentQuestionIndex: PropTypes.string,
   setCurrentQuestionIndex: PropTypes.function,
   startDate: PropTypes.object,
@@ -148,6 +182,7 @@ ExerciseContent.propTypes = {
   setWordsTyped: PropTypes.func,
   accuracy: PropTypes.number,
   setAccuracy: PropTypes.func,
+  exercise: PropTypes.func,
 };
 
 export default ExerciseContent;
