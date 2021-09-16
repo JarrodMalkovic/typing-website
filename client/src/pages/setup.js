@@ -12,6 +12,7 @@ import {
   Image,
 } from '@chakra-ui/react';
 import {
+  kk,
   LINUX,
   MAC,
   WINDOWS,
