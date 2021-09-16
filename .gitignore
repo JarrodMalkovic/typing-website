@@ -19,6 +19,7 @@ build
 .DS_Store
 *.pem
 .Rhistory
+postgres-data
 
 # debug
 npm-debug.log*
