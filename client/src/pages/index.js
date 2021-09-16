@@ -25,7 +25,7 @@ const Home = (props) => {
       <VStack spacing={5} width="100%">
         <Box position="relative">
           <Image
-            minW="full"
+            maxW="100vw"
             opacity="70%"
             linear-gradient="(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.25))"
             src={useColorModeValue(
@@ -40,8 +40,7 @@ const Home = (props) => {
             fontFamily="Homepage"
             top="20%"
             left="5%"
-            transform="translate(-50% -50%)"
-            textColor="white">
+            transform="translate(-50% -50%)">
             안녕하십니까
           </Text>
           <Text
@@ -56,13 +55,13 @@ const Home = (props) => {
           </Text>
           <Link href="/menu">
             <Button
-              bgColor="rgba(200,16,46,0.7)"
+              bgColor="rgba(57,170,225,0.7)"
               position="absolute"
               top="60%"
               left="6%"
               size="lg"
               _hover={{
-                bg: 'rgba(0,47,108,0.7)',
+                bg: 'rgba(200,16,46,0.7)',
               }}
               color="white"
               rightIcon={<ArrowForwardIcon />}>

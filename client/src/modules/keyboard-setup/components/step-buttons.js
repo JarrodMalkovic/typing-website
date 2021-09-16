@@ -8,13 +8,13 @@ const StepButtons = ({ numSteps, activeStep, nextStep, prevStep }) => {
   return (
     <ButtonGroup>
       <Button
-        size='sm'
-        variant='ghost'
+        size="sm"
+        variant="ghost"
         isDisabled={activeStep === 0}
         onClick={prevStep}>
         Prev
       </Button>
-      <Button size='sm' onClick={nextStep} disabled={numSteps === activeStep}>
+      <Button size="sm" onClick={nextStep} disabled={numSteps === activeStep}>
         Next
       </Button>
     </ButtonGroup>
