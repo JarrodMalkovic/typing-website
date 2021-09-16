@@ -51,7 +51,9 @@ INSTALLED_APPS = [
     'core.user',
     'core.exercises',
     'core.subexercises',
-    'core.questions'
+    'core.questions',
+    'core.challenge',
+    'core.practice'
 ]
 
 MIDDLEWARE = [
