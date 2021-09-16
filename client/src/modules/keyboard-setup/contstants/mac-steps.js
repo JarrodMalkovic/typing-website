@@ -1,75 +1,79 @@
 import * as React from 'react';
 
-import { Flex, Text } from '@chakra-ui/react';
-
-const stylesCss = {
-  center: {
-    display: " -webkit-box",
-    "-webkit-box-align": "center",
-    "-webkit-box-pack": "center",
-  },
-  textCenter: {
-    textAlign: 'center'
-  },
-  img:{
-    height:'400px',
-  }
-}
-
+import {
+  Flex,
+  Text,
+  Image,
+  Box,
+  Divider,
+  Container,
+  Heading,
+  Wrap,
+} from '@chakra-ui/react';
+//Need to have the image centered and have the have the step counter underneath it not have an absolute position on the page
+//Someho need to have it react to how big the container in the content is??????
 const Step1 = (
-  <div >
-    <div style={stylesCss.center}>
-      <img src="/images/mac 1.jpg" height={500} width={500} style={stylesCss.img} />
-    </div>
-    <div style={stylesCss.textCenter}>
-      <Text>
+  <Wrap position="absolute" justify="center">
+    <Image src="/images/mac 1.jpg" minW="40%" mawW="40%" height={300} />
+    <Divider></Divider>
+    <Container minW="60vw">
+      <Heading as="h2" size="md" textAlign="center">
         First click on the Apple logo in the upper left corner of the screen.
-      </Text>
-    </div>
-  </div>
+      </Heading>
+    </Container>
+  </Wrap>
 );
 
 const Step2 = (
-  <div>
-
-    <div style={stylesCss.center}>
-      <img src="/images/mac 2.jpg" height={500} width={500} style={stylesCss.img} />
-    </div>
-    <div style={stylesCss.textCenter}>
-      Select "System Preferences".
-    </div>
-  </div>
+  <Wrap position="absolute" justify="center">
+    <Image src="/images/mac 2.jpg" minW="40%" mawW="40%" height={300} />
+    <Divider></Divider>
+    <Container minW="60vw">
+      <Heading as="h2" size="md" textAlign="center">
+        Select "System Preferences"
+      </Heading>
+    </Container>
+  </Wrap>
 );
 
 const Step3 = (
-  <div>
-    <div style={stylesCss.center}>
-      <img src="/images/mac 3.jpg" height={300} width={500} style={stylesCss.img} />
-
-    </div>
-    <div style={stylesCss.textCenter}>
-      Select “Keyboard”, after opening "System Preferences", select "input Sources" and click on the "+" sign in the lower left corner.
-    </div>
-  </div>
+  <Wrap position="absolute" justify="center">
+    <Image src="/images/mac 3.jpg" minW="40%" mawW="40%" height={300} />
+    <Divider></Divider>
+    <Container minW="60vw">
+      <Heading as="h2" size="md" textAlign="center">
+        Select “Keyboard”, after opening "System Preferences", select "input
+        Sources" and click on the "+" sign in the lower left corner.
+      </Heading>
+    </Container>
+  </Wrap>
 );
 
 const Step4 = (
-  <div>
-    <div style={stylesCss.center}>
-      <img src="/images/mac 4.jpg" height={300} width={500} style={stylesCss.img} />
-    </div>
-    <div style={stylesCss.textCenter}>
-      In the pop-up input method list, select “Korean”, Then in the list of Korean input methods on the right, select the one you want to use, and then click "Add". We suggest you choose 2-Set Korean because it is the only national standard for Hangul keyboard.
-    </div>
-  </div>
+  <Wrap position="absolute" justify="center">
+    <Image src="/images/mac 4.jpg" minW="40%" mawW="40%" height={300} />
+    <Divider></Divider>
+    <Container minW="60vw">
+      <Heading as="h2" size="md" textAlign="center">
+        In the pop-up input method list, select “Korean”, Then in the list of
+        Korean input methods on the right, select the one you want to use, and
+        then click "Add". We suggest you choose 2-Set Korean because it is the
+        only national standard for Hangul keyboard.
+      </Heading>
+    </Container>
+  </Wrap>
 );
 
 const Step5 = (
-  <Flex>
-    <Text>
-      You can see that in the input method list on the left, the Korean input method has been added successfully.
-    </Text>
-  </Flex>
+  <Container minW="60vw">
+    <Divider></Divider>
+    <Heading as="h2" size="md" textAlign="center">
+      In the pop-up input method list, select “Korean”, Then in the list of
+      Korean input methods on the right, select the one you want to use, and
+      then click "Add". We suggest you choose 2-Set Korean because it is the
+      only national standard for Hangul keyboard.
+    </Heading>
+  </Container>
 );
 
 const macSteps = [
