@@ -7,7 +7,7 @@ import { ChevronDownIcon } from '@chakra-ui/icons';
 import PropTypes from 'prop-types';
 
 const ChangeOsMenu = ({ resetSteps, setOs }) => {
-  const handleClick = OS => {
+  const handleClick = (OS) => {
     resetSteps();
     setOs(OS);
   };
@@ -17,8 +17,8 @@ const ChangeOsMenu = ({ resetSteps, setOs }) => {
       {({ isOpen }) => (
         <>
           <MenuButton
-            size='sm'
-            variant='ghost'
+            size="sm"
+            variant="ghost"
             isActive={isOpen}
             as={Button}
             rightIcon={<ChevronDownIcon />}>
