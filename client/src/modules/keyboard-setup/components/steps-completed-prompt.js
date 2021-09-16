@@ -60,7 +60,6 @@ const StepsCompletedPrompt = ({ os }) => {
             <Input onChange={handleChange} />
           </Stack>
         </Box>
-
         {
           isKoreanText &&
           <Button >
