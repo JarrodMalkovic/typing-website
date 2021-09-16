@@ -68,7 +68,7 @@ const Setup = () => {
         {os ? (
           <>
             <Heading position="absolute">Setup Hangul Keyboard on {os}</Heading>
-            <Box position="absolute" minW="60%" maxW="60%">
+            <Box position="absolute" minW="60%" maxW="60%" textAlign="center">
               <Steps
                 activeStep={activeStep}
                 top="80px"
@@ -87,8 +87,10 @@ const Setup = () => {
                   </Step>
                 ))}
               </Steps>
-
-              <Flex top="700px" position="absolute">
+              {activeStep === steps.length && (
+                <StepsCompletedPrompt os={os} reset={reset} />
+              )}
+              <Flex top="500px" position="absolute">
                 <ChangeOsMenu setOs={setOs} resetSteps={reset} />
                 <Spacer />
                 <StepButtons
@@ -98,11 +100,6 @@ const Setup = () => {
                   prevStep={prevStep}
                 />
               </Flex>
-            </Box>
-            <Box position="absolute" top="40px" minW="100%" top="0px">
-              {activeStep === steps.length && (
-                <StepsCompletedPrompt os={os} reset={reset} />
-              )}
             </Box>
           </>
         ) : (

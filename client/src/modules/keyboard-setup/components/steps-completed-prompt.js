@@ -27,7 +27,13 @@ const StepsCompletedPrompt = ({ os }) => {
   //Make Confetti cover thr whole screen!!!!
   return (
     <Box>
-      <Confetti numberOfPieces={500} gravity={0.1} recycle={false} />
+      <Confetti
+        numberOfPieces={500}
+        gravity={0.1}
+        recycle={false}
+        position="absolute"
+        minW="100%"
+      />
       <VStack>
         <Heading as="h2" size="md" position="relative" top="200px">
           Woohoo! You have completed the keyboard setup instructions for {os} 🥳

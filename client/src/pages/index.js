@@ -1,13 +1,18 @@
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 
 import {
+  Container,
+  Heading,
   VStack,
   Image,
   Box,
   useColorModeValue,
   Text,
   Button,
+  Flex,
 } from '@chakra-ui/react';
+import { Grid, Row, Col } from 'react-bootstrap';
 import { ArrowForwardIcon } from '@chakra-ui/icons';
 import Link from 'next/link';
 import { useAuth } from '../modules/auth/hooks/use-auth';

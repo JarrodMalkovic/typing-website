@@ -29,5 +29,3 @@ services:
     environment:
       - DB_USER=postgres
       - POSTGRES_PASSWORD=development
-    volumes:
-      - ./postgres-data:/var/lib/postgresql/data

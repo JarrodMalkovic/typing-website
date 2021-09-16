@@ -1,79 +1,53 @@
 import * as React from 'react';
 
-import {
-  Flex,
-  Text,
-  Image,
-  Box,
-  Divider,
-  Container,
-  Heading,
-  Wrap,
-} from '@chakra-ui/react';
-//Need to have the image centered and have the have the step counter underneath it not have an absolute position on the page
-//Someho need to have it react to how big the container in the content is??????
+import { Flex, Text, Image } from '@chakra-ui/react';
+//Change img to React Image tags
 const Step1 = (
-  <Wrap position="absolute" justify="center">
-    <Image src="/images/mac 1.jpg" minW="40%" mawW="40%" height={300} />
-    <Divider></Divider>
-    <Container minW="60vw">
-      <Heading as="h2" size="md" textAlign="center">
-        First click on the Apple logo in the upper left corner of the screen.
-      </Heading>
-    </Container>
-  </Wrap>
+  <Flex>
+    <Text>
+      First click on the Apple logo in the upper left corner of the screen.
+    </Text>
+
+    <img src="/images/mac 1.jpg" height={500} width={500} position="relative" />
+  </Flex>
 );
 
 const Step2 = (
-  <Wrap position="absolute" justify="center">
-    <Image src="/images/mac 2.jpg" minW="40%" mawW="40%" height={300} />
-    <Divider></Divider>
-    <Container minW="60vw">
-      <Heading as="h2" size="md" textAlign="center">
-        Select "System Preferences"
-      </Heading>
-    </Container>
-  </Wrap>
+  <Flex>
+    <Text>Select "System Preferences".</Text>
+    <img src="/images/mac 2.jpg" height={500} width={500} />
+  </Flex>
 );
 
 const Step3 = (
-  <Wrap position="absolute" justify="center">
-    <Image src="/images/mac 3.jpg" minW="40%" mawW="40%" height={300} />
-    <Divider></Divider>
-    <Container minW="60vw">
-      <Heading as="h2" size="md" textAlign="center">
-        Select “Keyboard”, after opening "System Preferences", select "input
-        Sources" and click on the "+" sign in the lower left corner.
-      </Heading>
-    </Container>
-  </Wrap>
+  <Flex>
+    <Text>
+      Select “Keyboard”, after opening "System Preferences", select "input
+      Sources" and click on the "+" sign in the lower left corner.
+    </Text>
+    <img src="/images/mac 3.jpg" height={500} width={500} />
+  </Flex>
 );
 
 const Step4 = (
-  <Wrap position="absolute" justify="center">
-    <Image src="/images/mac 4.jpg" minW="40%" mawW="40%" height={300} />
-    <Divider></Divider>
-    <Container minW="60vw">
-      <Heading as="h2" size="md" textAlign="center">
-        In the pop-up input method list, select “Korean”, Then in the list of
-        Korean input methods on the right, select the one you want to use, and
-        then click "Add". We suggest you choose 2-Set Korean because it is the
-        only national standard for Hangul keyboard.
-      </Heading>
-    </Container>
-  </Wrap>
-);
-
-const Step5 = (
-  <Container minW="60vw">
-    <Divider></Divider>
-    <Heading as="h2" size="md" textAlign="center">
+  <Flex>
+    <Text>
       In the pop-up input method list, select “Korean”, Then in the list of
       Korean input methods on the right, select the one you want to use, and
       then click "Add". We suggest you choose 2-Set Korean because it is the
       only national standard for Hangul keyboard.
-    </Heading>
-  </Container>
+    </Text>
+    <img src="/images/mac 4.jpg" height={500} width={500} />
+  </Flex>
+);
+
+const Step5 = (
+  <Flex>
+    <Text>
+      You can see that in the input method list on the left, the Korean input
+      method has been added successfully.
+    </Text>
+  </Flex>
 );
 
 const macSteps = [
