@@ -64,10 +64,10 @@ const Step4 = (
 );
 
 const linuxSteps = [
-  { label: 'Step 1', description: 'Starting', content: Step1 },
-  { label: 'Step 2', description: 'Setting', content: Step2 },
-  { label: 'Step 3', description: 'Setting', content: Step3 },
-  { label: 'Step 4', description: 'Selecting', content: Step4 },
+  { label: 'Step 1', description: 'Installing Hangul', content: Step1 },
+  { label: 'Step 2', description: 'Navigating Settings', content: Step2 },
+  { label: 'Step 3', description: 'Setting Language', content: Step3 },
+  { label: 'Step 4', description: 'Selecting Hangul', content: Step4 },
 ];
 
 export { linuxSteps };

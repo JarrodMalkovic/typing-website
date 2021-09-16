@@ -8,6 +8,9 @@ import {
   Text,
   VStack,
   useColorModeValue,
+  Button,
+  Container,
+  Link,
 } from '@chakra-ui/react';
 
 import Confetti from 'react-confetti';
@@ -34,10 +37,21 @@ const StepsCompletedPrompt = ({ os }) => {
         </Heading>
         {isKoreanText !== null ? (
           isKoreanText ? (
-            <Text position="relative" top="200px">
-              Everything looks setup correctly! Have fun practicing your korean
-              typing skills!
-            </Text>
+            <Container>
+              <Text position="relative" top="200px">
+                Everything looks setup correctly! Have fun practicing your
+                korean typing skills!
+              </Text>
+              <Link href="/practice">
+                <Button
+                  top="400px"
+                  left="45vw"
+                  right="45vw"
+                  position="absolute">
+                  Continue to Practice!
+                </Button>
+              </Link>
+            </Container>
           ) : (
             <Text position="relative" top="200px">
               Oh no! Looks like the was an error setting up your keyboard 😞

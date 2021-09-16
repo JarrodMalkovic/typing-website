@@ -61,9 +61,9 @@ const Step4 = (
 
 const windowsSteps = [
   { label: 'Step 1', description: 'Starting', content: Step1 },
-  { label: 'Step 2', description: 'Setting', content: Step2 },
-  { label: 'Step 3', description: 'Setting', content: Step3 },
-  { label: 'Step 4', description: 'final', content: Step4 },
+  { label: 'Step 2', description: 'Adding a Language', content: Step2 },
+  { label: 'Step 3', description: 'Setting Korean Keyboard', content: Step3 },
+  { label: 'Step 4', description: 'Final Step', content: Step4 },
 ];
 
 export { windowsSteps };
