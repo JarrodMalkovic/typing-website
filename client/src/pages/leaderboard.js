@@ -64,53 +64,44 @@ const Leaderboard = () => {
           <Tbody>
             <Tr>
               <Td>1</Td>
-              <Td>millimetres (mm)</Td>
-              <Td isNumeric>25.4</Td>
-              <Td isNumeric>25.4</Td> <Td isNumeric>25.4</Td>
-              <Td isNumeric>25.4</Td>
+              <Td>Placeholder</Td>
+              <Td isNumeric>Placeholder</Td>
+              <Td isNumeric>Placeholder</Td>
+              <Td isNumeric>Placeholder</Td>
+              <Td isNumeric>Placeholder</Td>
             </Tr>
             <Tr>
               <Td>2</Td>
-              <Td>centimetres (cm)</Td>
-              <Td isNumeric>30.48</Td> <Td isNumeric>25.4</Td>{' '}
-              <Td isNumeric>25.4</Td>
-              <Td isNumeric>25.4</Td>
+              <Td>Placeholder</Td>
+              <Td isNumeric>Placeholder</Td>
+              <Td isNumeric>Placeholder</Td>
+              <Td isNumeric>Placeholder</Td>
+              <Td isNumeric>Placeholder</Td>
+            </Tr>{' '}
+            <Tr>
+              <Td>3</Td>
+              <Td>Placeholder</Td>
+              <Td isNumeric>Placeholder</Td>
+              <Td isNumeric>Placeholder</Td>
+              <Td isNumeric>Placeholder</Td>
+              <Td isNumeric>Placeholder</Td>
+            </Tr>{' '}
+            <Tr>
+              <Td>4</Td>
+              <Td>Placeholder</Td>
+              <Td isNumeric>Placeholder</Td>
+              <Td isNumeric>Placeholder</Td>
+              <Td isNumeric>Placeholder</Td>
+              <Td isNumeric>Placeholder</Td>
+            </Tr>{' '}
+            <Tr>
+              <Td>5</Td>
+              <Td>Placeholder</Td>
+              <Td isNumeric>Placeholder</Td>
+              <Td isNumeric>Placeholder</Td>
+              <Td isNumeric>Placeholder</Td>
+              <Td isNumeric>Placeholder</Td>
             </Tr>
-            <Tr>
-              <Td>3</Td>
-              <Td>metres (m)</Td>
-              <Td isNumeric>0.91444</Td> <Td isNumeric>25.4</Td>{' '}
-              <Td isNumeric>25.4</Td>
-              <Td isNumeric>25.4</Td>
-            </Tr>{' '}
-            <Tr>
-              <Td>3</Td>
-              <Td>metres (m)</Td>
-              <Td isNumeric>0.91444</Td> <Td isNumeric>25.4</Td>{' '}
-              <Td isNumeric>25.4</Td>
-              <Td isNumeric>25.4</Td>
-            </Tr>{' '}
-            <Tr>
-              <Td>3</Td>
-              <Td>metres (m)</Td>
-              <Td isNumeric>0.91444</Td> <Td isNumeric>25.4</Td>{' '}
-              <Td isNumeric>25.4</Td>
-              <Td isNumeric>25.4</Td>
-            </Tr>{' '}
-            <Tr>
-              <Td>3</Td>
-              <Td>metres (m)</Td>
-              <Td isNumeric>0.91444</Td> <Td isNumeric>25.4</Td>{' '}
-              <Td isNumeric>25.4</Td>
-              <Td isNumeric>25.4</Td>
-            </Tr>{' '}
-            <Tr>
-              <Td>3</Td>
-              <Td>metres (m)</Td>
-              <Td isNumeric>0.91444</Td> <Td isNumeric>25.4</Td>{' '}
-              <Td isNumeric>25.4</Td>
-              <Td isNumeric>25.4</Td>
-            </Tr>{' '}
           </Tbody>
         </Table>{' '}
       </VStack>
