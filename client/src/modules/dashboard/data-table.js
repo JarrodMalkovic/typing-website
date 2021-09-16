@@ -13,11 +13,6 @@ import {
   chakra,
   AlertIcon,
   Spinner,
-  Stat,
-  HStack,
-  StatHelpText,
-  StatNumber,
-  StatLabel,
   Checkbox,
 } from '@chakra-ui/react';
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
