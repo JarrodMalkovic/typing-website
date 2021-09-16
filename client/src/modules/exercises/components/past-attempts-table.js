@@ -55,12 +55,12 @@ const PastAttemptsTable = ({ exercise_slug }) => {
         {data &&
           data.map((row) => (
             <Tr>
-              <Td>idk</Td>
-              <Td>idk</Td>
-              <Td isNumeric>{row.score}</Td>
-              <Td isNumeric>{row.wpm}</Td>
-              <Td isNumeric>{row.accuracy}</Td>
-              <Td isNumeric>{row.time_elapsed}</Td>
+              <Td>Placeholder</Td>
+              <Td>Placeholder</Td>
+              <Td isNumeric>Placeholder</Td>
+              <Td isNumeric>Placeholder</Td>
+              <Td isNumeric>Placeholder</Td>
+              <Td isNumeric>Placeholder</Td>
             </Tr>
           ))}
       </Tbody>
