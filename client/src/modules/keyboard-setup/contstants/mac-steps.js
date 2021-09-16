@@ -78,10 +78,10 @@ const Step5 = (
 
 const macSteps = [
   { label: 'Step 1', description: 'Starting', content: Step1 },
-  { label: 'Step 2', description: 'Setting', content: Step2 },
-  { label: 'Step 3', description: 'Setting', content: Step3 },
-  { label: 'Step 4', description: 'Setting', content: Step4 },
-  { label: 'Step 5', description: 'Congratulation', content: Step5 },
+  { label: 'Step 2', description: 'System Preferences', content: Step2 },
+  { label: 'Step 3', description: 'Input Sources', content: Step3 },
+  { label: 'Step 4', description: 'Set Korean Keyboard', content: Step4 },
+  { label: 'Step 5', description: 'Selection', content: Step5 },
 ];
 
 export { macSteps };
