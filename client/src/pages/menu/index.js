@@ -9,8 +9,6 @@ import {
   Wrap,
   Text,
   Box,
-  WrapItem,
-  Flex,
   useColorModeValue
 } from '@chakra-ui/react';
 
@@ -38,43 +36,46 @@ const Menu = () => {
             Choose Your Path!
         </Text>
 
-          <WrapItem>
+          <Wrap justify = "center">
             <HStack>
-              <Tooltip label = "Set your keyboard to Korean!" placement = "bottom">
-                <Container padding = "20px" maxW="container.lg" _hover={{color: "#39aae1"}}>
-                  <Link href="/setup">
-                    <a>
+              <Link href="/setup">
+                <a>
+                  <Tooltip label = "Set your keyboard to Korean!" placement = "bottom">
+                    <Container padding = "20px" maxW="container.lg" _hover={{color: "#39aae1"}}>
                       <Image src = "/images/setup.png" boxSize="200px" margin = "10px"/>
-                      <Text mt="10px" textAlign = "center" fontWeight =  "bold" fontSize = "xl">Setup</Text>
-                    </a>
-                  </Link>
-                </Container>
-              </Tooltip>
+                      <Text mt="10px" textAlign = "center" fontWeight =  "bold" fontSize = "xl">Keyboard Setup</Text>
+                    </Container>
+                  </Tooltip>
+                </a>
+              </Link>
+            </HStack>
 
-              <Tooltip label = "Begin practicing your keyboard typing skills!" placement = "bottom">
-                <Container padding = "20px" maxW="container.lg" _hover={{color: "#39aae1"}}>
-                  <Link href="/practice">
-                    <a>
+            <HStack>
+              <Link href="/practice">
+                <a>
+                  <Tooltip label = "Begin practicing your keyboard typing skills!" placement = "bottom">
+                    <Container padding = "20px" maxW="container.lg" _hover={{color: "#39aae1"}}>
                       <Image src = "/images/practice.png" boxSize="200px" margin = "10px"/>
                       <Text mt="10px" textAlign = "center" fontWeight =  "bold" fontSize = "xl">Practice</Text>
-                    </a>
-                  </Link>
-                </Container>
-              </Tooltip>
+                    </Container>
+                  </Tooltip>
+                </a>
+              </Link>
+            </HStack>
 
-              <Tooltip label = "Put your typing skills to the ultimate test!" placement = "bottom">
-                <Container padding = "20px" maxW="container.lg" _hover={{color: "#39aae1"}}>
-                  <Link href="/challenge">
-                    <a>
+            <HStack>
+              <Link href="/challenge">
+                <a>
+                  <Tooltip label = "Put your typing skills to the ultimate test!" placement = "bottom">
+                    <Container padding = "20px" maxW="container.lg" _hover={{color: "#39aae1"}}>
                       <Image src = "/images/challenge.png" boxSize="200px" margin = "10px"/>
                       <Text mt="10px" textAlign = "center" fontWeight =  "bold" fontSize = "xl">Challenge</Text>
-                    </a>
-                  </Link>
-                </Container>
-              </Tooltip>
-
+                    </Container>
+                  </Tooltip>
+                </a>
+              </Link>
             </HStack>
-          </WrapItem>
+          </Wrap>
       </VStack>
     </Box>
   );

@@ -39,7 +39,7 @@ const PracticeExerciseButton = ({ name,img, subExercises,dscrpt }) => {
           <Container padding = "20px" maxW="container.lg" _hover={{
                                   color: "#39aae1",
                                 }}>
-            <Image src = {img} boxSize="150px"/>
+            <Image src = {img} boxSize="160px"/>
             <Text mt="10px" fontWeight =  "bold" fontSize = "xl">{name}</Text>
           </Container>
         </VStack>
