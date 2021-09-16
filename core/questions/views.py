@@ -1,95 +1,29 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
-from rest_framework import permissions
-from rest_framework.exceptions import APIException
 from rest_framework.views import APIView
 from .serializers import QuestionSerializer, PracticeAttemptSerializer, GetQuestionsSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Question
-from core.practice.models import PracticeAttempt
-from core.subexercises.models import Subexercise
+from django.http import HttpResponse
 from rest_framework.parsers import MultiPartParser, JSONParser
 import cloudinary.uploader
 from django.shortcuts import get_object_or_404
+from .mixin import SuperUserRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
+
+
+# /api/questions/subexercise/<slug:subexercise>/
 
 
 class QuestionSubexerciseAPIView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-
-    # GET - Returns all questions for a given subexercise given
-    # it is level 1, or they have completed previous subexercise
+    # GET - Returns all questions for a given subexercise - Auth Required
+    # TODO: Make it so auth is required for this route and check that they have completeled the previous subexercise first, if they have not return an error
     def get(self, request, subexercise):
-        # Get the level of subexercise requested
-        current_subexercise = Subexercise.objects.get(
-            subexercise_slug=subexercise)
-        level_request = current_subexercise.level
-        current_exercise_slug = current_subexercise.exercise_slug
-
-        # If user requesting level 1, return all questions
-        # Otherwise, check if there exists an attempt for the previous subexercise
-        if level_request == 1:
+        try:
             questions = Question.objects.filter(subexercise_slug=subexercise)
             serializers = QuestionSerializer(questions, many=True)
             return Response(serializers.data, status=status.HTTP_200_OK)
-
-        previous_subexercise = Subexercise.objects.get(
-            level=level_request-1, exercise_slug=current_exercise_slug)
-
-        attempts = PracticeAttempt.objects.filter(
-            subexercise_slug=previous_subexercise, user=request.user)
-
-        if len(attempts) == 0:
-            raise APIException(
-                detail="You must complete previous subexercises before this one")
-
-        questions = Question.objects.filter(
-            subexercise_slug=subexercise)
-
-        serializers = QuestionSerializer(questions, many=True)
-
-        return Response(serializers.data, status=status.HTTP_200_OK)
-
-
-# /api/subexercises/exercise/<slug:exercise>/
-# AUTHENTICAED USER ONLY
-class QuestionSubexerciseOrderedAPIView(APIView):
-    permission_classes = [permissions.IsAuthenticated]
-
-    # GET - Return all the subexercises, in order by level.
-    # If they have not completed the previous subexercise, it's
-    # attempted field is set to False.
-    def get(self, request, exercise):
-        subexercises = Subexercise.objects.filter(
-            exercise_slug=exercise).order_by('level')
-
-        data = []
-        for subexercise in subexercises:
-            sub_data = {}
-            sub_data["subexercise_slug"] = subexercise.subexercise_slug
-            sub_data["subexercise_name"] = subexercise.subexercise_name
-            sub_data["level"] = subexercise.level
-
-            try:
-                attempts = PracticeAttempt.objects.filter(
-                    subexercise_slug=subexercise, user=request.user)
-
-                sub_data["attempt"] = len(attempts) != 0
-            except PracticeAttempt.DoesNotExist:
-                sub_data["attempt"] = False
-            data.append(sub_data)
-        return Response(data, status=status.HTTP_200_OK)
-
-
-# class QuestionSubexerciseAPIView(APIView):
-#     # GET - Returns all questions for a given subexercise - Auth Required
-#     # TODO: Make it so auth is required for this route and check that they have completeled the previous subexercise first, if they have not return an error
-#     def get(self, request, subexercise):
-#         try:
-#             questions = Question.objects.filter(subexercise_slug=subexercise)
-#             serializers = QuestionSerializer(questions, many=True)
-#             return Response(serializers.data, status=status.HTTP_200_OK)
-#         except Question.DoesNotExist:
-#             return Response([], status=status.HTTP_200_OK)
+        except Question.DoesNotExist:
+            return Response([], status=status.HTTP_200_OK)
 
 
 # /api/questions/exercise/<slug:exercise>/
@@ -110,9 +44,7 @@ class QuestionExerciseAPIView(APIView):
 
 # /api/questions/<int:id>/
 # ADMIN ONLY
-class QuestionIdAPIView(APIView):
-    permission_classes = [permissions.IsAdminUser]
-
+class QuestionIdAPIView(SuperUserRequiredMixin, APIView):
     def get_object(self, id):
         # If question id does not exist, returns 404 NOT FOUND
         return get_object_or_404(Question, id=id)
@@ -141,10 +73,10 @@ class QuestionIdAPIView(APIView):
 
 # /api/questions/
 # ADMIN ONLY
-class QuestionAPIView(APIView):
-    permission_classes = [permissions.IsAdminUser]
+class QuestionAPIView(SuperUserRequiredMixin, APIView):
+    # permission_classes = [IsAdminUser]
     parser_classes = (MultiPartParser, JSONParser)
-
+    
     # DELETE - Deletes many questions (Body will contain an array of the ID's to delete)
     def delete(self, request):
         for id in request.data.get('questions'):
@@ -161,6 +93,8 @@ class QuestionAPIView(APIView):
         if audio_file:
             upload_data = cloudinary.uploader.upload(
                 audio_file, resource_type='raw')
+
+            print(request.data)
 
             data = {
                 'audio_url': upload_data.get('secure_url'),
@@ -180,8 +114,6 @@ class QuestionAPIView(APIView):
 
 # /api/questions/subexercise/attempt
 # OR /api/practice/attempt
-
-
 class QuestionSubexerciseAttemptAPIView(LoginRequiredMixin, APIView):
     # POST - Saves a users attempt for a given subexercisie - Auth Required
     def post(self, request):
