@@ -14,11 +14,12 @@ import {
 //Someho need to have it react to how big the container in the content is??????
 const Step1 = (
   <Wrap position="absolute" justify="center">
-    <Image src="/images/mac 1.jpg" minW="40%" mawW="40%" height={300} />
+    <Image src="/images/Mac - Step 1.png" minW="40%" mawW="40%" height={300} borderRadius = "2%"/>
     <Divider></Divider>
     <Container minW="60vw">
       <Heading as="h2" size="md" textAlign="center">
-        First click on the Apple logo in the upper left corner of the screen.
+        <Text  margin = "10px"> 1. Click on the Apple logo in the upper left corner of the screen.</Text> 
+        <Text  margin = "10px"> 2. Select "System Preferences". </Text> 
       </Heading>
     </Container>
   </Wrap>
@@ -26,11 +27,13 @@ const Step1 = (
 
 const Step2 = (
   <Wrap position="absolute" justify="center">
-    <Image src="/images/mac 2.jpg" minW="40%" mawW="40%" height={300} />
+    <Image src="/images/Mac - Step 2.png" minW="40%" mawW="40%" height={300} borderRadius = "2%"/>
     <Divider></Divider>
     <Container minW="60vw">
       <Heading as="h2" size="md" textAlign="center">
-        Select "System Preferences"
+      <Text  margin = "10px"> 3. Select "Keyboard".</Text> 
+      <Text  margin = "10px"> 4. Select "input Sources".</Text> 
+      <Text  margin = "10px"> 5. Click on the "+" sign in the bottom left corner.</Text>
       </Heading>
     </Container>
   </Wrap>
@@ -38,12 +41,15 @@ const Step2 = (
 
 const Step3 = (
   <Wrap position="absolute" justify="center">
-    <Image src="/images/mac 3.jpg" minW="40%" mawW="40%" height={300} />
+    <Image src="/images/Mac - Step 3.png" minW="40%" mawW="40%" height={300} borderRadius = "2%"/>
     <Divider></Divider>
     <Container minW="60vw">
       <Heading as="h2" size="md" textAlign="center">
-        Select “Keyboard”, after opening "System Preferences", select "input
-        Sources" and click on the "+" sign in the lower left corner.
+        <Text  margin = "10px"> 6. In the pop-up input method list, select “Korean”. </Text>
+        <Text  margin = "10px"> 7. Then in the list of Korean input methods on the right, 
+        select the one you want to use, and then click "Add". 
+        We suggest you choose 2-Set Korean because it is the
+        only national standard for Hangul keyboard.</Text>
       </Heading>
     </Container>
   </Wrap>
@@ -51,37 +57,22 @@ const Step3 = (
 
 const Step4 = (
   <Wrap position="absolute" justify="center">
-    <Image src="/images/mac 4.jpg" minW="40%" mawW="40%" height={300} />
+    <Image src="/images/Mac - Step 4.png" minW="40%" mawW="40%" height={300} borderRadius = "2%"/>
     <Divider></Divider>
     <Container minW="60vw">
       <Heading as="h2" size="md" textAlign="center">
-        In the pop-up input method list, select “Korean”, Then in the list of
-        Korean input methods on the right, select the one you want to use, and
-        then click "Add". We suggest you choose 2-Set Korean because it is the
-        only national standard for Hangul keyboard.
+        8. Ensure that your the 2-Set Korean Keyboard is your default keyboard. 
       </Heading>
     </Container>
   </Wrap>
 );
 
-const Step5 = (
-  <Container minW="60vw">
-    <Divider></Divider>
-    <Heading as="h2" size="md" textAlign="center">
-      In the pop-up input method list, select “Korean”, Then in the list of
-      Korean input methods on the right, select the one you want to use, and
-      then click "Add". We suggest you choose 2-Set Korean because it is the
-      only national standard for Hangul keyboard.
-    </Heading>
-  </Container>
-);
 
 const macSteps = [
   { label: 'Step 1', description: 'Starting', content: Step1 },
   { label: 'Step 2', description: 'System Preferences', content: Step2 },
   { label: 'Step 3', description: 'Input Sources', content: Step3 },
   { label: 'Step 4', description: 'Set Korean Keyboard', content: Step4 },
-  { label: 'Step 5', description: 'Selection', content: Step5 },
 ];
 
 export { macSteps };
