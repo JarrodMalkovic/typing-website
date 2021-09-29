@@ -50,7 +50,7 @@ const UserProfileDropdown = () => {
         <MenuList
           bg={useColorModeValue('white', 'gray.900')}
           borderColor={useColorModeValue('gray.200', 'gray.700')}>
-          <Link href="/profile/username">
+          <Link href={`/profile/${state.user.username}`}>
             <MenuItem>Profile</MenuItem>
           </Link>
           <Link href="/past-attempts">
@@ -63,9 +63,16 @@ const UserProfileDropdown = () => {
             <MenuItem>Settings</MenuItem>
           </Link>
           <MenuDivider />
-          <Link href="/dashboard">
+          <Link href="/questions">
+            <MenuItem>Question Dashboard</MenuItem>
+          </Link>
+          <Link href="/exercises">
             <MenuItem>Exercise Dashboard</MenuItem>
           </Link>
+          <Link href="/subexercises">
+            <MenuItem>Subexercise Dashboard</MenuItem>
+          </Link>
+
           <Link href="/statistics">
             <MenuItem>Exercise Statistics</MenuItem>
           </Link>

@@ -6,17 +6,8 @@ import {
   VStack,
   Flex,
   Spacer,
-  Menu,
   Box,
-  MenuList,
-  MenuButton,
-  MenuItem,
-  StatGroup,
   SimpleGrid,
-  Stat,
-  StatLabel,
-  StatNumber,
-  useRadioGroup,
   Tr,
   Th,
   Td,
@@ -24,151 +15,108 @@ import {
   Thead,
   Tbody,
   useColorModeValue,
-  StatHelpText,
-  useTheme,
-  Button,
 } from '@chakra-ui/react';
-import { ChevronDownIcon } from '@chakra-ui/icons';
 import StatsCard from '../modules/statistics/components/stats-card';
-import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis } from 'recharts';
 import ChartCard from '../modules/statistics/components/chart-card';
-const sampleData = [
-  {
-    name: '12/3/2021',
-    score: 2400,
-    amt: 2400,
-  },
-  {
-    name: '12/3/2021',
-    score: 1398,
-    amt: 2210,
-  },
-  {
-    name: '12/3/2021',
-    score: 9800,
-    amt: 2290,
-  },
-  {
-    name: '12/3/2021',
-    score: 3908,
-    amt: 2000,
-  },
-  {
-    name: '12/3/2021',
-    score: 4800,
-    amt: 2181,
-  },
-  {
-    name: '12/3/2021',
-    score: 3800,
-    amt: 2500,
-  },
-  {
-    name: '12/3/2021',
-    score: 4300,
-    amt: 2100,
-  },
-];
+import StatisticsMenu from '../modules/statistics/components/statistics-menu';
+import { useQuery } from 'react-query';
+import axios from 'axios';
+import { BASE_API_URL } from '../common/contstants/base-api-url';
+import { calculateHumanReadableTimeString } from '../common/utils/calculate-human-readable-time-string';
+import AttemptsTable from '../modules/statistics/components/attempts-table';
+
+const getStatistics = async (category) => {
+  const { data } =
+    category === 'All Exercises'
+      ? await axios.get(`${BASE_API_URL}/api/questions/stats/`)
+      : category === 'Challenge'
+      ? await axios.get(
+          `${BASE_API_URL}/api/questions/stats/?category=challenge`,
+        )
+      : await axios.get(
+          `${BASE_API_URL}/api/questions/stats/?category=${category}`,
+        );
+
+  return data;
+};
 
 const Dashboard = () => {
-  const theme = useTheme();
-  const options = ['wpm', 'accuracy', 'time'];
-
-  const { getRootProps, getRadioProps } = useRadioGroup({
-    name: 'stat',
-    defaultValue: 'wpm',
-    onChange: console.log,
+  const [category, setCategory] = React.useState({
+    category: 'All Exercises',
+    name: 'All Exercises',
   });
+
+  const { data } = useQuery(['statistics', category.category], () =>
+    getStatistics(category.category),
+  );
+
+  console.log(data);
 
   return (
     <Container pt="8" maxW="container.xl">
       <VStack spacing={4} width="100%" align="stretch">
         <Flex>
-          <Heading>Letter Statistics</Heading>
+          <Heading>{category.name} Statistics</Heading>
           <Spacer />
-          <Menu>
-            <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
-              Select Category
-            </MenuButton>
-            <MenuList>
-              <MenuItem>All Exercises</MenuItem>
-              <MenuItem>Challenge Mode</MenuItem>
-              <MenuItem>Letters</MenuItem>
-              <MenuItem>Words</MenuItem>
-              <MenuItem>Long Sentences</MenuItem>
-              <MenuItem>Diction</MenuItem>
-            </MenuList>
-          </Menu>
+          <StatisticsMenu setCategory={setCategory} />
         </Flex>
-        <SimpleGrid columns={{ base: 1, md: 3 }} spacing={'4'}>
-          <StatsCard title="Average WPM" stat="90.42" time="Last 30 days" />{' '}
-          <StatsCard title="Average WPM" stat="90.42" time="Last 30 days" />
-          <StatsCard title="Average WPM" stat="90.42" time="Last 30 days" />
-        </SimpleGrid>
-        <SimpleGrid columns={{ base: 1, md: 3 }} spacing={'4'}>
-          <ChartCard />
-          <ChartCard />
-          <ChartCard />
-        </SimpleGrid>
-        <Box
-          border="1px solid"
-          borderColor={useColorModeValue('gray.200', 'gray.700')}
-          rounded={'lg'}>
-          <Table>
-            <Thead>
-              <Tr>
-                <Th>Rank</Th>
-                <Th>Username</Th>
-                <Th isNumeric>Score</Th>
-                <Th isNumeric>WPM</Th>
-                <Th isNumeric>Accuracy</Th>
-                <Th isNumeric>Time Elapsed</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              <Tr>
-                <Td>1</Td>
-                <Td>Placeholder</Td>
-                <Td isNumeric>Placeholder</Td>
-                <Td isNumeric>Placeholder</Td>
-                <Td isNumeric>Placeholder</Td>
-                <Td isNumeric>Placeholder</Td>
-              </Tr>
-              <Tr>
-                <Td>2</Td>
-                <Td>Placeholder</Td>
-                <Td isNumeric>Placeholder</Td>
-                <Td isNumeric>Placeholder</Td>
-                <Td isNumeric>Placeholder</Td>
-                <Td isNumeric>Placeholder</Td>
-              </Tr>{' '}
-              <Tr>
-                <Td>3</Td>
-                <Td>Placeholder</Td>
-                <Td isNumeric>Placeholder</Td>
-                <Td isNumeric>Placeholder</Td>
-                <Td isNumeric>Placeholder</Td>
-                <Td isNumeric>Placeholder</Td>
-              </Tr>{' '}
-              <Tr>
-                <Td>4</Td>
-                <Td>Placeholder</Td>
-                <Td isNumeric>Placeholder</Td>
-                <Td isNumeric>Placeholder</Td>
-                <Td isNumeric>Placeholder</Td>
-                <Td isNumeric>Placeholder</Td>
-              </Tr>{' '}
-              <Tr>
-                <Td>5</Td>
-                <Td>Placeholder</Td>
-                <Td isNumeric>Placeholder</Td>
-                <Td isNumeric>Placeholder</Td>
-                <Td isNumeric>Placeholder</Td>
-                <Td isNumeric>Placeholder</Td>
-              </Tr>
-            </Tbody>
-          </Table>
-        </Box>
+        {!data ? (
+          'Loading'
+        ) : (
+          <>
+            <SimpleGrid columns={{ base: 1, md: 3 }} spacing={'4'}>
+              <StatsCard
+                title="Average WPM"
+                stat={
+                  typeof data.recent_stats.wpm__avg == 'number'
+                    ? data.recent_stats.wpm__avg.toFixed(2)
+                    : 'N/A'
+                }
+                time="Last 30 days"
+              />
+              <StatsCard
+                title="Average Accuracy"
+                stat={
+                  typeof data.recent_stats.accuracy__avg == 'number'
+                    ? `%${data.recent_stats.accuracy__avg.toFixed(2)}`
+                    : 'N/A'
+                }
+                time="Last 30 days"
+              />
+              <StatsCard
+                title="Average Time Elapsed"
+                stat={
+                  typeof data.recent_stats.time_elapsed__avg == 'number'
+                    ? calculateHumanReadableTimeString(
+                        data.recent_stats.time_elapsed__avg * 1000,
+                      )
+                    : 'N/A'
+                }
+                time="Last 30 days"
+              />
+            </SimpleGrid>
+            <SimpleGrid columns={{ base: 1, md: 3 }} spacing={'4'}>
+              <ChartCard data={data.charts} dataKey="wpm" name="WPM" />
+
+              <ChartCard
+                data={data.charts}
+                dataKey="accuracy"
+                name="Accuracy"
+              />
+              <ChartCard
+                data={data.charts}
+                dataKey="time_elapsed"
+                name="Time Elapsed"
+              />
+            </SimpleGrid>
+            <Box
+              border="1px solid"
+              borderColor={useColorModeValue('gray.200', 'gray.700')}
+              rounded={'lg'}>
+              <AttemptsTable category={category.category} />
+            </Box>
+          </>
+        )}
       </VStack>
     </Container>
   );

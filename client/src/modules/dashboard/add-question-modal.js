@@ -63,7 +63,7 @@ const AddQuestionModal = ({ isOpen, onOpen, onClose }) => {
         (subexercise) => subexercise.slug === data.subexercise_slug,
       ).name;
 
-      queryClient.setQueryData(exercise, (old) =>
+      queryClient.setQueryData(['dashboard', exercise], (old) =>
         Array.isArray(old)
           ? [
               ...old,

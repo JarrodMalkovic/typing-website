@@ -54,7 +54,9 @@ const EditQuestionButton = ({ row, exercise }) => {
           (subexercise) => subexercise.slug === data.subexercise_slug,
         ).name;
 
-        queryClient.setQueryData(exercise, (old) =>
+        console.log(subexercise_name);
+
+        queryClient.setQueryData(['dashboard', exercise], (old) =>
           old.map((oldRow) =>
             oldRow.id === row.id
               ? {

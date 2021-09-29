@@ -3,23 +3,13 @@ from .serializers import GetPracticeAttemptSerializer, CreatePracticeAttemptSeri
 from .models import PracticeAttempt
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, generics
 from rest_framework.permissions import IsAuthenticated
-
-# /api/questions/subexercise/attempt
-# OR /api/practice/attempt
-
-# anders
-
-
-# /api/questions/subexercise/attempt
-# OR /api/practice/attempt
 
 
 class PracticeAttemptAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    # POST - Saves a users attempt for a given subexercisie - Auth Required
     def post(self, request):
         serializer = CreatePracticeAttemptSerializer(data=request.data)
 
