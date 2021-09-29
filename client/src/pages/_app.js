@@ -10,12 +10,15 @@ import AuthProvider from '../modules/auth/context/auth-context';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { Hydrate } from 'react-query/hydration';
 import '../common/styles/index.css';
+import 'react-calendar-heatmap/dist/styles.css';
+import ReactTooltip from 'react-tooltip';
 
 const MyApp = ({ Component, pageProps }) => {
   const [queryClient] = React.useState(() => new QueryClient());
 
   return (
     <QueryClientProvider client={queryClient}>
+      <ReactTooltip />
       <Hydrate state={pageProps.dehyrdaedState}>
         <AuthProvider>
           <ChakraProvider theme={theme}>
