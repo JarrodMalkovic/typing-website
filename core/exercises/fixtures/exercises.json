@@ -4,7 +4,13 @@
         "model": "exercises.exercise",
         "fields": {
             "exercise_slug": "diction",
-            "exercise_name": "Diction"
+            "exercise_name": "Diction",
+            "image" : "",
+            "description": "",
+            "allow_in_challenge_mode": false,
+            "hidden": false,
+            "allow_audio_files_in_questions": false,
+            "created_at": "2021-09-29 13:47:46.516341+00"
         }
     },   
     {
@@ -12,7 +18,13 @@
         "model": "exercises.exercise",
         "fields": {
             "exercise_slug": "letters",
-            "exercise_name": "Letters"
+            "exercise_name": "Letters",
+            "image" : "",
+            "description": "",
+            "allow_in_challenge_mode": false,
+            "hidden": false,
+            "allow_audio_files_in_questions": false,
+            "created_at": "2021-09-29 13:47:46.516341+00"
         }
     },
     {
@@ -20,7 +32,13 @@
         "model": "exercises.exercise",
         "fields": {
             "exercise_slug": "syllables",
-            "exercise_name": "Syllables"
+            "exercise_name": "Syllables",
+            "image" : "",
+            "description": "",
+            "allow_in_challenge_mode": false,
+            "hidden": false,
+            "allow_audio_files_in_questions": false,
+            "created_at": "2021-09-29 13:47:46.516341+00"
         }
     },
     {
@@ -28,7 +46,13 @@
         "model": "exercises.exercise",
         "fields": {
             "exercise_slug": "words",
-            "exercise_name": "Words"
+            "exercise_name": "Words",
+            "image" : "",
+            "description": "",
+            "allow_in_challenge_mode": false,
+            "hidden": false,
+            "allow_audio_files_in_questions": false,
+            "created_at": "2021-09-29 13:47:46.516341+00"
         }
     },
     {
@@ -36,7 +60,13 @@
         "model": "exercises.exercise",
         "fields": {
             "exercise_slug": "short-sentences",
-            "exercise_name": "Short Sentences"
+            "exercise_name": "Short Sentences",
+            "image" : "",
+            "description": "",
+            "allow_in_challenge_mode": false,
+            "hidden": false,
+            "allow_audio_files_in_questions": false,
+            "created_at": "2021-09-29 13:47:46.516341+00"
         }
     },
     {
@@ -44,7 +74,13 @@
         "model": "exercises.exercise",
         "fields": {
             "exercise_slug": "long-sentences",
-            "exercise_name": "Long Sentences"
+            "exercise_name": "Long Sentences",
+            "image" : "",
+            "description": "",
+            "allow_in_challenge_mode": false,
+            "hidden": false,
+            "allow_audio_files_in_questions": false,
+            "created_at": "2021-09-29 13:47:46.516341+00"
         }
     }
 ]
