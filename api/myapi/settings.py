@@ -45,8 +45,9 @@ INSTALLED_APPS = [
     # Third-Party Apps
     'rest_framework',
     'corsheaders',
+    'drf_yasg2',
 
-    # Local Apps (Your project's apps)
+    # Local Apps
     'core',
     'core.user',
     'core.exercises',
