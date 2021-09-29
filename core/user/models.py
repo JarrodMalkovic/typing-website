@@ -1,10 +1,10 @@
 from django.db import models
-
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from libgravatar import Gravatar
 
-# Adapted from: https://dev.to/koladev/django-rest-authentication-cmh
+
 class UserManager(BaseUserManager):
+    """ Adapted from: https://dev.to/koladev/django-rest-authentication-cmh """
 
     def create_user(self, username, email, password=None, **kwargs):
         """Create and return a `User` with an email, phone number, username and password."""
@@ -13,9 +13,11 @@ class UserManager(BaseUserManager):
         if email is None:
             raise TypeError('Users must have an email.')
 
-        avatar = Gravatar(email).get_image(size=80, default='identicon', force_default=False, use_ssl=True)
+        avatar = Gravatar(email).get_image(
+            size=80, default='identicon', force_default=False, use_ssl=True)
 
-        user = self.model(username=username, email=self.normalize_email(email), avatar=avatar)
+        user = self.model(username=username,
+                          email=self.normalize_email(email), avatar=avatar)
         user.set_password(password)
         user.save(using=self._db)
 
@@ -39,13 +41,16 @@ class UserManager(BaseUserManager):
 
         return user
 
-# Adapted from: https://dev.to/koladev/django-rest-authentication-cmh
+
 class User(AbstractBaseUser, PermissionsMixin):
+    """ Adapted from: https://dev.to/koladev/django-rest-authentication-cmh """
     username = models.CharField(db_index=True, max_length=255, unique=True)
     email = models.EmailField(db_index=True, unique=True, blank=True)
     avatar = models.CharField(max_length=255)
+    bio = models.CharField(max_length=500)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
@@ -54,4 +59,3 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return f"{self.email}"
-
