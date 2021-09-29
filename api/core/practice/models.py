@@ -11,6 +11,7 @@ class PracticeAttempt(models.Model):
     time_elapsed = models.FloatField()
     accuracy = models.FloatField()
     score = models.FloatField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.attempt}"
+        return f"{self.subexercise_slug}"
