@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Question, Subexercise
 from core.practice.models import PracticeAttempt
+from core.user.serializers import UserSerializer
 
 
 class SubexerciseSerializer(serializers.ModelSerializer):
@@ -41,19 +42,13 @@ class QuestionSerializer(serializers.ModelSerializer):
 
 
 class PracticeAttemptSerializer(serializers.ModelSerializer):
+    subexercise_slug = SubexerciseSerializer()
+    user = UserSerializer()
+
     class Meta:
         model = PracticeAttempt
-        fields = ['id', 'subexercise_slug', 'user',
+        fields = ['id', 'subexercise_slug', 'user', 'created_at',
                   'wpm', 'time_elapsed', 'accuracy', 'score']
 
     def create(self, validated_data):
         return PracticeAttempt.objects.create(**validated_data)
-
-
-# class ChallengeAttemptSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = ChallengeAttempt
-#         fields = ['id', 'user', 'wpm', 'time_elapsed', 'accuracy', 'score']
-
-#     def create(self, validated_data):
-#         return ChallengeAttempt.objects.create(**validated_data)
