@@ -34,7 +34,7 @@ const Dashboard = () => {
     <Container pt="8" maxW="container.xl">
       <VStack spacing={2} width="100%" align="stretch">
         <Flex>
-          <Heading>Admin Dashboard</Heading>
+          <Heading>Question Dashboard</Heading>
           <Spacer />
           <Box>
             <InputGroup>
