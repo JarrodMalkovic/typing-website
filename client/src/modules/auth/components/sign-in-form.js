@@ -42,7 +42,6 @@ const SignIn = async (data) => {
 
 // Adapted from: https://chakra-templates.dev/forms/authentication
 const SigninForm = () => {
-  const router = useRouter();
   const toast = useToast();
   const { dispatch } = useAuth();
 
