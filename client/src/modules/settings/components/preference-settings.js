@@ -21,9 +21,12 @@ import {
   RadioGroup,
   VStack,
   Radio,
+  useColorMode,
 } from '@chakra-ui/react';
 
 const PreferenceSettings = () => {
+  const { colorMode, toggleColorMode } = useColorMode();
+
   return (
     <>
       <Box>
@@ -52,8 +55,22 @@ const PreferenceSettings = () => {
                   <FormLabel>Theme</FormLabel>
                   <RadioGroup>
                     <Stack>
-                      <Radio>Dark Mode</Radio>
-                      <Radio>Dark Mode</Radio>
+                      <Box
+                        onClick={() =>
+                          colorMode === 'light' && toggleColorMode()
+                        }>
+                        <Radio isChecked={colorMode === 'dark'}>
+                          Dark Mode
+                        </Radio>
+                      </Box>
+                      <Box
+                        onClick={() =>
+                          colorMode === 'dark' && toggleColorMode()
+                        }>
+                        <Radio isChecked={colorMode === 'light'}>
+                          Light Mode
+                        </Radio>
+                      </Box>
                     </Stack>
                   </RadioGroup>
                 </FormControl>
