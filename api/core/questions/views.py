@@ -8,6 +8,7 @@ from rest_framework import status, generics
 from .models import Question
 from core.practice.models import PracticeAttempt
 from core.subexercises.models import Subexercise
+from core.exercises.models import Exercise
 from core.challenge.models import ChallengeAttempt
 from rest_framework.parsers import MultiPartParser, JSONParser
 import cloudinary.uploader
@@ -257,3 +258,98 @@ class QuestionAttemptsAPIView(APIView):
             serializers = PracticeAttemptSerializer(attempts, many=True)
 
         return Response(serializers.data, status=status.HTTP_200_OK)
+
+
+class QuestionExcelDownload(APIView):
+    # permission_classes = [permissions.IsAdminUser]
+
+    # For a given exercise, return in a list of dictionaries
+    # containing every question along with its subexercise and meaning
+    # If a question does not have a meaning, N/A is supplied
+    def get(self, request, exercise_slug):
+        '''
+        data = {
+            exercise: "",
+            subexercise: "",
+            question: "",
+            meaning: ""
+        }
+        '''
+        question_list = []
+
+        subexercises = Subexercise.objects.filter(
+            exercise_slug=exercise_slug)
+
+        for subexercise in subexercises:
+            questions = Question.objects.filter(
+                subexercise_slug=subexercise.subexercise_slug)
+
+            for question in questions:
+                data = {
+                    'subexercise': subexercise.subexercise_name,
+                    'question': question.question,
+                }
+                try:
+                    data['meaning'] = question.meaning
+                except:
+                    data['meaning'] = "N/A"
+                        
+                    question_list.append(data)
+        return Response(question_list, status=status.HTTP_200_OK)
+        
+        
+class QuestionExcelUpload(APIView):
+    # Upload the excel doc and update the database with
+    # Two ways:
+    # 1. upload the excel and make the database represent the excel (replace)
+    # 2. uplaod the excel and append the questions to database (add)
+    
+    '''
+    Takes a list of lists
+    Each list containes two items. The first item is a dictionary 
+    that specifies the exercise that the questions are for.
+    The second item is a list of dictionaries - each dictionary is a new question
+    This function will save the questions (add to existing database)
+    Example inner list:
+    [{"exercise": "letters"}, 
+    [{"subexercise":"C + V", "question":"hello", "meaning":"hello-meaning"}, 
+    {"subexercise":"Shift C + V", "question":"new", "meaning":"new-meaning"}]],
+    '''
+    def post(self, request):
+        data = request.data
+        print(data)
+        
+        all_questions = []
+        for exercise in data:
+            for question in exercise[1]:
+                try:
+                    subexercise_name = question['subexercise']
+                    subexercise = Subexercise.objects.filter(subexercise_name=subexercise_name).first()
+
+                # If subexercise does exist - tell admin user to add that first
+                # Tell the admin which entry was wrong
+                # If this occurs, no questions will be added
+                except Subexercise.DoesNotExist:
+                    response_str = "Subexercise: '{}' does not exist".format(subexercise_name)
+                    response = [{"response":response_str}]
+                    return Response(response, status=status.HTTP_400_BAD_REQUEST) 
+                
+                try:
+                    new_question = {
+                            "subexercise_slug": subexercise.subexercise_slug,
+                            "question": question['question']
+                        }
+                    print(new_question)
+                    all_questions.append(new_question)
+                except:
+                    response_str = "Subexercise: '{}' does not exist".format(subexercise_name)
+                    response = [{"response":response_str}]
+                    return Response(response, status=status.HTTP_400_BAD_REQUEST) 
+                
+        
+        serializer = QuestionSerializer(data=all_questions, many=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
