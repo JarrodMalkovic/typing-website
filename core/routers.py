@@ -1,3 +1,4 @@
+from core.subexercises.views import CreateSubexerciseAPIView, GetSubexercisesAPIVIew, ReorderSubexercisesAPIView, SubexerciseAPIView
 from core.exercises.views import ExerciseAPIView, UpdateExerciseAPIView
 from core.user.view import BanUserAPIView, DeleteAccountAPIView, DemoteUserAPIView, PromoteUserAPIView, UpdateUserProfileAPIView, UserProfileAPIView, UsersAPIView
 from core.practice.views import PracticeAttemptAPIView
@@ -28,9 +29,9 @@ urlpatterns = [
     path('practice/exercise/<slug:exercise>/attempts/',
          QuestionExerciseAttemptAPIView.as_view()),
     path('challenge/attempts/', ChallengeAttemptsAPIView.as_view()),
-    path('practice/attempt',
+    path('practice/attempt/',
          PracticeAttemptAPIView.as_view()),
-    path('subexercises/exercise/<slug:exercise>/',
+    path('subexercises/exercise/<slug:exercise>/completion/',
          QuestionSubexerciseOrderedAPIView.as_view()),
     path('questions/leaderboard/', QuestionLeaderboardAPIView.as_view()),
     path('questions/stats/', QuestionStatsAPIView.as_view()),
@@ -46,5 +47,12 @@ urlpatterns = [
 
     path('exercises/', ExerciseAPIView.as_view()),
     path('exercises/<slug:exercise_slug>/', UpdateExerciseAPIView.as_view()),
+    path('subexercises/exercise/<slug:exercise_slug>/',
+         GetSubexercisesAPIVIew.as_view()),
+    path('subexercises/exercise/<slug:exercise_slug>/reorder/',
+         ReorderSubexercisesAPIView.as_view()),
+    path('subexercises/', CreateSubexerciseAPIView.as_view()),
+    path('subexercises/subexercise/<slug:subexercise_slug>/',
+         SubexerciseAPIView.as_view()),
     * routes.urls,
 ]
