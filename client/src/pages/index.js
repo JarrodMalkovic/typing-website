@@ -109,80 +109,67 @@ const mystyle = {
                 Who We Are
               </Heading>
               <Text fontSize = "20px" textAlign = "justify"> 
-                Everyone learns in different ways. For the first time in history, 
-                we can analyze how millions of people learn at once to create the most 
-                effective educational system possible and tailor it to each student.
-                Our ultimate goal is to give everyone access to a private tutor experience through technology. 
+              KeyKorea is a tool designed for students, by students, to help them practice their Korean Typing Skills. 
+              Learning a new language can be exciting and challenging, and there are many aspects that come with it; 
+              it involves more than speaking and listening; being able to type has a far-reaching impact in today's digital world. 
               </Text>
             </Box>
           </Col>
           <Col>
-            <Image padding = "20px" align = "right" src="/images/challenge.png" minW="40%" mawW="40%" height={300} borderRadius = "2%"/>
+            <Image padding = "20px" align = "right" src="/images/logo.png" minW="40%" mawW="40%" height={300} borderRadius = "2%"/>
           </Col>
         </Row>
       </Box>
-
+      <Divider></Divider>
       <Divider></Divider>
       <Box marginTop = "100px" marginBottom = "100px">
         <Row>
           <Col>
-            <Image padding = "20px" align = "right" src="/images/challenge.png" minW="40%" mawW="40%" height={300} borderRadius = "2%"/>
+            <Image padding = "20px" align = "right" src="/images/world.png" minW="40%" mawW="40%" height={300} borderRadius = "2%"/>
           </Col>
-          <Col xs={8} margin = "20px">
-            <Box textAlign = "center" padding = "20px">
-              <Heading paddingBottom = "50px"> 
-                Designed For Your Success
-              </Heading>
-              <Text fontSize = "20px" textAlign = "justify"> 
-                Everyone learns in different ways. For the first time in history, 
-                we can analyze how millions of people learn at once to create the most 
-                effective educational system possible and tailor it to each student.
-                Our ultimate goal is to give everyone access to a private tutor experience through technology. 
-              </Text>
-            </Box>
-          </Col>
-          
-        </Row>
-      </Box>
-
-      <Divider></Divider>
-      <Box marginTop = "100px" marginBottom = "100px">
-        <Row>
           <Col xs={8} margin = "20px">
             <Box textAlign = "center" padding = "20px">
               <Heading paddingBottom = "50px"> 
                 Enhance Your Korean Skills
               </Heading>
               <Text fontSize = "20px" textAlign = "justify"> 
-                Everyone learns in different ways. For the first time in history, 
-                we can analyze how millions of people learn at once to create the most 
-                effective educational system possible and tailor it to each student.
-                Our ultimate goal is to give everyone access to a private tutor experience through technology. 
+                This website includes all relevant resources to help students get started on their Korean-typing journey. 
+                By including the practice and challenge modes, we hope that the users of this platform feel both comfortable and confident practicing their skills. 
+                Our aim is to create an application that is easy to use and understand, and resourceful at the same time. 
+                We really hope all the users of this platform find it applicable to their study of the Korean language. 
+              </Text>
+            </Box>
+          </Col>
+        </Row>
+      </Box>
+
+      <Divider></Divider>
+      <Box marginTop = "100px" marginBottom = "100px">
+        <Row>
+          <Col xs={8} margin = "20px">
+            <Box textAlign = "center" padding = "20px">
+              <Heading paddingBottom = "50px"> 
+                Designed For Your Success
+              </Heading>
+              <Text fontSize = "20px" textAlign = "justify"> 
+
+                The website features an easy-to-follow keyboard set up page, designed for anyone who wants to set up their own keyboard. 
+                We have also incorporated the practice and challenge modes. The practice mode is designed for users to practice their 
+                skills at their own pace after which they can compete with their peers using the challenge mode. 
+                The profile page holds information about past attempts, and statistics related to the user's performance. 
+                The leaderboard can be used by users to compare abilities and compete to beat other users of the platform.
               </Text>
             </Box>
           </Col>
           <Col>
-            <Image padding = "20px" align = "right" src="/images/challenge.png" minW="40%" mawW="40%" height={300} borderRadius = "2%"/>
+            <Image padding = "20px" align = "right" src="/images/practice.png" minW="40%" mawW="40%" height={300} borderRadius = "2%"/>
           </Col>
-          
         </Row>
+
       </Box>
+      <Divider></Divider>
+
     </Container>
-
-    
-{/* 
-    <HStack>
-      <VStack>
-        <Text> 
-          Add paragraph here
-        </Text>
-      </VStack>
-
-      <Image align = "right" src="/images/Mac - Step 2.png" minW="40%" mawW="40%" height={300} borderRadius = "2%"/>
-
-      
-    </HStack> */}
-      
     </VStack> 
   </>
 

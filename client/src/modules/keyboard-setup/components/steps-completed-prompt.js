@@ -13,7 +13,6 @@ import {
   Link,
 } from '@chakra-ui/react';
 
-import Confetti from 'react-confetti';
 import { HANGUL_REGEX } from '../../../common/contstants/hangul-regex';
 import PropTypes from 'prop-types';
 
@@ -27,18 +26,16 @@ const StepsCompletedPrompt = ({ os }) => {
       ? setIsKoreanText(Boolean(lastKeyPressed.match(HANGUL_REGEX)))
       : setIsKoreanText(null);
   };
-  //Make Confetti cover thr whole screen!!!!
   return (
     <Box>
-      <Confetti numberOfPieces={500} gravity={0.1} recycle={false} />
       <VStack>
-        <Heading as="h2" size="md" position="relative" top="200px">
-          Woohoo! You have completed the keyboard setup instructions for {os} 🥳
+        <Heading as="h2" size="md"  position="relative" top="200px">
+          Well done! You have completed the keyboard setup instructions for {os}!
         </Heading>
         {isKoreanText !== null ? (
           isKoreanText ? (
             <Container>
-              <Text position="relative" top="200px">
+              <Text position="relative" top="200px" color = "#39aae1" fontWeight ="medium">
                 Everything looks setup correctly! Have fun practicing your
                 korean typing skills!
               </Text>
@@ -53,8 +50,8 @@ const StepsCompletedPrompt = ({ os }) => {
               </Link>
             </Container>
           ) : (
-            <Text position="relative" top="200px">
-              Oh no! Looks like the was an error setting up your keyboard 😞
+            <Text position="relative" top="200px" color = "#f52d56" fontWeight ="medium">
+            Oh no! You are not typing in Hangul.Ensure that your keyboard is setup in Korean.
             </Text>
           )
         ) : (

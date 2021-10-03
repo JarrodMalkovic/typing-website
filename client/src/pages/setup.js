@@ -89,7 +89,7 @@ const Setup = () => {
                 ))}
               </Steps>
 
-              <Flex top="700px" position="absolute">
+              <Flex top="800px" position="absolute">
                 <ChangeOsMenu setOs={setOs} resetSteps={reset} />
                 <Spacer />
                 <StepButtons

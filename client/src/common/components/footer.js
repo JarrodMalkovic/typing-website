@@ -14,9 +14,10 @@ import ActiveNavLink from './active-nav-link';
 const Footer = () => {
   return (
     <Box
-      mt={'20'}
+    marginTop = "150px"
       color={useColorModeValue('gray.700', 'gray.200')}
-      margin={'0'}>
+      as="footer" role="contentinfo" mx="auto" maxW="7xl" py="12" px={{ base: '4', md: '8' }}
+      >
       <Container
         as={Stack}
         maxW={'container.xl'}
