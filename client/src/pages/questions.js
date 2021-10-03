@@ -20,11 +20,12 @@ import {
 } from '@chakra-ui/react';
 import DataTable from '../modules/dashboard/data-table';
 import AddQuestionButton from '../modules/dashboard/add-question-button';
-import { exercises } from '../common/contstants/exercises';
 import { SearchIcon } from '@chakra-ui/icons';
+import { useExercises } from '../modules/exercises/hooks/use-exercises';
 
 const Dashboard = () => {
   const [filter, setFilter] = React.useState('');
+  const { data: exercises, isLoading } = useExercises();
 
   const handleChange = (event) => {
     setFilter(event.target.value);
@@ -57,20 +58,27 @@ const Dashboard = () => {
           This is a short sentence which describes what this dashboard is all
           about
         </Text>
-        <Tabs isLazy variant="enclosed" top={40}>
-          <TabList>
-            {Object.entries(exercises).map(([key, value], idx) => (
-              <Tab key={idx}>{value.name}</Tab>
-            ))}
-          </TabList>
-          <TabPanels>
-            {Object.entries(exercises).map(([key, value], idx) => (
-              <TabPanel paddingX="0" key={idx}>
-                <DataTable exercise_slug={value.slug} filter={filter} />
-              </TabPanel>
-            ))}
-          </TabPanels>
-        </Tabs>
+        {isLoading ? (
+          <h1>Loading</h1>
+        ) : (
+          <Tabs isLazy variant="enclosed" top={40}>
+            <TabList>
+              {Object.entries(exercises).map(([key, value], idx) => (
+                <Tab key={idx}>{value.exercise_name}</Tab>
+              ))}
+            </TabList>
+            <TabPanels>
+              {Object.entries(exercises).map(([key, value], idx) => (
+                <TabPanel paddingX="0" key={idx}>
+                  <DataTable
+                    exercise_slug={value.exercise_slug}
+                    filter={filter}
+                  />
+                </TabPanel>
+              ))}
+            </TabPanels>
+          </Tabs>
+        )}
       </VStack>
     </Container>
   );
