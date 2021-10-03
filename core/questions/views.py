@@ -16,6 +16,7 @@ from core.challenge.serializers import ChallengeAttemptSerializer
 from django.db.models import Avg, Count
 from django.utils import timezone
 from datetime import timedelta
+import math
 
 
 class QuestionSubexerciseAPIView(APIView):
@@ -64,6 +65,8 @@ class QuestionSubexerciseOrderedAPIView(APIView):
             sub_data["subexercise_slug"] = subexercise.subexercise_slug
             sub_data["subexercise_name"] = subexercise.subexercise_name
             sub_data["level"] = subexercise.level
+            sub_data["description"] = subexercise.description
+            sub_data["exercise_slug"] = subexercise.exercise_slug_id
 
             try:
                 attempts = PracticeAttempt.objects.filter(
@@ -132,7 +135,8 @@ class QuestionAPIView(APIView):
             data = {
                 'audio_url': upload_data.get('secure_url'),
                 'question': request.data.get('question'),
-                'subexercise_slug': request.data.get('subexercise_slug')
+                'subexercise_slug': request.data.get('subexercise_slug'),
+                'translation': request.data.get('translation')
             }
 
             serializer = QuestionSerializer(data=data)
@@ -199,7 +203,7 @@ class QuestionStatsAPIView(APIView):
                 .aggregate(Avg('wpm'), Avg('accuracy'), Avg('time_elapsed'))
 
             charts = PracticeAttempt.objects.extra(
-                select={'date': "TO_CHAR(created_at, 'YYYY-MM-DD')"}) \
+                select={'date': "TO_CHAR(practice_practiceattempt.created_at, 'YYYY-MM-DD')"}) \
                 .values('date') \
                 .order_by('date') \
                 .annotate(wpm=Avg('wpm'), time_elapsed=Avg('time_elapsed'), accuracy=Avg('accuracy'))
@@ -209,7 +213,7 @@ class QuestionStatsAPIView(APIView):
                 .aggregate(Avg('wpm'), Avg('accuracy'), Avg('time_elapsed'))
 
             charts = ChallengeAttempt.objects.extra(
-                select={'date': "TO_CHAR(created_at, 'YYYY-MM-DD')"}) \
+                select={'date': "TO_CHAR(challenge_challengeattempt.created_at, 'YYYY-MM-DD')"}) \
                 .values('date') \
                 .order_by('date') \
                 .annotate(wpm=Avg('wpm'), time_elapsed=Avg('time_elapsed'), accuracy=Avg('accuracy'))
@@ -219,7 +223,7 @@ class QuestionStatsAPIView(APIView):
                 .aggregate(Avg('wpm'), Avg('accuracy'), Avg('time_elapsed'))
 
             charts = PracticeAttempt.objects.extra(
-                select={'date': "TO_CHAR(created_at, 'YYYY-MM-DD')"}) \
+                select={'date': "TO_CHAR(practice_practiceattempt.created_at, 'YYYY-MM-DD')"}) \
                 .values('date') \
                 .filter(subexercise_slug__exercise_slug=category) \
                 .order_by('date') \
@@ -238,22 +242,29 @@ class QuestionAttemptsAPIView(APIView):
 
     def get(self, request):
         category = request.GET.get('category', 'all')
+        page = int(request.GET.get('page', 0))
+        limit = min(int(request.GET.get('limit', 10)), 50)
+        skip = page * limit
 
-        attempts = None
         serializers = None
+        count = None
 
         if category == 'all':
+            count = len(PracticeAttempt.objects.all())
             attempts = PracticeAttempt.objects.select_related(
-                'user')
+                'user')[skip:skip + limit]
             serializers = PracticeAttemptSerializer(attempts, many=True)
         elif category == 'challenge':
+            count = len(ChallengeAttempt.objects.all())
             attempts = ChallengeAttempt.objects.select_related(
-                'user')
+                'user')[skip:skip + limit]
             serializers = ChallengeAttemptSerializer(attempts, many=True)
         else:
+            count = len(PracticeAttempt.objects.filter(
+                subexercise_slug_id__exercise_slug_id=category))
             attempts = PracticeAttempt.objects.filter(
                 subexercise_slug_id__exercise_slug_id=category).select_related(
-                'user')
+                'user')[skip:skip + limit]
             serializers = PracticeAttemptSerializer(attempts, many=True)
 
-        return Response(serializers.data, status=status.HTTP_200_OK)
+        return Response({'pages': math.ceil(count / limit), 'attempts': serializers.data}, status=status.HTTP_200_OK)
