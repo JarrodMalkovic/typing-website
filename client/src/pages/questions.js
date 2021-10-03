@@ -22,6 +22,8 @@ import DataTable from '../modules/dashboard/data-table';
 import AddQuestionButton from '../modules/dashboard/add-question-button';
 import { SearchIcon } from '@chakra-ui/icons';
 import { useExercises } from '../modules/exercises/hooks/use-exercises';
+import ExportToExcel from '../modules/dashboard/upload-questions-button';
+import UploadQuestions from '../modules/dashboard/file-upload';
 
 const Dashboard = () => {
   const [filter, setFilter] = React.useState('');
@@ -30,6 +32,8 @@ const Dashboard = () => {
   const handleChange = (event) => {
     setFilter(event.target.value);
   };
+
+  const fileName = 'KeyKorea Questions';
 
   return (
     <Container pt="8" maxW="container.xl">
@@ -53,6 +57,8 @@ const Dashboard = () => {
             </InputGroup>
           </Box>
           <AddQuestionButton />
+          <ExportToExcel fileName={fileName} />
+          <UploadQuestions />
         </Flex>
         <Text>
           This is a short sentence which describes what this dashboard is all

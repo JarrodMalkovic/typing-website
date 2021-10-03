@@ -2,7 +2,7 @@ from core.subexercises.views import CreateSubexerciseAPIView, GetSubexercisesAPI
 from core.exercises.views import ExerciseAPIView, UpdateExerciseAPIView
 from core.user.view import BanUserAPIView, DeleteAccountAPIView, DemoteUserAPIView, PromoteUserAPIView, UpdateUserProfileAPIView, UserProfileAPIView, UsersAPIView
 from core.practice.views import PracticeAttemptAPIView
-from core.questions.views import QuestionAttemptsAPIView, QuestionLeaderboardAPIView, QuestionStatsAPIView, QuestionSubexerciseAPIView, QuestionIdAPIView, QuestionExerciseAttemptAPIView, QuestionExerciseAPIView, QuestionAPIView, QuestionSubexerciseOrderedAPIView
+from core.questions.views import QuestionAttemptsAPIView, QuestionLeaderboardAPIView, QuestionStatsAPIView, QuestionSubexerciseAPIView, QuestionIdAPIView, QuestionExerciseAttemptAPIView, QuestionExerciseAPIView, QuestionAPIView, QuestionSubexerciseOrderedAPIView, QuestionExcelDownload, QuestionExcelUpload
 from core.challenge.views import ChallengeAPIView, ChallengeAttemptsAPIView
 from rest_framework.routers import SimpleRouter
 from core.auth.viewsets import ChangePasswordAPIView, LoginViewSet, RegistrationViewSet, RefreshViewSet, CurrentUserViewSet
@@ -44,7 +44,6 @@ urlpatterns = [
     path('user/<int:id>/promote/', PromoteUserAPIView.as_view()),
     path('user/<int:id>/demote/', DemoteUserAPIView.as_view()),
     path('questions/attempts/', QuestionAttemptsAPIView.as_view()),
-
     path('exercises/', ExerciseAPIView.as_view()),
     path('exercises/<slug:exercise_slug>/', UpdateExerciseAPIView.as_view()),
     path('subexercises/exercise/<slug:exercise_slug>/',
@@ -54,5 +53,9 @@ urlpatterns = [
     path('subexercises/', CreateSubexerciseAPIView.as_view()),
     path('subexercises/subexercise/<slug:subexercise_slug>/',
          SubexerciseAPIView.as_view()),
+    path('download-questions/<slug:exercise_slug>/',
+         QuestionExcelDownload.as_view()),
+    path('upload-questions/', QuestionExcelUpload.as_view()),
+
     * routes.urls,
 ]
