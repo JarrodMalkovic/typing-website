@@ -15,6 +15,7 @@ import os
 import cloudinary
 from datetime import timedelta
 from dotenv import dotenv_values
+import django_on_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,12 +25,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-g!*aneuy&)ki8b4!jasmwvn0(+xb)fd41_r-!murgs!k3gq#25'
+SECRET_KEY = os.environ.get(
+    'SECRET_KEY', dotenv_values(".env").get('SECRET_KEY'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get(
+    'ENVIRONMENT', dotenv_values(".env").get('ENVIRONMENT')) == 'DEVELOPMENT'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -162,7 +165,8 @@ REST_FRAMEWORK = {
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "http://127.0.0.1:3000"
+    "http://127.0.0.1:3000",
+    "https://keykorea.vercel.app"
 ]
 
 
@@ -171,3 +175,5 @@ cloudinary.config(cloud_name=dotenv_values(".env").get('CLOUD_NAME'),
                   api_secret=dotenv_values(".env").get('API_SECRET'))
 
 TEST_WITHOUT_MIGRATIONS_COMMAND = 'django_nose.management.commands.test.Command'
+
+django_on_heroku.settings(locals())
