@@ -15,6 +15,9 @@ import { useRouter } from 'next/router';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 import { BASE_API_URL } from '../../../../common/contstants/base-api-url';
+import Spinner from '../../../../common/components/spinner';
+import { useUnauthorizedRedirect } from '../../../../modules/auth/hooks/use-unauthorized-redirect';
+import { useTitle } from 'react-use';
 
 const getCompletionPercentage = (currentQuestionIndex, totalQuestions) =>
   Math.ceil((currentQuestionIndex / totalQuestions) * 100);
@@ -42,6 +45,9 @@ const getQuestions = async (exercise) => {
 };
 
 const Exercise = () => {
+  useTitle(`KeyKorea - Practice Mode`);
+  const { isLoading: isAuthLoading } = useUnauthorizedRedirect('/auth/sign-in');
+
   const theme = useTheme();
   const router = useRouter();
   const { subexercise, exercise } = router.query;
@@ -77,10 +83,14 @@ const Exercise = () => {
     return <Heading>An error occured</Heading>;
   }
 
+  if (isAuthLoading) {
+    return <Spinner />;
+  }
+
   return (
     <Container pt="8" maxW="container.xl">
       {isLoading ? (
-        'Loading...'
+        <Spinner />
       ) : (
         <>
           <ProgressBar
