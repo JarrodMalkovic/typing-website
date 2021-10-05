@@ -17,6 +17,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import { BASE_API_URL } from '../../../common/contstants/base-api-url';
 import { useMutation, useQueryClient } from 'react-query';
+import { getRelatedCacheKeys } from '../../../common/utils/get-related-cache-keys';
 
 const promoteUser = async (userId) => {
   const { data } = await axios.patch(
@@ -30,9 +31,20 @@ const PromoteUserModal = ({ username, userId, isOpen, onClose, finalRef }) => {
 
   const { mutate, isLoading } = useMutation(() => promoteUser(userId), {
     onSuccess: (data) => {
-      queryClient.setQueryData('users', (old) =>
-        old.map((oldRow) => (oldRow.id === userId ? data : oldRow)),
+      const keys = getRelatedCacheKeys(queryClient, 'users');
+
+      keys.forEach((key) =>
+        queryClient.setQueryData(key, (old) => {
+          return {
+            ...old,
+            users: old.users.map((oldRow) =>
+              oldRow.id === userId ? data : oldRow,
+            ),
+          };
+        }),
       );
+
+      onClose();
     },
   });
 

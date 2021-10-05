@@ -13,6 +13,7 @@ import {
 import axios from 'axios';
 import { BASE_API_URL } from '../../../common/contstants/base-api-url';
 import { useMutation, useQueryClient } from 'react-query';
+import { getRelatedCacheKeys } from '../../../common/utils/get-related-cache-keys';
 
 const banUser = async (userId) => {
   const { data } = await axios.delete(
@@ -26,9 +27,18 @@ const BanUserModal = ({ isOpen, onClose, cancelRef, username, userId }) => {
 
   const { mutate, isLoading } = useMutation(() => banUser(userId), {
     onSuccess: () => {
-      queryClient.setQueryData('users', (old) =>
-        old.filter((oldRow) => oldRow.id !== userId),
+      const keys = getRelatedCacheKeys(queryClient, 'users');
+
+      keys.forEach((key) =>
+        queryClient.setQueryData(key, (old) => {
+          return {
+            ...old,
+            users: old.users.filter((oldRow) => oldRow.id !== userId),
+          };
+        }),
       );
+
+      onClose();
     },
   });
 
