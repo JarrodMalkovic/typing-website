@@ -9,6 +9,7 @@ from core.practice.models import PracticeAttempt
 from django.db.models import Avg, Count
 from datetime import timedelta
 from django.utils import timezone
+import math
 
 
 class UserProfileAPIView(APIView):
@@ -47,10 +48,18 @@ class UserProfileAPIView(APIView):
 class UsersAPIView(APIView):
     permission_classes = [permissions.IsAdminUser]
 
-    def get(self, _):
-        users = User.objects.all()
+    def get(self, request):
+        page = int(request.GET.get('page', 0))
+        limit = min(int(request.GET.get('limit', 10)), 50)
+        search = request.GET.get('search', '')
+        skip = page * limit
+
+        count = len(User.objects.filter(username__icontains=search))
+        users = User.objects.filter(username__icontains=search)[
+            skip:skip + limit]
         serializers = UsersSerializer(users, many=True)
-        return Response(serializers.data, status=status.HTTP_200_OK)
+
+        return Response({'pages': math.ceil(count / limit), 'users': serializers.data}, status=status.HTTP_200_OK)
 
 
 class UpdateUserProfileAPIView(APIView):

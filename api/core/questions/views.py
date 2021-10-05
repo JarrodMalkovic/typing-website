@@ -338,7 +338,8 @@ class QuestionExcelUpload(APIView):
                 try:
                     new_question = {
                         "subexercise_slug": subexercise.subexercise_slug,
-                        "question": question['question']
+                        "question": question['question'],
+                        "translation": question['translation']
                     }
                     all_questions.append(new_question)
                 except:
