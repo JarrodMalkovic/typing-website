@@ -19,9 +19,9 @@ import UserProfileDropdown from './user-profile-dropdown';
 import { useAuth } from '../../modules/auth/hooks/use-auth';
 
 const Links = [
-  { name: 'Keyboard Setup', href: '/setup' },
-  { name: 'Practice', href: '/practice' },
-  { name: 'Challenge', href: '/challenge' }
+  { name: 'Keyboard Setup', href: '/setup', requiresAuth: false },
+  { name: 'Practice', href: '/practice', requiresAuth: true },
+  { name: 'Challenge', href: '/challenge', requiresAuth: true },
 ];
 
 // Adapted from: https://chakra-templates.dev/navigation/navbar
@@ -45,18 +45,24 @@ const Navbar = () => {
             onClick={isOpen ? onClose : onOpen}
           />
           <HStack spacing={8} alignItems={'center'}>
-          <Logo />
+            <Logo />
             <HStack
               as={'nav'}
               spacing={4}
               display={{ base: 'none', md: 'flex' }}>
-              {Links.map((link) => (
-                <ActiveNavLink
-                  name={link.name}
-                  href={link.href}
-                  key={link.name}
-                />
-              ))}
+              {Links.map((link) => {
+                if (link.requiresAuth && !state.isAuthenticated) {
+                  return null;
+                }
+
+                return (
+                  <ActiveNavLink
+                    name={link.name}
+                    href={link.href}
+                    key={link.name}
+                  />
+                );
+              })}
             </HStack>
           </HStack>
           <Flex alignItems={'center'}>
@@ -79,13 +85,19 @@ const Navbar = () => {
         {isOpen && (
           <Box pb={4} display={{ md: 'none' }}>
             <Stack as={'nav'} spacing={4}>
-              {Links.map((link) => (
-                <ActiveNavLink
-                  name={link.name}
-                  href={link.href}
-                  key={link.name}
-                />
-              ))}
+              {Links.map((link) => {
+                if (link.requiresAuth && !state.isAuthenticated) {
+                  return null;
+                }
+
+                return (
+                  <ActiveNavLink
+                    name={link.name}
+                    href={link.href}
+                    key={link.name}
+                  />
+                );
+              })}
             </Stack>
           </Box>
         )}
