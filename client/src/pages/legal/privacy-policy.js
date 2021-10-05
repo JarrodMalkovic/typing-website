@@ -4,8 +4,11 @@ import { Container } from '@chakra-ui/react';
 import ChakraUIRenderer from 'chakra-ui-markdown-renderer';
 import ReactMarkdown from 'react-markdown';
 import PropTypes from 'prop-types';
+import { useTitle } from 'react-use';
 
 const PrivacyPolicy = ({ source }) => {
+  useTitle('KeyKorea - Privacy Policy');
+
   return (
     <Container pt="8" maxW="container.xl">
       <ReactMarkdown components={ChakraUIRenderer()}>{source}</ReactMarkdown>

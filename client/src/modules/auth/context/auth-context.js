@@ -59,6 +59,7 @@ export const AuthProvider = ({ children }) => {
       setAuthToken(localStorage.getItem('access-token'));
       const res = await axios.get(`${BASE_API_URL}/api/auth/current-user/`);
       dispatch({ type: 'login', payload: res.data });
+      console.log(res.data);
     } catch (error) {
       dispatch({ type: 'auth-error' });
     }

@@ -24,13 +24,22 @@ import { exercises } from '../common/contstants/exercises';
 import { SearchIcon } from '@chakra-ui/icons';
 import AddExerciseButton from '../modules/exercises/components/add-exercise-button';
 import ExercisesTable from '../modules/exercises/components/exercises-table';
+import { useNonAdminRedirect } from '../modules/auth/hooks/use-non-admin-redirect';
+import Spinner from '../common/components/spinner';
+import { useTitle } from 'react-use';
 
 const Dashboard = () => {
+  useTitle('KeyKorea - Exercises Dashboard');
+  const { isLoading: isAuthLoading } = useNonAdminRedirect('/');
   const [filter, setFilter] = React.useState('');
 
   const handleChange = (event) => {
     setFilter(event.target.value);
   };
+
+  if (isAuthLoading) {
+    return <Spinner />;
+  }
 
   return (
     <Container pt="8" maxW="container.xl">

@@ -10,6 +10,7 @@ import {
   Input,
   Spacer,
   Stack,
+  VStack,
   Text,
   useColorModeValue,
 } from '@chakra-ui/react';
@@ -107,16 +108,46 @@ const ExerciseContent = ({
   return (
     <>
       <Stack align={'center'}>
-        <Center>
-          <Heading textAlign="center" fontSize={'4xl'}>
-            Type the following in Korean{' '}
-          </Heading>
-        </Center>
-        <Text
-          fontSize={'2xl'}
-          color={useColorModeValue('gray.600', 'gray.200')}>
-          {showTextDifference(word, questions[currentQuestionIndex].question)}
-        </Text>
+        {questions[currentQuestionIndex].audio_url ? (
+          <Center>
+            <VStack>
+              <Heading textAlign="center" fontSize={'4xl'}>
+                Type the what you hear in Korean
+              </Heading>{' '}
+              <audio
+                autoPlay
+                controls="controls"
+                src={questions[currentQuestionIndex].audio_url}
+              />
+              <Text
+                fontSize={'sm'}
+                color={useColorModeValue('gray.600', 'gray.200')}>
+                ({questions[currentQuestionIndex].translation})
+              </Text>
+            </VStack>
+          </Center>
+        ) : (
+          <>
+            <Center>
+              <Heading textAlign="center" fontSize={'4xl'}>
+                Type the following in Korean
+              </Heading>
+            </Center>
+            <Text
+              fontSize={'2xl'}
+              color={useColorModeValue('gray.600', 'gray.200')}>
+              {showTextDifference(
+                word,
+                questions[currentQuestionIndex].question,
+              )}
+            </Text>
+            <Text
+              fontSize={'sm'}
+              color={useColorModeValue('gray.600', 'gray.200')}>
+              ({questions[currentQuestionIndex].translation})
+            </Text>
+          </>
+        )}
       </Stack>
       <Center>
         <Box

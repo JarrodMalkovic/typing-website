@@ -6,13 +6,19 @@ from rest_framework import permissions, serializers, status, generics
 from .models import Exercise
 import cloudinary.uploader
 from rest_framework.exceptions import APIException
+from myapi.permissions import IsAdminUserOrReadOnlyAndIsAuthenticated
 
 
 class ExerciseAPIView(APIView):
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [IsAdminUserOrReadOnlyAndIsAuthenticated]
 
     def get(self, request):
-        exercises = Exercise.objects.all()
+        if request.user.is_staff or request.user.is_superuser:
+            exercises = Exercise.objects.all()
+            serializers = CreateExerciseSerializer(exercises, many=True)
+            return Response(serializers.data, status=status.HTTP_200_OK)
+
+        exercises = Exercise.objects.filter(hidden=False)
         serializers = CreateExerciseSerializer(exercises, many=True)
         return Response(serializers.data, status=status.HTTP_200_OK)
 

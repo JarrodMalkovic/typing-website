@@ -17,9 +17,11 @@ import { calculateTimeTaken } from '../utils/calculate-time-taken';
 import axios from 'axios';
 import { BASE_API_URL } from '../../../common/contstants/base-api-url';
 import { useMutation } from 'react-query';
+import Link from 'next/link';
+import { useSubexercises } from '../../subexercises/hooks/use-subexercises';
 
 const submitPracticeAttempt = async (exercise, body) => {
-  const res = await axios.post(`${BASE_API_URL}/api/practice/attempt`, {
+  const res = await axios.post(`${BASE_API_URL}/api/practice/attempt/`, {
     subexercise_slug: exercise,
     ...body,
   });
@@ -31,15 +33,19 @@ const ExerciseSummary = ({
   startDate,
   wordsTyped,
   accuracy,
-  exercise,
+  subexercise,
   restart,
+  exercise,
 }) => {
+  const { data: subexercises, isLoading } = useSubexercises(exercise);
+
   const [wpm] = React.useState(caculateWPM(startDate, wordsTyped));
   const [timeTaken] = React.useState(calculateTimeTaken(startDate, new Date()));
   const [score] = React.useState(wpm * (accuracy / 100));
+  const [nextSubexercise, setNextSubexercise] = React.useState(null);
 
   const { mutate } = useMutation(() =>
-    submitPracticeAttempt(exercise, {
+    submitPracticeAttempt(subexercise, {
       wpm,
       time_elapsed: timeTaken,
       score,
@@ -48,23 +54,40 @@ const ExerciseSummary = ({
   );
 
   React.useEffect(() => {
-    localStorage.removeItem(`${exercise}-accuracy`);
-    localStorage.removeItem(`${exercise}-words-typed`);
-    localStorage.removeItem(`${exercise}-current-question-index`);
-    localStorage.removeItem(`${exercise}-time-elapsed`);
-  }, [exercise]);
+    localStorage.removeItem(`${subexercise}-accuracy`);
+    localStorage.removeItem(`${subexercise}-words-typed`);
+    localStorage.removeItem(`${subexercise}-current-question-index`);
+    localStorage.removeItem(`${subexercise}-time-elapsed`);
+  }, [subexercise]);
 
   React.useEffect(() => {
     mutate();
   }, []);
 
+  React.useEffect(() => {
+    if (!subexercises) {
+      return;
+    }
+
+    const currentSubexerciseIdx = subexercises
+      .map((subexercise) => subexercise.subexercise_slug)
+      .indexOf(subexercise);
+
+    if (currentSubexerciseIdx >= subexercises.length - 1) {
+      return;
+    }
+
+    const nextSubexercise = subexercises[currentSubexerciseIdx + 1];
+    setNextSubexercise(nextSubexercise.subexercise_slug);
+  }, [isLoading]);
+
   return (
     <Box>
       <Confetti numberOfPieces={500} gravity={0.1} recycle={false} />
       <Stack align={'center'}>
-        <Heading>Woohoo! You finished the exercise! 🥳</Heading>
+        <Heading>Woohoo! You finished the subexercise! 🥳</Heading>
         <Heading as="h2" size="md">
-          Exercise Summary
+          Subexercise Summary
         </Heading>
         <HStack spacing="8">
           <Text>Speed: {wpm} WPM</Text>
@@ -76,7 +99,18 @@ const ExerciseSummary = ({
           <Button size="sm" variant="ghost" onClick={restart}>
             Restart Exercise
           </Button>
-          <Button size="sm">Next Exercise</Button>
+
+          {isLoading ? (
+            <h1>Loading</h1>
+          ) : !nextSubexercise ? (
+            <Link href="/practice">
+              <Button size="sm">Back to practice page</Button>
+            </Link>
+          ) : (
+            <Link href={`/practice/${exercise}/subexercise/${nextSubexercise}`}>
+              <Button size="sm">Next Subexercise</Button>
+            </Link>
+          )}
         </ButtonGroup>
       </Stack>
     </Box>

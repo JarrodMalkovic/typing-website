@@ -20,19 +20,27 @@ import {
 } from '@chakra-ui/react';
 import DataTable from '../modules/dashboard/data-table';
 import AddQuestionButton from '../modules/dashboard/add-question-button';
-import { exercises } from '../common/contstants/exercises';
 import { SearchIcon } from '@chakra-ui/icons';
+import { useExercises } from '../modules/exercises/hooks/use-exercises';
 import ExportToExcel from '../modules/dashboard/upload-questions-button';
 import UploadQuestions from '../modules/dashboard/file-upload';
+import { useNonAdminRedirect } from '../modules/auth/hooks/use-non-admin-redirect';
+import Spinner from '../common/components/spinner';
+import { useTitle } from 'react-use';
 
 const Dashboard = () => {
+  useTitle('KeyKorea - Questions Dashboard');
+  const { isLoading: isAuthLoading } = useNonAdminRedirect('/');
   const [filter, setFilter] = React.useState('');
+  const { data: exercises, isLoading } = useExercises();
 
   const handleChange = (event) => {
     setFilter(event.target.value);
   };
 
-  const fileName = "KeyKorea Questions";
+  if (isAuthLoading) {
+    return <Spinner />;
+  }
 
   return (
     <Container pt="8" maxW="container.xl">
@@ -56,27 +64,32 @@ const Dashboard = () => {
             </InputGroup>
           </Box>
           <AddQuestionButton />
-          <ExportToExcel fileName={fileName} />
-          <UploadQuestions/>
         </Flex>
         <Text>
           This is a short sentence which describes what this dashboard is all
           about
         </Text>
-        <Tabs isLazy variant="enclosed" top={40}>
-          <TabList>
-            {Object.entries(exercises).map(([key, value], idx) => (
-              <Tab key={idx}>{value.name}</Tab>
-            ))}
-          </TabList>
-          <TabPanels>
-            {Object.entries(exercises).map(([key, value], idx) => (
-              <TabPanel paddingX="0" key={idx}>
-                <DataTable exercise_slug={value.slug} filter={filter} />
-              </TabPanel>
-            ))}
-          </TabPanels>
-        </Tabs>
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          <Tabs isLazy variant="enclosed" top={40}>
+            <TabList>
+              {Object.entries(exercises).map(([key, value], idx) => (
+                <Tab key={idx}>{value.exercise_name}</Tab>
+              ))}
+            </TabList>
+            <TabPanels>
+              {Object.entries(exercises).map(([key, value], idx) => (
+                <TabPanel paddingX="0" key={idx}>
+                  <DataTable
+                    exercise_slug={value.exercise_slug}
+                    filter={filter}
+                  />
+                </TabPanel>
+              ))}
+            </TabPanels>
+          </Tabs>
+        )}
       </VStack>
     </Container>
   );

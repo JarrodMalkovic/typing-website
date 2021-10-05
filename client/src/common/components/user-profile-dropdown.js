@@ -47,9 +47,7 @@ const UserProfileDropdown = () => {
             </Box>
           </HStack>
         </MenuButton>
-        <MenuList
-          bg={useColorModeValue('white', 'gray.900')}
-          borderColor={useColorModeValue('gray.200', 'gray.700')}>
+        <MenuList bg={useColorModeValue('white', 'gray.900')}>
           <Link href={`/profile/${state.user.username}`}>
             <MenuItem>Profile</MenuItem>
           </Link>
@@ -62,23 +60,27 @@ const UserProfileDropdown = () => {
           <Link href="/settings">
             <MenuItem>Settings</MenuItem>
           </Link>
-          <MenuDivider />
-          <Link href="/questions">
-            <MenuItem>Question Dashboard</MenuItem>
-          </Link>
-          <Link href="/exercises">
-            <MenuItem>Exercise Dashboard</MenuItem>
-          </Link>
-          <Link href="/subexercises">
-            <MenuItem>Subexercise Dashboard</MenuItem>
-          </Link>
+          {state.user.isAdmin && (
+            <>
+              <MenuDivider />
+              <Link href="/questions">
+                <MenuItem>Question Dashboard</MenuItem>
+              </Link>
+              <Link href="/exercises">
+                <MenuItem>Exercise Dashboard</MenuItem>
+              </Link>
+              <Link href="/subexercises">
+                <MenuItem>Subexercise Dashboard</MenuItem>
+              </Link>
 
-          <Link href="/statistics">
-            <MenuItem>Exercise Statistics</MenuItem>
-          </Link>
-          <Link href="/users">
-            <MenuItem>User Management</MenuItem>
-          </Link>
+              <Link href="/statistics">
+                <MenuItem>Exercise Statistics</MenuItem>
+              </Link>
+              <Link href="/users">
+                <MenuItem>User Management</MenuItem>
+              </Link>
+            </>
+          )}
           <MenuDivider />
           <MenuItem onClick={logout}>Sign out</MenuItem>
         </MenuList>
