@@ -29,7 +29,7 @@ const Practice = () => {
         <Heading fontSize="45px" padding="20px" position="absolute" top={0}>
           Practice Mode
         </Heading>
-        <Divider />
+        
 
         <VStack position="absolute" top={20}>
           <Text

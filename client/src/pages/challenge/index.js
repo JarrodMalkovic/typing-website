@@ -114,42 +114,52 @@ const Challenge = () => {
               linear-gradient="(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.25))"
               src="/images/Basic.png"
             />
-            <Heading position="absolute" top={0}>
+            <Heading fontSize="45px" padding="20px" position="absolute" top={0}>
               Challenge Mode
             </Heading>
             <Text
-              fontSize="lg"
-              top={20}
+              fontSize="20px"
+              top={40}
               align="center"
               position="absolute"
-              color={useColorModeValue('gray.600', 'gray.200')}
-              maxW="container.md">
+              maxW="container.md"
+              textAlign = "center"
+              fontWeight = "medium"
+            >
               This mode puts your korean typing skills to the ultimate test!
               Challenge Mode tests all your skills, containing exercises on
-              Letters, Sylabbles, Words, Short Sentances, Long Sentances and
-              Diction! <br></br>You can track how you go, and enter a
-              leaderboard with your other peers! <br></br>Good Luck!
+              Letters, Sylabbles, Words, Short and Long Sentences and Dictation! 
+
+              <br></br>
+              <br></br>
+
+              <Text textAlign = "center">You can track how you go, and enter a
+              leaderboard with your other peers! Good Luck! </Text>
+            
             </Text>
-            <ButtonGroup position="absolute" top={80}>
+
+
+
+            <ButtonGroup position="absolute" top={80} padding = "50px">
               <Button
-                size="sm"
+                size="lg"
                 variant="ghost"
                 isLoading={isFetching}
                 onClick={refetch}
-                bgColor="rgba(200,16,46,0.7)"
+                bgColor="#39aae1"
                 _hover={{
-                  bg: 'rgba(0,47,108,0.7)',
+                  bg: '#f52c56',
                 }}
                 color="white">
                 Start Challenge
               </Button>
               <NextLink href="/practice">
                 <Button
-                  size="sm"
+                  size="lg"
                   variant="ghost"
-                  bgColor="rgba(200,16,46,0.7)"
+                  bgColor="#39aae1"
                   _hover={{
-                    bg: 'rgba(0,47,108,0.7)',
+                    bg: '#f52c56',
                   }}
                   color="white">
                   I need some practice first
