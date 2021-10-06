@@ -13,4 +13,4 @@ class ChallengeAttempt(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.attempt}"
+        return f"{self.user} {self.created_at}"
