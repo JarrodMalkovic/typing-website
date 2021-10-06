@@ -174,9 +174,12 @@ CORS_ALLOWED_ORIGINS = [
 ]
 
 
-cloudinary.config(cloud_name=dotenv_values(".env").get('CLOUD_NAME'),
-                  api_key=dotenv_values(".env").get('API_KEY'),
-                  api_secret=dotenv_values(".env").get('API_SECRET'))
+cloudinary.config(cloud_name=os.environ.get(
+    'CLOUD_NAME', dotenv_values(".env").get('CLOUD_NAME')),
+    api_key=os.environ.get(
+    'API_KEY', dotenv_values(".env").get('API_KEY')),
+    api_secret=os.environ.get(
+    'API_SECRET', dotenv_values(".env").get('API_SECRET')))
 
 TEST_WITHOUT_MIGRATIONS_COMMAND = 'django_nose.management.commands.test.Command'
 
