@@ -10,6 +10,7 @@ import {
   VStack,
   Box,
   Image,
+
 } from '@chakra-ui/react';
 import {
   kk,
@@ -39,6 +40,7 @@ const getSteps = (os) => {
       return windowsSteps;
   }
 };
+
 
 const Setup = () => {
   const [os, setOs] = React.useState(null);
