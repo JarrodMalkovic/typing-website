@@ -107,3 +107,13 @@ docker ps
 and verifying that there are no containers listed
 
 Note: On Linux systems, if you get an error running `docker-compose down`, you may first need to run `sudo aa-remove-unknown`
+
+## Running Automated Tests
+Ensure that the Django App and the Postgres Database is running
+```bash
+docker-compose up
+```
+Run the automated tests by doing:
+```bash
+python3 manage.py test --nomigrations
+```
