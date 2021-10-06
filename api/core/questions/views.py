@@ -24,33 +24,36 @@ class QuestionSubexerciseAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, subexercise):
-        current_subexercise = Subexercise.objects.get(
-            subexercise_slug=subexercise)
+        try:
+            current_subexercise = Subexercise.objects.get(
+                subexercise_slug=subexercise)
 
-        level_request = current_subexercise.level
-        current_exercise_slug = current_subexercise.exercise_slug
+            level_request = current_subexercise.level
+            current_exercise_slug = current_subexercise.exercise_slug
 
-        if level_request == 1:
-            questions = Question.objects.filter(subexercise_slug=subexercise)
+            if level_request == 1:
+                questions = Question.objects.filter(subexercise_slug=subexercise)
+                serializers = QuestionSerializer(questions, many=True)
+                return Response(serializers.data, status=status.HTTP_200_OK)
+
+            previous_subexercise = Subexercise.objects.get(
+                level=level_request-1, exercise_slug=current_exercise_slug)
+
+            attempts = PracticeAttempt.objects.filter(
+                subexercise_slug=previous_subexercise, user=request.user)
+
+            if len(attempts) == 0:
+                raise APIException(
+                    detail="You must complete previous subexercises before this one")
+
+            questions = Question.objects.filter(
+                subexercise_slug=subexercise)
+
             serializers = QuestionSerializer(questions, many=True)
+
             return Response(serializers.data, status=status.HTTP_200_OK)
-
-        previous_subexercise = Subexercise.objects.get(
-            level=level_request-1, exercise_slug=current_exercise_slug)
-
-        attempts = PracticeAttempt.objects.filter(
-            subexercise_slug=previous_subexercise, user=request.user)
-
-        if len(attempts) == 0:
-            raise APIException(
-                detail="You must complete previous subexercises before this one")
-
-        questions = Question.objects.filter(
-            subexercise_slug=subexercise)
-
-        serializers = QuestionSerializer(questions, many=True)
-
-        return Response(serializers.data, status=status.HTTP_200_OK)
+        except Subexercise.DoesNotExist:
+            return Response([], status=status.HTTP_200_OK)
 
 
 class QuestionSubexerciseOrderedAPIView(APIView):
@@ -102,7 +105,7 @@ class QuestionIdAPIView(APIView):
     def get(self, _, id):
         question = self.get_object(id)
         serializer = QuestionSerializer(question)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, id):
         question = self.get_object(id)
@@ -110,7 +113,7 @@ class QuestionIdAPIView(APIView):
 
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
