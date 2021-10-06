@@ -15,14 +15,14 @@ class GetQuestionsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Question
-        fields = ['id', 'question', 'subexercise_slug',
+        fields = ['id', 'question', 'subexercise_slug', 'translation',
                   'audio_url', 'created_at']
 
 
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
-        fields = ['id', 'question', 'audio_url',
+        fields = ['id', 'question', 'audio_url', 'translation',
                   'subexercise_slug', 'created_at']
 
     def create(self, validatted_data):

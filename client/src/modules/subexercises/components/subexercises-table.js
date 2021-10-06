@@ -1,7 +1,7 @@
 import React from 'react';
 import { useTable } from 'react-table';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
-import HTML5Backend from 'react-dnd-html5-backend';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import update from 'immutability-helper';
 import {
   Table as ChakraTable,
@@ -11,16 +11,29 @@ import {
   Button,
   Tbody,
   Thead,
+  ButtonGroup,
 } from '@chakra-ui/react';
 import { DragHandleIcon } from '@chakra-ui/icons';
+import { useMutation, useQuery } from 'react-query';
+import axios from 'axios';
+import { BASE_API_URL } from '../../../common/contstants/base-api-url';
+import EditSubexerciseButtton from './edit-subexercise-button';
+import DeleteSubexerciseButton from './delete-subexercise-button';
 
-console.log(HTML5Backend);
+const reorderSubexercises = async ({ body, exercise_slug }) => {
+  const { data } = await axios.patch(
+    `${BASE_API_URL}/api/subexercises/exercise/${exercise_slug}/reorder/`,
+    body,
+  );
 
-const Table = ({ columns, data }) => {
-  const [records, setRecords] = React.useState(data);
+  return data;
+};
+
+const Table = ({ columns, records, setRecords, exercise_slug }) => {
+  const { mutate } = useMutation(reorderSubexercises);
 
   const getRowId = React.useCallback((row) => {
-    return row.id;
+    return row.subexercise_slug;
   }, []);
 
   const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
@@ -32,14 +45,30 @@ const Table = ({ columns, data }) => {
 
   const moveRow = (dragIndex, hoverIndex) => {
     const dragRecord = records[dragIndex];
-    setRecords(
-      update(records, {
-        $splice: [
-          [dragIndex, 1],
-          [hoverIndex, 0, dragRecord],
-        ],
-      }),
-    );
+
+    const rows = update(records, {
+      $splice: [
+        [dragIndex, 1],
+        [hoverIndex, 0, dragRecord],
+      ],
+    });
+
+    setRecords(rows);
+
+    const reordered = rows
+      .map((row, idx) => {
+        return { subexercise_slug: row.subexercise_slug, level: idx + 1 };
+      })
+      .reduce(
+        (obj, item) =>
+          Object.assign(obj, {
+            [item.subexercise_slug]: { level: item.level },
+          }),
+        {},
+      );
+
+    console.log(dragRecord);
+    mutate({ body: reordered, exercise_slug });
   };
 
   return (
@@ -87,36 +116,26 @@ const Row = ({ row, index, moveRow }) => {
       }
       const dragIndex = item.index;
       const hoverIndex = index;
-      // Don't replace items with themselves
+
       if (dragIndex === hoverIndex) {
         return;
       }
-      // Determine rectangle on screen
+
       const hoverBoundingRect = dropRef.current.getBoundingClientRect();
-      // Get vertical middle
       const hoverMiddleY =
         (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
-      // Determine mouse position
       const clientOffset = monitor.getClientOffset();
-      // Get pixels to the top
       const hoverClientY = clientOffset.y - hoverBoundingRect.top;
-      // Only perform the move when the mouse has crossed half of the items height
-      // When dragging downwards, only move when the cursor is below 50%
-      // When dragging upwards, only move when the cursor is above 50%
-      // Dragging downwards
+
       if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
         return;
       }
-      // Dragging upwards
+
       if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
         return;
       }
-      // Time to actually perform the action
+
       moveRow(dragIndex, hoverIndex);
-      // Note: we're mutating the monitor item here!
-      // Generally it's better to avoid mutations,
-      // but it's good here for the sake of performance
-      // to avoid expensive index searches.
       item.index = hoverIndex;
     },
   });
@@ -149,9 +168,27 @@ const Row = ({ row, index, moveRow }) => {
   );
 };
 
-const SubexercisesTable = () => {
-  const columns = React.useMemo(
-    () => [
+const getSubexercises = async (exercise_slug) => {
+  const { data } = await axios.get(
+    `${BASE_API_URL}/api/subexercises/exercise/${exercise_slug}/`,
+  );
+
+  return data;
+};
+
+const SubexercisesTable = ({ exercise_slug }) => {
+  const [tableData, setTableData] = React.useState([]);
+  const { data: apiResponse, isLoading } = useQuery(
+    ['subexercise', 'dashboard', exercise_slug],
+    () => getSubexercises(exercise_slug),
+  );
+
+  React.useEffect(() => {
+    setTableData(apiResponse || []);
+  }, [apiResponse]);
+
+  const [columns, data] = React.useMemo(() => {
+    const columns = [
       {
         Header: 'Name',
         accessor: 'subexercise_name',
@@ -162,55 +199,37 @@ const SubexercisesTable = () => {
       },
       {
         Header: 'Date Created',
-        accessor: 'date_created',
+        accessor: 'created_at',
+        Cell: ({ cell }) => {
+          const date = new Date(cell.value);
+          return date.toDateString();
+        },
       },
 
       {
         Header: '',
         accessor: 'editButton',
         Cell: ({ cell }) => (
-          <Button float="right" variant="ghost" size="sm" color="blue.400">
-            Edit
-          </Button>
+          <ButtonGroup float="right">
+            <EditSubexerciseButtton subexercise={cell.row.original} />
+            <DeleteSubexerciseButton subexercise={cell.row.original} />
+          </ButtonGroup>
         ),
         disableSortBy: true,
       },
-    ],
-    [],
+    ];
+
+    return [columns, tableData];
+  }, [tableData]);
+
+  return (
+    <Table
+      columns={columns}
+      records={data}
+      setRecords={setTableData}
+      exercise_slug={exercise_slug}
+    />
   );
-
-  const data = React.useMemo(
-    () => [
-      {
-        id: 1,
-        subexercise_name: 'Placeholder Subexercise 1',
-        description: 'Placeholder Description 1',
-        date_created: '25/20/2021',
-      },
-      {
-        id: 2,
-        subexercise_name: 'Placeholder Subexercise 2',
-        description: 'Placeholder Description 2',
-        date_created: '25/20/2021',
-      },
-
-      {
-        id: 3,
-        subexercise_name: 'Placeholder Subexercise 3',
-        description: 'Placeholder Description 3',
-        date_created: '25/20/2021',
-      },
-      {
-        id: 4,
-        subexercise_name: 'Placeholder Subexercise 4',
-        description: 'Placeholder Description 4',
-        date_created: '25/20/2021',
-      },
-    ],
-    [],
-  );
-
-  return <Table columns={columns} data={data} />;
 };
 
 export default SubexercisesTable;

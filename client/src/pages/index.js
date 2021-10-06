@@ -14,20 +14,14 @@ import {
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Row, Col } from 'react-bootstrap';
-
 import { ArrowForwardIcon } from '@chakra-ui/icons';
 import Link from 'next/link';
 import { useAuth } from '../modules/auth/hooks/use-auth';
+import { useTitle } from 'react-use';
 
 const Home = (props) => {
+  useTitle('KeyKorea');
   const { state } = useAuth();
-
-  const mystyle = {
-    color: 'white',
-    backgroundColor: 'DodgerBlue',
-    padding: '10px',
-    fontFamily: 'Arial',
-  };
 
   return (
     <>

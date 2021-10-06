@@ -10,28 +10,24 @@ import {
   TabPanels,
   TabPanel,
   Flex,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  Image,
   Spacer,
-  Box,
   Text,
 } from '@chakra-ui/react';
-import DataTable from '../modules/dashboard/data-table';
-import AddQuestionButton from '../modules/dashboard/add-question-button';
-import { exercises } from '../common/contstants/exercises';
-import { SearchIcon } from '@chakra-ui/icons';
-import AddExerciseButton from '../modules/exercises/components/add-exercise-button';
-import ExercisesTable from '../modules/exercises/components/exercises-table';
 import SubexercisesTable from '../modules/subexercises/components/subexercises-table';
+import AddSubexerciseButton from '../modules/subexercises/components/add-subexercise-button';
+import { useExercises } from '../modules/exercises/hooks/use-exercises';
+import { useTitle } from 'react-use';
+import { useNonAdminRedirect } from '../modules/auth/hooks/use-non-admin-redirect';
+import Spinner from '../common/components/spinner';
 
 const Dashboard = () => {
-  const [filter, setFilter] = React.useState('');
+  useTitle('KeyKorea - Subexercises Dashboard');
+  const { isLoading: isAuthLoading } = useNonAdminRedirect('/');
+  const { data: exercises, isLoading } = useExercises();
 
-  const handleChange = (event) => {
-    setFilter(event.target.value);
-  };
+  if (isAuthLoading) {
+    return <Spinner />;
+  }
 
   return (
     <Container pt="8" maxW="container.xl">
@@ -39,41 +35,31 @@ const Dashboard = () => {
         <Flex>
           <Heading>Subxercise Dashboard</Heading>
           <Spacer />
-          <Box>
-            <InputGroup>
-              <InputLeftElement
-                pointerEvents="none"
-                children={<SearchIcon />}
-              />
-              <Input
-                w="xs"
-                mr="3"
-                placeholder="Search subexercises..."
-                value={filter}
-                onChange={handleChange}
-              />
-            </InputGroup>
-          </Box>
-          <AddExerciseButton />
+
+          <AddSubexerciseButton />
         </Flex>
         <Text>
           This is a short sentence which describes what this dashboard is all
           about
         </Text>
-        <Tabs variant="enclosed">
-          <TabList>
-            <Tab>Exercise 1</Tab>
-            <Tab>Exercise 2</Tab>
-          </TabList>
-          <TabPanels>
-            <TabPanel marginX="0" paddingX="0">
-              <SubexercisesTable />
-            </TabPanel>
-            <TabPanel marginX="0" paddingX="0">
-              <SubexercisesTable />
-            </TabPanel>
-          </TabPanels>
-        </Tabs>
+        {isLoading ? (
+          <h1>Loading</h1>
+        ) : (
+          <Tabs isLazy variant="enclosed">
+            <TabList>
+              {Object.entries(exercises).map(([key, value], idx) => (
+                <Tab key={idx}>{value.exercise_name}</Tab>
+              ))}
+            </TabList>
+            <TabPanels>
+              {Object.entries(exercises).map(([key, value], idx) => (
+                <TabPanel paddingX="0" key={idx}>
+                  <SubexercisesTable exercise_slug={value.exercise_slug} />
+                </TabPanel>
+              ))}
+            </TabPanels>
+          </Tabs>
+        )}
       </VStack>
     </Container>
   );

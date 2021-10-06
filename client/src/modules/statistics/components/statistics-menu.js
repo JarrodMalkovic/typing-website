@@ -3,16 +3,24 @@ import * as React from 'react';
 import { MenuButton, Button, MenuList, MenuItem, Menu } from '@chakra-ui/react';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { exercises } from '../../../common/contstants/exercises';
-
-const options = [
-  { category: 'All Exercises', name: 'All Exercises' },
-  { category: 'challenge', name: 'Challenge Mode' },
-  ...Object.entries(exercises).map(([slug, value]) => {
-    return { category: slug, name: value.name };
-  }),
-];
+import { useExercises } from '../../exercises/hooks/use-exercises';
 
 const StatisticsMenu = ({ setCategory }) => {
+  const { data: exercises, isLoading } = useExercises();
+
+  const options = isLoading
+    ? [
+        { category: 'All Exercises', name: 'All Exercises' },
+        { category: 'challenge', name: 'Challenge Mode' },
+      ]
+    : [
+        { category: 'All Exercises', name: 'All Exercises' },
+        { category: 'challenge', name: 'Challenge Mode' },
+        ...Object.entries(exercises).map(([key, value]) => {
+          return { category: value.exercise_slug, name: value.exercise_name };
+        }),
+      ];
+
   return (
     <Menu>
       <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>

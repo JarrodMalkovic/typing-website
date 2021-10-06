@@ -6,4 +6,4 @@ class SubexerciseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Subexercise
         fields = ['subexercise_slug',
-                  'subexercise_name', 'level', 'exercise_slug']
+                  'subexercise_name', 'level', 'exercise_slug', 'description', 'created_at']

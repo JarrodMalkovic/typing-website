@@ -15,8 +15,10 @@ import {
 import NavLink from 'next/link';
 import SigninForm from '../../modules/auth/components/sign-in-form.js';
 import { useAuthorizedRedirect } from '../../modules/auth/hooks/use-authorized-redirect.js';
+import { useTitle } from 'react-use';
 
 const SignIn = () => {
+  useTitle('KeyKorea - Sign in');
   useAuthorizedRedirect();
 
   return (

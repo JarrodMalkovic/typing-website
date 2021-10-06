@@ -18,15 +18,29 @@ import {
   Text,
 } from '@chakra-ui/react';
 import { SearchIcon } from '@chakra-ui/icons';
-import { exercises } from '../common/contstants/exercises';
-import PastAttemptsTable from '../modules/exercises/components/past-attempts-table';
 
-const tabs = [
-  ...Object.entries(exercises),
-  ['challenge', { name: 'Challenge', slug: 'challenge' }],
-];
+import PastAttemptsTable from '../modules/exercises/components/past-attempts-table';
+import { useExercises } from '../modules/exercises/hooks/use-exercises';
+import { useUnauthorizedRedirect } from '../modules/auth/hooks/use-unauthorized-redirect';
+import Spinner from '../common/components/spinner';
+import { useTitle } from 'react-use';
 
 const PastAttempts = () => {
+  useTitle('KeyKorea - Past Attempts Dashboard');
+  const { isLoading: isAuthLoading } = useUnauthorizedRedirect('auth/sign-in');
+  const { data: exercises, isLoading } = useExercises();
+
+  const tabs = isLoading || [
+    ...Object.entries(exercises).map(([key, value]) => {
+      return { name: value.exercise_name, slug: value.exercise_slug };
+    }),
+    { name: 'Challenge', slug: 'challenge' },
+  ];
+
+  if (isAuthLoading) {
+    return <Spinner />;
+  }
+
   return (
     <Container pt="8" maxW="container.xl">
       <VStack spacing={2} width="100%" align="stretch">
@@ -47,20 +61,24 @@ const PastAttempts = () => {
           This is a short sentence which describes what this dashboard is all
           about
         </Text>
-        <Tabs isLazy variant="enclosed">
-          <TabList>
-            {tabs.map(([key, value], idx) => (
-              <Tab key={idx}>{value.name}</Tab>
-            ))}
-          </TabList>
-          <TabPanels>
-            {tabs.map(([key, value], idx) => (
-              <TabPanel paddingX="0" key={idx}>
-                <PastAttemptsTable exercise_slug={value.slug} />
-              </TabPanel>
-            ))}
-          </TabPanels>
-        </Tabs>
+        {isLoading ? (
+          <h1>Loading</h1>
+        ) : (
+          <Tabs isLazy variant="enclosed">
+            <TabList>
+              {tabs.map((value, idx) => (
+                <Tab key={idx}>{value.name}</Tab>
+              ))}
+            </TabList>
+            <TabPanels>
+              {tabs.map((value, idx) => (
+                <TabPanel paddingX="0" key={idx}>
+                  <PastAttemptsTable exercise_slug={value.slug} />
+                </TabPanel>
+              ))}
+            </TabPanels>
+          </Tabs>
+        )}
       </VStack>
     </Container>
   );

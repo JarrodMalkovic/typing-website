@@ -3,12 +3,15 @@ import * as React from 'react';
 import { Container, Heading, VStack, Flex, Spacer } from '@chakra-ui/react';
 import LeaderboardMenu from '../modules/leaderboard/components/leaderboard-menu';
 import LeaderboardTable from '../modules/leaderboard/components/leaderboard-table';
+import { useTitle } from 'react-use';
 
 const Leaderboard = () => {
   const [category, setCategory] = React.useState({
     category: 'All Exercises',
     name: 'All Exercises',
   });
+
+  useTitle(`KeyKorea - ${category.name} Leaderboard`);
 
   return (
     <Container pt="8" maxW="container.xl">

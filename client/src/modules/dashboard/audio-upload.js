@@ -65,7 +65,7 @@ const AudioUpload = ({ setFieldValue }) => {
           </TabList>
 
           <TabPanels>
-            <TabPanel paddingX="0">
+            <TabPanel pb="0" px="0">
               <>
                 <Flex
                   display="flex"

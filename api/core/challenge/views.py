@@ -11,7 +11,8 @@ class ChallengeAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
-        questions = Question.objects.all().order_by('?')[:10]
+        questions = Question.objects.filter(
+            subexercise_slug__exercise_slug_id__hidden=False,  subexercise_slug__exercise_slug_id__allow_in_challenge_mode=True).order_by('?')[:10]
         serializers = QuestionSerializer(questions, many=True)
         return Response(serializers.data, status=status.HTTP_200_OK)
 

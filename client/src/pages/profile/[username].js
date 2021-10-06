@@ -30,6 +30,7 @@ import axios from 'axios';
 import { BASE_API_URL } from '../../common/contstants/base-api-url';
 import { calculateHumanReadableTimeString } from '../../common/utils/calculate-human-readable-time-string';
 import { humanized_time_span } from '../../common/utils/humanized-time-span';
+import { useTitle } from 'react-use';
 
 const getProfile = async (username) => {
   const { data } = await axios.get(
@@ -56,6 +57,12 @@ const Profile = () => {
   React.useEffect(() => {
     ReactTooltip.rebuild();
   });
+
+  useTitle(
+    `KeyKorea - ${
+      isLoading ? 'Loading...' : `${data.user.username}'s Profile`
+    } `,
+  );
 
   return (
     <Container pt="8" maxW="container.xl">
@@ -115,26 +122,6 @@ const Profile = () => {
                       ? 'This user has not made a bio yet.'
                       : data.user.bio}
                   </Text>
-                </Box>
-              </Box>
-              <Box
-                border="1px solid"
-                borderColor={useColorModeValue('gray.200', 'gray.700')}
-                rounded={'lg'}>
-                <Box
-                  px={{ base: 2, md: 4 }}
-                  py="2"
-                  borderBottom="1px solid"
-                  borderColor={useColorModeValue('gray.200', 'gray.700')}>
-                  <Heading size="sm">Admin Control Panel</Heading>
-                </Box>
-                <Box px={{ base: 2, md: 4 }} py="2" pt="2">
-                  <Center>
-                    <ButtonGroup>
-                      <Button>View Full Stats</Button>
-                      <Button>Ban User</Button>
-                    </ButtonGroup>
-                  </Center>
                 </Box>
               </Box>
             </GridItem>

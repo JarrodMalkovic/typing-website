@@ -24,6 +24,9 @@ import axios from 'axios';
 import { BASE_API_URL } from '../common/contstants/base-api-url';
 import { calculateHumanReadableTimeString } from '../common/utils/calculate-human-readable-time-string';
 import AttemptsTable from '../modules/statistics/components/attempts-table';
+import { useNonAdminRedirect } from '../modules/auth/hooks/use-non-admin-redirect';
+import Spinner from '../common/components/spinner';
+import { useTitle } from 'react-use';
 
 const getStatistics = async (category) => {
   const { data } =
@@ -41,16 +44,20 @@ const getStatistics = async (category) => {
 };
 
 const Dashboard = () => {
+  useTitle('KeyKorea - Exercise Statistics');
+  const { isLoading: isAuthLoading } = useNonAdminRedirect('/');
   const [category, setCategory] = React.useState({
     category: 'All Exercises',
     name: 'All Exercises',
   });
 
-  const { data } = useQuery(['statistics', category.category], () =>
+  const { data, isLoading } = useQuery(['statistics', category.category], () =>
     getStatistics(category.category),
   );
 
-  console.log(data);
+  if (isAuthLoading) {
+    return <Spinner />;
+  }
 
   return (
     <Container pt="8" maxW="container.xl">
@@ -60,8 +67,8 @@ const Dashboard = () => {
           <Spacer />
           <StatisticsMenu setCategory={setCategory} />
         </Flex>
-        {!data ? (
-          'Loading'
+        {isLoading ? (
+          <Spinner />
         ) : (
           <>
             <SimpleGrid columns={{ base: 1, md: 3 }} spacing={'4'}>
