@@ -14,13 +14,41 @@ import {
   Input,
   Textarea,
   FormHelperText,
+  FormErrorMessage,
   ButtonGroup,
   Flex,
   Avatar,
   Icon,
 } from '@chakra-ui/react';
+import { useMutation } from 'react-query';
+import axios from 'axios';
+import { BASE_API_URL } from '../../../common/contstants/base-api-url';
+import { Field, Form, Formik } from 'formik';
+import * as Yup from 'yup';
+
+const ChangePasswordSchema = Yup.object({
+  password: Yup.string()
+    .min(8, 'Too short!')
+    .max(50, 'Too long!')
+    .required('Required'),
+  confirmPassword: Yup.string().oneOf(
+    [Yup.ref('password'), null],
+    'Passwords must match',
+  ),
+});
+
+const changePassword = async (body) => {
+  const { data } = await axios.patch(
+    `${BASE_API_URL}/api/auth/change-password/`,
+    { password: body.password },
+  );
+
+  return data;
+};
 
 const ChangePasswordSettings = () => {
+  const mutation = useMutation(changePassword);
+
   return (
     <>
       <Box>
@@ -43,26 +71,71 @@ const ChangePasswordSettings = () => {
             </Box>
           </GridItem>
           <GridItem mt={[5, null, 0]} colSpan={{ md: 2 }}>
-            <Stack px={4} py={5} spacing={6} p={{ sm: 6 }}>
-              <Box>
-                <FormControl as={GridItem}>
-                  <FormLabel>New Password</FormLabel>
-                  <Input type="tel" width="100%" rounded="md" />
-                </FormControl>
-              </Box>
+            <Formik
+              initialValues={{
+                password: '',
+                confirmPassword: '',
+              }}
+              validationSchema={ChangePasswordSchema}
+              onSubmit={mutation.mutate}>
+              {() => (
+                <Form>
+                  <Stack px={4} py={5} spacing={6} p={{ sm: 6 }}>
+                    <Field name="password">
+                      {({ field, form }) => (
+                        <FormControl
+                          isInvalid={
+                            form.errors.password && form.touched.password
+                          }
+                          as={GridItem}>
+                          <FormLabel>New Password</FormLabel>
+                          <Input
+                            {...field}
+                            type="tel"
+                            width="100%"
+                            rounded="md"
+                          />
+                          <FormErrorMessage>
+                            {form.errors.password}
+                          </FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
 
-              <Box>
-                <FormControl as={GridItem}>
-                  <FormLabel>New Password Confirm</FormLabel>
-                  <Input type="tel" width="100%" rounded="md" />
-                </FormControl>
-              </Box>
-            </Stack>
-            <Box px={{ base: 4, sm: 6 }} py={3} textAlign="right">
-              <Button type="submit" variant="solid" fontWeight="md">
-                Update Password
-              </Button>
-            </Box>
+                    <Field name="confirmPassword">
+                      {({ field, form }) => (
+                        <FormControl
+                          isInvalid={
+                            form.errors.confirmPassword &&
+                            form.touched.confirmPassword
+                          }
+                          as={GridItem}>
+                          <FormLabel>New Password Confirm</FormLabel>
+                          <Input
+                            {...field}
+                            type="tel"
+                            width="100%"
+                            rounded="md"
+                          />
+                          <FormErrorMessage>
+                            {form.errors.confirmPassword}
+                          </FormErrorMessage>
+                        </FormControl>
+                      )}
+                    </Field>
+                  </Stack>
+                  <Box px={{ base: 4, sm: 6 }} py={3} textAlign="right">
+                    <Button
+                      type="submit"
+                      isLoading={mutation.isLoading}
+                      variant="solid"
+                      fontWeight="md">
+                      {mutation.isLoading ? 'Updating...' : 'Update Password'}
+                    </Button>
+                  </Box>
+                </Form>
+              )}
+            </Formik>
           </GridItem>
         </SimpleGrid>
       </Box>

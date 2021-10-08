@@ -7,6 +7,7 @@ import {
   Text,
   Wrap,
   Image,
+  Center,
   Box,
   Divider,
   useColorModeValue,
@@ -14,9 +15,20 @@ import {
 
 import Link from 'next/link';
 import PracticeExerciseButton from '../../modules/practice/practice-exercise-button';
-import { exercises } from '../../common/contstants/exercises';
+import { useExercises } from '../../modules/exercises/hooks/use-exercises';
+import { useUnauthorizedRedirect } from '../../modules/auth/hooks/use-unauthorized-redirect';
+import Spinner from '../../common/components/spinner';
+import { useTitle } from 'react-use';
 
 const Practice = () => {
+  const { isLoading: isAuthLoading } = useUnauthorizedRedirect('/auth/sign-in');
+  const { data: exercises, isLoading } = useExercises();
+  useTitle('KeyKorea - Practice Mode');
+
+  if (isAuthLoading) {
+    return <Spinner />;
+  }
+
   return (
     <Box position="relative">
       <VStack spacing={5} width="100%">
@@ -38,21 +50,26 @@ const Practice = () => {
             Choose Your Path!
           </Text>
         </VStack>
-        <Wrap
-          spacing="30px"
-          justify="center"
-          maxW="container.md"
-          position="absolute"
-          top={40}>
-          {Object.entries(exercises).map(([key, value], idx) => (
-            <PracticeExerciseButton
-              key={value.name}
-              name={value.name}
-              slug={value.slug}
-              img={value.img}
-            />
-          ))}
-        </Wrap>
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          <Wrap
+            spacing="30px"
+            justify="center"
+            maxW="container.md"
+            position="absolute"
+            top={40}>
+            {Object.entries(exercises).map(([key, value], idx) => (
+              <PracticeExerciseButton
+                key={value.exercise_slug}
+                name={value.exercise_name}
+                slug={value.exercise_slug}
+                description={value.description}
+                img={value.image}
+              />
+            ))}
+          </Wrap>
+        )}
       </VStack>
     </Box>
   );

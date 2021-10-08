@@ -55,8 +55,9 @@ const getQuestions = async (exercise_slug) => {
 
 const DataTable = ({ exercise_slug, filter }) => {
   const [tableData, setTableData] = React.useState([]);
-  const { data: apiResponse, isLoading } = useQuery(exercise_slug, () =>
-    getQuestions(exercise_slug),
+  const { data: apiResponse, isLoading } = useQuery(
+    ['dashboard', exercise_slug],
+    () => getQuestions(exercise_slug),
   );
 
   React.useEffect(() => {

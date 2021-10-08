@@ -3,14 +3,19 @@ import * as React from 'react';
 import {
   Container,
   Heading,
+  Button,
   VStack,
   Tabs,
   TabList,
   Tab,
+  HStack,
+  ButtonGroup,
   TabPanels,
   Table,
   Tr,
+  Avatar,
   Td,
+  Link,
   Tbody,
   Thead,
   Th,
@@ -23,17 +28,24 @@ import {
   Box,
   Text,
 } from '@chakra-ui/react';
-import DataTable from '../modules/dashboard/data-table';
-import AddQuestionButton from '../modules/dashboard/add-question-button';
-import { exercises } from '../common/contstants/exercises';
 import { SearchIcon } from '@chakra-ui/icons';
+import UsersTable from '../modules/users/components/users-table';
+import { useTitle } from 'react-use';
+import { useNonAdminRedirect } from '../modules/auth/hooks/use-non-admin-redirect';
+import Spinner from '../common/components/spinner';
 
 const Dashboard = () => {
-  const [filter, setFilter] = React.useState('');
+  useTitle('KeyKorea - User Management');
+  const { isLoading: isAuthLoading } = useNonAdminRedirect('/');
+  const [search, setSearch] = React.useState('');
 
   const handleChange = (event) => {
-    setFilter(event.target.value);
+    setSearch(event.target.value);
   };
+
+  if (isAuthLoading) {
+    return <Spinner />;
+  }
 
   return (
     <Container pt="8" maxW="container.xl">
@@ -41,7 +53,7 @@ const Dashboard = () => {
         <Flex>
           <Heading>User Management</Heading>
           <Spacer />
-          <Box>
+          <HStack spacing={-8}>
             <InputGroup>
               <InputLeftElement
                 pointerEvents="none"
@@ -51,34 +63,17 @@ const Dashboard = () => {
                 w="xs"
                 mr="4"
                 placeholder="Search users"
-                value={filter}
+                value={search}
                 onChange={handleChange}
               />
             </InputGroup>
-          </Box>
+          </HStack>
         </Flex>
         <Text>
           This is a short sentence which describes what this dashboard is all
           about
         </Text>
-        <Table>
-          <Thead>
-            <Tr>
-              <Th>Username</Th>
-              <Th>Date Joined</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            <Tr>
-              <Td>Example_User</Td>
-              <Td>12/3/2021</Td>
-            </Tr>
-            <Tr>
-              <Td>Example_User</Td>
-              <Td>12/3/2021</Td>
-            </Tr>
-          </Tbody>
-        </Table>
+        <UsersTable search={search} />
       </VStack>
     </Container>
   );

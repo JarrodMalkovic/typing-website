@@ -11,6 +11,7 @@ const defaultState = { user: null, isAuthenticated: false, isLoading: true };
 export const AuthContext = React.createContext(defaultState);
 
 export const AuthReducer = (initialState, action) => {
+  console.log(initialState);
   switch (action.type) {
     case 'login':
       return {
@@ -24,6 +25,19 @@ export const AuthReducer = (initialState, action) => {
         ...initialState,
         user: null,
         isAuthenticated: false,
+        isLoading: false,
+      };
+    case 'update':
+      console.log({
+        ...initialState,
+        user: { ...initialState.user, username: action.payload },
+        isAuthenticated: true,
+        isLoading: false,
+      });
+      return {
+        ...initialState,
+        user: { ...initialState.user, username: action.payload },
+        isAuthenticated: true,
         isLoading: false,
       };
     case 'logout':
@@ -45,6 +59,7 @@ export const AuthProvider = ({ children }) => {
       setAuthToken(localStorage.getItem('access-token'));
       const res = await axios.get(`${BASE_API_URL}/api/auth/current-user/`);
       dispatch({ type: 'login', payload: res.data });
+      console.log(res.data);
     } catch (error) {
       dispatch({ type: 'auth-error' });
     }

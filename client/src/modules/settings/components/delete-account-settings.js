@@ -6,9 +6,16 @@ import {
   GridItem,
   Heading,
   Text,
+  AlertDialog,
+  AlertDialogCloseButton,
+  AlertDialogContent,
+  AlertDialogBody,
+  AlertDialogOverlay,
   Stack,
+  AlertDialogHeader,
   FormLabel,
   FormControl,
+  AlertDialogFooter,
   Button,
   useColorModeValue,
   Input,
@@ -19,8 +26,29 @@ import {
   Avatar,
   Icon,
 } from '@chakra-ui/react';
+import { useMutation } from 'react-query';
+import axios from 'axios';
+import { BASE_API_URL } from '../../../common/contstants/base-api-url';
+import { useAuth } from '../../auth/hooks/use-auth';
+
+const deleteAccount = async () => {
+  const { data } = await axios.delete(`${BASE_API_URL}/api/user/`);
+  return data;
+};
 
 const DeleteAccountSettings = () => {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const onClose = () => setIsOpen(false);
+  const cancelRef = React.useRef();
+  const { dispatch } = useAuth();
+
+  const mutation = useMutation(deleteAccount, {
+    onSuccess: () => {
+      dispatch({ type: 'logout' });
+      onClose();
+    },
+  });
+
   return (
     <>
       <Box>
@@ -44,7 +72,10 @@ const DeleteAccountSettings = () => {
           </GridItem>
           <GridItem mt={[5, null, 0]} colSpan={{ md: 2 }}>
             <Box px={{ base: 4, sm: 6 }} py={3} textAlign="right">
-              <Button type="submit" variant="solid" fontWeight="md">
+              <Button
+                onClick={() => setIsOpen(true)}
+                variant="solid"
+                fontWeight="md">
                 Delete Account
               </Button>
             </Box>
@@ -61,6 +92,32 @@ const DeleteAccountSettings = () => {
             )}></Box>
         </Box>
       </Box>
+      <AlertDialog
+        isCentered
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}>
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Delete Account
+            </AlertDialogHeader>
+
+            <AlertDialogBody>
+              Are you sure? You can't undo this action afterwards.
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onClose}>
+                Cancel
+              </Button>
+              <Button colorScheme="red" onClick={mutation.mutate} ml={3}>
+                Delete
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </>
   );
 };

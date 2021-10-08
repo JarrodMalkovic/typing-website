@@ -21,6 +21,9 @@ import { BASE_API_URL } from '../../common/contstants/base-api-url';
 import ExerciseContent from '../../modules/exercises/components/exercise-content';
 import ChallengeSummary from '../../modules/exercises/components/challenge-summary';
 import ProgressBar from '@ramonak/react-progress-bar';
+import { useUnauthorizedRedirect } from '../../modules/auth/hooks/use-unauthorized-redirect';
+import Spinner from '../../common/components/spinner';
+import { useTitle } from 'react-use';
 
 const getCompletionPercentage = (currentQuestionIndex, totalQuestions) =>
   Math.ceil((currentQuestionIndex / totalQuestions) * 100);
@@ -32,6 +35,9 @@ const getChallengeQuestions = async () => {
 };
 
 const Challenge = () => {
+  useTitle('KeyKorea - Challenge Mode');
+  const { isLoading: isAuthLoading } = useUnauthorizedRedirect('/auth/sign-in');
+
   const theme = useTheme();
   const queryClient = useQueryClient();
 
@@ -61,6 +67,10 @@ const Challenge = () => {
     setStartDate(new Date());
     setCurrentQuestionIndex(0);
   };
+
+  if (isAuthLoading) {
+    return <Spinner />;
+  }
 
   return (
     <>

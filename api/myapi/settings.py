@@ -15,6 +15,8 @@ import os
 import cloudinary
 from datetime import timedelta
 from dotenv import dotenv_values
+import django_on_heroku
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,17 +26,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-g!*aneuy&)ki8b4!jasmwvn0(+xb)fd41_r-!murgs!k3gq#25'
+SECRET_KEY = os.environ.get(
+    'SECRET_KEY', dotenv_values(".env").get('SECRET_KEY'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get(
+    'ENVIRONMENT', dotenv_values(".env").get('ENVIRONMENT')) == 'DEVELOPMENT'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'test_without_migrations',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -45,8 +50,9 @@ INSTALLED_APPS = [
     # Third-Party Apps
     'rest_framework',
     'corsheaders',
+    'drf_yasg2',
 
-    # Local Apps (Your project's apps)
+    # Local Apps
     'core',
     'core.user',
     'core.exercises',
@@ -95,13 +101,16 @@ WSGI_APPLICATION = 'myapi.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ['DB_NAME'],
-        'USER': os.environ['DB_USER'],
-        'PASSWORD': os.environ['DB_PW'],
-        'HOST': os.environ['DB_HOST'],
-        'PORT': os.environ['DB_PORT']
+        'NAME': os.environ.get('DB_NAME', ''),
+        'USER': os.environ.get('DB_USER', ''),
+        'PASSWORD': os.environ.get('DB_PW', ''),
+        'HOST': os.environ.get('DB_HOST', ''),
+        'PORT': os.environ.get('DB_PORT', '')
     }
 }
+
+DATABASES['default'] = dj_database_url.config(
+    default="postgres://postgres:development@postgres:5432/postgres")
 
 AUTH_USER_MODEL = 'core_user.User'
 
@@ -160,10 +169,18 @@ REST_FRAMEWORK = {
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
-    "http://127.0.0.1:3000"
+    "http://127.0.0.1:3000",
+    "https://keykorea.vercel.app"
 ]
 
 
-cloudinary.config(cloud_name=dotenv_values(".env").get('CLOUD_NAME'),
-                  api_key=dotenv_values(".env").get('API_KEY'),
-                  api_secret=dotenv_values(".env").get('API_SECRET'))
+cloudinary.config(cloud_name=os.environ.get(
+    'CLOUD_NAME', dotenv_values(".env").get('CLOUD_NAME')),
+    api_key=os.environ.get(
+    'API_KEY', dotenv_values(".env").get('API_KEY')),
+    api_secret=os.environ.get(
+    'API_SECRET', dotenv_values(".env").get('API_SECRET')))
+
+TEST_WITHOUT_MIGRATIONS_COMMAND = 'django_nose.management.commands.test.Command'
+
+django_on_heroku.settings(locals())

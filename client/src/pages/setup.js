@@ -27,6 +27,7 @@ import { getOperatingSystem } from '../modules/keyboard-setup/utils/get-operatin
 import { linuxSteps } from '../modules/keyboard-setup/contstants/linux-steps';
 import { macSteps } from '../modules/keyboard-setup/contstants/mac-steps';
 import { windowsSteps } from '../modules/keyboard-setup/contstants/windows-steps';
+import { useTitle } from 'react-use';
 
 const getSteps = (os) => {
   switch (os) {
@@ -43,6 +44,7 @@ const getSteps = (os) => {
 
 
 const Setup = () => {
+  useTitle('KeyKorea - Keyboard Setup');
   const [os, setOs] = React.useState(null);
   const [steps, setSteps] = React.useState(getSteps(os));
 

@@ -10,8 +10,10 @@ from core.user.serializers import UserSerializer
 from rest_framework.views import APIView
 from core.user.models import User
 
-# Adapted from: https://dev.to/koladev/django-rest-authentication-cmh
+
 class LoginViewSet(ModelViewSet, TokenObtainPairView):
+    """ Adapted from: https://dev.to/koladev/django-rest-authentication-cmh """
+
     serializer_class = LoginSerializer
     permission_classes = (AllowAny,)
     http_method_names = ['post']
@@ -26,8 +28,10 @@ class LoginViewSet(ModelViewSet, TokenObtainPairView):
 
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
-# Adapted from: https://dev.to/koladev/django-rest-authentication-cmh
+
 class RegistrationViewSet(ModelViewSet, TokenObtainPairView):
+    """ Adapted from: https://dev.to/koladev/django-rest-authentication-cmh """
+
     serializer_class = RegisterSerializer
     permission_classes = (AllowAny,)
     http_method_names = ['post']
@@ -51,8 +55,10 @@ class RegistrationViewSet(ModelViewSet, TokenObtainPairView):
 
         return Response(res, status=status.HTTP_201_CREATED)
 
-# Adapted from: https://dev.to/koladev/django-rest-authentication-cmh
+
 class RefreshViewSet(ViewSet, TokenRefreshView):
+    """ Adapted from: https://dev.to/koladev/django-rest-authentication-cmh """
+
     permission_classes = (AllowAny,)
     http_method_names = ['post']
 
@@ -66,16 +72,30 @@ class RefreshViewSet(ViewSet, TokenRefreshView):
 
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
-# Adapted from: https://dev.to/koladev/django-rest-authentication-cmh
+
 class CurrentUserViewSet(ViewSet):
     permission_classes = [IsAuthenticated]
     http_method_names = ['get']
 
     def list(self, request, format=None):
         res = {
-            'username': request.user.username, 
+            'username': request.user.username,
             'email': request.user.email,
-            'avatar': request.user.avatar
+            'avatar': request.user.avatar,
+            'isAdmin': request.user.is_staff
         }
 
         return Response(res, status=status.HTTP_200_OK)
+
+
+class ChangePasswordAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request):
+        user = User.objects.get(id=request.user.id)
+
+        new_password = request.data.get('password', '')
+        user.set_password(new_password)
+        user.save()
+
+        return Response(status=status.HTTP_200_OK)

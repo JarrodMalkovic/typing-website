@@ -1,5 +1,5 @@
 import * as React from 'react';
-
+import { Field, Form, Formik } from 'formik';
 import {
   Container,
   Heading,
@@ -16,6 +16,9 @@ import ProfileSettings from '../modules/settings/components/profile-settings';
 import PreferenceSettings from '../modules/settings/components/preference-settings';
 import ChangePasswordSettings from '../modules/settings/components/change-password-settings';
 import DeleteAccountSettings from '../modules/settings/components/delete-account-settings';
+import { useUnauthorizedRedirect } from '../modules/auth/hooks/use-unauthorized-redirect';
+import Spinner from '../common/components/spinner';
+import { useTitle } from 'react-use';
 
 const tabs = [
   {
@@ -45,7 +48,13 @@ const tabs = [
 ];
 
 const Dashboard = () => {
+  useTitle('KeyKorea - Settings');
+  const { isLoading: isAuthLoading } = useUnauthorizedRedirect('/auth/sign-in');
   const headingRef = React.useRef();
+
+  if (isAuthLoading) {
+    return <Spinner />;
+  }
 
   return (
     <Container pt="8" maxW="container.xl">

@@ -24,8 +24,8 @@ import {
 import axios from 'axios';
 import { BASE_API_URL } from '../../common/contstants/base-api-url';
 import { useMutation, useQueryClient } from 'react-query';
-import { exercises } from '../../common/contstants/exercises';
 import PropTypes from 'prop-types';
+import { useSubexercises } from '../subexercises/hooks/use-subexercises';
 
 const validationSchema = Yup.object({
   subexercise_slug: Yup.string().required('Required!'),
@@ -46,15 +46,18 @@ const EditQuestionButton = ({ row, exercise }) => {
   const toast = useToast();
   const queryClient = useQueryClient();
 
+  const { data: subexercises } = useSubexercises(exercise);
+
   const { mutate, isError, error, isLoading } = useMutation(
     (data) => editQuestion(data, row.id),
     {
       onSuccess: (data) => {
-        const subexercise_name = exercises[exercise].subexercises.find(
-          (subexercise) => subexercise.slug === data.subexercise_slug,
-        ).name;
+        const subexercise_name = subexercises.find(
+          (subexercise) =>
+            subexercise.subexercise_slug === data.subexercise_slug,
+        ).subexercise_name;
 
-        queryClient.setQueryData(exercise, (old) =>
+        queryClient.setQueryData(['dashboard', exercise], (old) =>
           old.map((oldRow) =>
             oldRow.id === row.id
               ? {
@@ -100,6 +103,7 @@ const EditQuestionButton = ({ row, exercise }) => {
             initialValues={{
               subexercise_slug: row.subexercise_slug['subexercise_slug'],
               question: row.question,
+              translation: row.translation,
             }}
             onSubmit={mutate}
             validationSchema={validationSchema}>
@@ -111,48 +115,6 @@ const EditQuestionButton = ({ row, exercise }) => {
                   <VStack spacing="4">
                     {isError && <h1>{JSON.stringify(error)}</h1>}
                     <Stack spacing={4} w="full">
-                      <FormControl>
-                        <FormLabel>Exercise Type</FormLabel>
-                        <Select
-                          isDisabled={true}
-                          value={exercise}
-                          placeholder="Select exercise">
-                          {Object.entries(exercises).map(
-                            ([key, value], idx) => (
-                              <option key={idx} value={value.slug}>
-                                {value.name}
-                              </option>
-                            ),
-                          )}
-                        </Select>
-                      </FormControl>
-                      <Field name="subexercise_slug" as="select">
-                        {({ field, form }) => (
-                          <FormControl
-                            isInvalid={
-                              form.errors.subexercise_slug &&
-                              form.touched.subexercise_slug
-                            }>
-                            <FormLabel>Subexercise Type</FormLabel>
-                            <Select
-                              {...field}
-                              isDisabled={exercise == ''}
-                              placeholder="Select subexercise">
-                              {exercises[exercise] &&
-                                exercises[exercise].subexercises.map(
-                                  (subexercise, idx) => (
-                                    <option key={idx} value={subexercise.slug}>
-                                      {subexercise.name}
-                                    </option>
-                                  ),
-                                )}
-                            </Select>
-                            <FormErrorMessage>
-                              {form.errors.subexercise_slug}
-                            </FormErrorMessage>
-                          </FormControl>
-                        )}
-                      </Field>
                       <Field name="question">
                         {({ field, form }) => (
                           <FormControl
@@ -168,6 +130,26 @@ const EditQuestionButton = ({ row, exercise }) => {
                             />
                             <FormErrorMessage>
                               {form.errors.question}
+                            </FormErrorMessage>
+                          </FormControl>
+                        )}
+                      </Field>
+                      <Field name="translation">
+                        {({ field, form }) => (
+                          <FormControl
+                            isInvalid={
+                              form.errors.translation &&
+                              form.touched.translation
+                            }>
+                            <FormLabel>Translation</FormLabel>
+                            <Input
+                              {...field}
+                              id="translation"
+                              placeholder="Enter translation"
+                              value={values.translation}
+                            />
+                            <FormErrorMessage>
+                              {form.errors.translation}
                             </FormErrorMessage>
                           </FormControl>
                         )}

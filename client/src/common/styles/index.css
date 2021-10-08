@@ -27,3 +27,50 @@
   color: white;
   border-bottom-color: rgba(0, 0, 0, 1);
 }
+
+.chakra-ui-dark .recharts-tooltip-wrapper {
+}
+
+.recharts-default-tooltip {
+  border-radius: 5%;
+}
+
+.chakra-ui-dark .recharts-default-tooltip {
+  background-color: #1a202c !important;
+
+  border: 1px solid #2d3748 !important;
+}
+
+.chakra-ui-dark .react-calendar-heatmap .color-empty {
+  fill: #2d3748 !important;
+}
+
+.react-calendar-heatmap .color-scale-1 {
+  fill: #bee3f8;
+}
+.react-calendar-heatmap .color-scale-2 {
+  fill: #90cdf4;
+}
+.react-calendar-heatmap .color-scale-3 {
+  fill: #63b3ed;
+}
+.react-calendar-heatmap .color-scale-4 {
+  fill: #4299e1;
+}
+
+.react-calendar-heatmap .color-scale-5 {
+  fill: #3182ce;
+}
+.react-calendar-heatmap .color-scale-6 {
+  fill: #2b6cb0;
+}
+.react-calendar-heatmap .color-scale-7 {
+  fill: #2c5282;
+}
+
+.react-calendar-heatmap .color-scale-8 {
+  fill: #2a4365;
+}
+.react-calendar-heatmap .color-scale-9 {
+  fill: #1a365d;
+}

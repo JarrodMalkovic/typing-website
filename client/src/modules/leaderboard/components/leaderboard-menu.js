@@ -3,22 +3,34 @@ import * as React from 'react';
 import { MenuButton, Button, MenuList, MenuItem, Menu } from '@chakra-ui/react';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { exercises } from '../../../common/contstants/exercises';
+import { useExercises } from '../../exercises/hooks/use-exercises';
 
-const options = Object.entries(exercises);
+const LeaderboardMenu = ({ setCategory }) => {
+  const { data: exercises, isLoading } = useExercises();
 
-const LeaderboardMenu = () => {
+  const options = isLoading
+    ? [
+        { category: 'All Exercises', name: 'All Exercises' },
+        { category: 'challenge', name: 'Challenge Mode' },
+      ]
+    : [
+        { category: 'All Exercises', name: 'All Exercises' },
+        { category: 'challenge', name: 'Challenge Mode' },
+        ...Object.entries(exercises)
+        .map(([key, value]) => {
+          return { category: value.exercise_slug, name: value.exercise_name };
+        }),
+      ];
+
   return (
     <Menu>
       <MenuButton as={Button} rightIcon={<ChevronDownIcon />}>
         Select Category
       </MenuButton>
       <MenuList>
-        <MenuItem>All Exercises</MenuItem>
-        <MenuItem>Challenge Mode</MenuItem>
-        <MenuItem>Letters</MenuItem>
-        <MenuItem>Words</MenuItem>
-        <MenuItem>Long Sentences</MenuItem>
-        <MenuItem>Diction</MenuItem>
+        {options.map((option) => (
+          <MenuItem onClick={() => setCategory(option)}>{option.name}</MenuItem>
+        ))}
       </MenuList>
     </Menu>
   );

@@ -4,60 +4,61 @@ from rest_framework.exceptions import APIException
 from rest_framework.views import APIView
 from .serializers import QuestionSerializer, PracticeAttemptSerializer, GetQuestionsSerializer
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, generics
 from .models import Question
 from core.practice.models import PracticeAttempt
 from core.subexercises.models import Subexercise
+from core.exercises.models import Exercise
+from core.challenge.models import ChallengeAttempt
 from rest_framework.parsers import MultiPartParser, JSONParser
 import cloudinary.uploader
 from django.shortcuts import get_object_or_404
+from core.challenge.serializers import ChallengeAttemptSerializer
+from django.db.models import Avg, Count
+from django.utils import timezone
+from datetime import timedelta
+import math
 
 
 class QuestionSubexerciseAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    # GET - Returns all questions for a given subexercise given
-    # it is level 1, or they have completed previous subexercise
     def get(self, request, subexercise):
-        # Get the level of subexercise requested
-        current_subexercise = Subexercise.objects.get(
-            subexercise_slug=subexercise)
-        level_request = current_subexercise.level
-        current_exercise_slug = current_subexercise.exercise_slug
+        try:
+            current_subexercise = Subexercise.objects.get(
+                subexercise_slug=subexercise)
 
-        # If user requesting level 1, return all questions
-        # Otherwise, check if there exists an attempt for the previous subexercise
-        if level_request == 1:
-            questions = Question.objects.filter(subexercise_slug=subexercise)
+            level_request = current_subexercise.level
+            current_exercise_slug = current_subexercise.exercise_slug
+
+            if level_request == 1:
+                questions = Question.objects.filter(subexercise_slug=subexercise)
+                serializers = QuestionSerializer(questions, many=True)
+                return Response(serializers.data, status=status.HTTP_200_OK)
+
+            previous_subexercise = Subexercise.objects.get(
+                level=level_request-1, exercise_slug=current_exercise_slug)
+
+            attempts = PracticeAttempt.objects.filter(
+                subexercise_slug=previous_subexercise, user=request.user)
+
+            if len(attempts) == 0:
+                raise APIException(
+                    detail="You must complete previous subexercises before this one")
+
+            questions = Question.objects.filter(
+                subexercise_slug=subexercise)
+
             serializers = QuestionSerializer(questions, many=True)
+
             return Response(serializers.data, status=status.HTTP_200_OK)
-
-        previous_subexercise = Subexercise.objects.get(
-            level=level_request-1, exercise_slug=current_exercise_slug)
-
-        attempts = PracticeAttempt.objects.filter(
-            subexercise_slug=previous_subexercise, user=request.user)
-
-        if len(attempts) == 0:
-            raise APIException(
-                detail="You must complete previous subexercises before this one")
-
-        questions = Question.objects.filter(
-            subexercise_slug=subexercise)
-
-        serializers = QuestionSerializer(questions, many=True)
-
-        return Response(serializers.data, status=status.HTTP_200_OK)
+        except Subexercise.DoesNotExist:
+            return Response([], status=status.HTTP_200_OK)
 
 
-# /api/subexercises/exercise/<slug:exercise>/
-# AUTHENTICAED USER ONLY
 class QuestionSubexerciseOrderedAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
-    # GET - Return all the subexercises, in order by level.
-    # If they have not completed the previous subexercise, it's
-    # attempted field is set to False.
     def get(self, request, exercise):
         subexercises = Subexercise.objects.filter(
             exercise_slug=exercise).order_by('level')
@@ -68,6 +69,8 @@ class QuestionSubexerciseOrderedAPIView(APIView):
             sub_data["subexercise_slug"] = subexercise.subexercise_slug
             sub_data["subexercise_name"] = subexercise.subexercise_name
             sub_data["level"] = subexercise.level
+            sub_data["description"] = subexercise.description
+            sub_data["exercise_slug"] = subexercise.exercise_slug_id
 
             try:
                 attempts = PracticeAttempt.objects.filter(
@@ -80,22 +83,7 @@ class QuestionSubexerciseOrderedAPIView(APIView):
         return Response(data, status=status.HTTP_200_OK)
 
 
-# class QuestionSubexerciseAPIView(APIView):
-#     # GET - Returns all questions for a given subexercise - Auth Required
-#     # TODO: Make it so auth is required for this route and check that they have completeled the previous subexercise first, if they have not return an error
-#     def get(self, request, subexercise):
-#         try:
-#             questions = Question.objects.filter(subexercise_slug=subexercise)
-#             serializers = QuestionSerializer(questions, many=True)
-#             return Response(serializers.data, status=status.HTTP_200_OK)
-#         except Question.DoesNotExist:
-#             return Response([], status=status.HTTP_200_OK)
-
-
-# /api/questions/exercise/<slug:exercise>/
 class QuestionExerciseAPIView(APIView):
-    # GET - Returns all questions for a given exercise - Admin Only
-    # TODO: Make it so only admins can access this route
     def get(self, request, exercise):
         try:
             questions = Question.objects.filter(
@@ -108,52 +96,38 @@ class QuestionExerciseAPIView(APIView):
             return Response([], status=status.HTTP_200_OK)
 
 
-# /api/questions/<int:id>/
-# ADMIN ONLY
 class QuestionIdAPIView(APIView):
     permission_classes = [permissions.IsAdminUser]
 
     def get_object(self, id):
-        # If question id does not exist, returns 404 NOT FOUND
         return get_object_or_404(Question, id=id)
 
-    # GET - Gets the specific question by its id
-    def get(self, request, id):
+    def get(self, _, id):
         question = self.get_object(id)
         serializer = QuestionSerializer(question)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-    # DELETE - Deletes a question by ID - Admin Only
-    def delete(self, request, id):
-        return Response()
-
-    # PUT - Edits a question by ID - Admin Only
     def put(self, request, id):
         question = self.get_object(id)
         serializer = QuestionSerializer(question, data=request.data)
 
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-# /api/questions/
-# ADMIN ONLY
 class QuestionAPIView(APIView):
     permission_classes = [permissions.IsAdminUser]
     parser_classes = (MultiPartParser, JSONParser)
 
-    # DELETE - Deletes many questions (Body will contain an array of the ID's to delete)
     def delete(self, request):
         for id in request.data.get('questions'):
             Question.objects.filter(id=id).delete()
 
         return Response(request.data.get('questions'), status=status.HTTP_200_OK)
 
-    # POST - Creates a question - Admin Only
-    # TODO: Make it so only admins can access this route
     def post(self, request):
         serializer = None
         audio_file = request.data.get('audio_file')
@@ -165,7 +139,8 @@ class QuestionAPIView(APIView):
             data = {
                 'audio_url': upload_data.get('secure_url'),
                 'question': request.data.get('question'),
-                'subexercise_slug': request.data.get('subexercise_slug')
+                'subexercise_slug': request.data.get('subexercise_slug'),
+                'translation': request.data.get('translation')
             }
 
             serializer = QuestionSerializer(data=data)
@@ -178,36 +153,208 @@ class QuestionAPIView(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# /api/questions/subexercise/attempt
-# OR /api/practice/attempt
+
+class QuestionExerciseAttemptAPIView(APIView):
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, exercise):
+        attempts = PracticeAttempt.objects.filter(
+            subexercise_slug_id__exercise_slug_id=exercise, user=request.user)
+
+        serializers = PracticeAttemptSerializer(attempts, many=True)
+        return Response(serializers.data, status=status.HTTP_200_OK)
 
 
-class QuestionSubexerciseAttemptAPIView(LoginRequiredMixin, APIView):
-    # POST - Saves a users attempt for a given subexercisie - Auth Required
+class QuestionLeaderboardAPIView(APIView):
+
+    def get(self, request):
+        category = request.GET.get('category', 'all')
+
+        top_attempts = None
+        serializers = None
+
+        if category == 'all':
+            top_attempts = PracticeAttempt.objects.select_related(
+                'user').order_by("-score")[:20]
+            serializers = PracticeAttemptSerializer(top_attempts, many=True)
+        elif category == 'challenge':
+            top_attempts = ChallengeAttempt.objects.select_related(
+                'user').order_by("-score")[:20]
+            serializers = ChallengeAttemptSerializer(top_attempts, many=True)
+        else:
+            top_attempts = PracticeAttempt.objects.filter(
+                subexercise_slug_id__exercise_slug_id=category).select_related(
+                'user').order_by("-score")[:20]
+            serializers = PracticeAttemptSerializer(top_attempts, many=True)
+
+        return Response(serializers.data, status=status.HTTP_200_OK)
+
+
+class QuestionStatsAPIView(APIView):
+    permission_classes = [permissions.IsAdminUser]
+
+    def get(self, request):
+        category = request.GET.get('category', 'all')
+
+        recent_stats = None
+        charts = None
+
+        one_month_ago = timezone.now().date() - timedelta(days=30)
+
+        if category == 'all':
+            recent_stats = PracticeAttempt.objects \
+                .filter(created_at__gte=one_month_ago) \
+                .aggregate(Avg('wpm'), Avg('accuracy'), Avg('time_elapsed'))
+
+            charts = PracticeAttempt.objects.extra(
+                select={'date': "TO_CHAR(practice_practiceattempt.created_at, 'YYYY-MM-DD')"}) \
+                .values('date') \
+                .order_by('date') \
+                .annotate(wpm=Avg('wpm'), time_elapsed=Avg('time_elapsed'), accuracy=Avg('accuracy'))
+        elif category == 'challenge':
+            recent_stats = ChallengeAttempt.objects \
+                .filter(created_at__gte=one_month_ago) \
+                .aggregate(Avg('wpm'), Avg('accuracy'), Avg('time_elapsed'))
+
+            charts = ChallengeAttempt.objects.extra(
+                select={'date': "TO_CHAR(challenge_challengeattempt.created_at, 'YYYY-MM-DD')"}) \
+                .values('date') \
+                .order_by('date') \
+                .annotate(wpm=Avg('wpm'), time_elapsed=Avg('time_elapsed'), accuracy=Avg('accuracy'))
+        else:
+            recent_stats = PracticeAttempt.objects \
+                .filter(created_at__gte=one_month_ago, subexercise_slug__exercise_slug=category) \
+                .aggregate(Avg('wpm'), Avg('accuracy'), Avg('time_elapsed'))
+
+            charts = PracticeAttempt.objects.extra(
+                select={'date': "TO_CHAR(practice_practiceattempt.created_at, 'YYYY-MM-DD')"}) \
+                .values('date') \
+                .filter(subexercise_slug__exercise_slug=category) \
+                .order_by('date') \
+                .annotate(wpm=Avg('wpm'), time_elapsed=Avg('time_elapsed'), accuracy=Avg('accuracy'))
+
+        data = {
+            'recent_stats': recent_stats,
+            'charts': charts
+        }
+
+        return Response(data, status=status.HTTP_200_OK)
+
+
+class QuestionAttemptsAPIView(APIView):
+    permission_classes = [permissions.IsAdminUser]
+
+    def get(self, request):
+        category = request.GET.get('category', 'all')
+        page = int(request.GET.get('page', 0))
+        limit = min(int(request.GET.get('limit', 10)), 50)
+        skip = page * limit
+
+        serializers = None
+        count = None
+
+        if category == 'all':
+            count = len(PracticeAttempt.objects.all())
+            attempts = PracticeAttempt.objects.select_related(
+                'user')[skip:skip + limit]
+            serializers = PracticeAttemptSerializer(attempts, many=True)
+        elif category == 'challenge':
+            count = len(ChallengeAttempt.objects.all())
+            attempts = ChallengeAttempt.objects.select_related(
+                'user')[skip:skip + limit]
+            serializers = ChallengeAttemptSerializer(attempts, many=True)
+        else:
+            count = len(PracticeAttempt.objects.filter(
+                subexercise_slug_id__exercise_slug_id=category))
+            attempts = PracticeAttempt.objects.filter(
+                subexercise_slug_id__exercise_slug_id=category).select_related(
+                'user')[skip:skip + limit]
+            serializers = PracticeAttemptSerializer(attempts, many=True)
+
+        return Response({'pages': math.ceil(count / limit), 'attempts': serializers.data}, status=status.HTTP_200_OK)
+
+
+class QuestionExcelDownload(APIView):
+    permission_classes = [permissions.IsAdminUser]
+
+    # For a given exercise, return in a list of dictionaries
+    # containing every question along with its subexercise and meaning
+    # If a question does not have a meaning, N/A is supplied
+    def get(self, request, exercise_slug):
+        question_list = []
+        subexercises = Subexercise.objects.filter(
+            exercise_slug=exercise_slug)
+
+        for subexercise in subexercises:
+            questions = Question.objects.filter(
+                subexercise_slug=subexercise.subexercise_slug)
+
+            for question in questions:
+                data = {
+                    'subexercise': subexercise.subexercise_name,
+                    'question': question.question,
+                    'translation':  question.translation
+                }
+
+                question_list.append(data)
+        return Response(question_list, status=status.HTTP_200_OK)
+
+
+class QuestionExcelUpload(APIView):
+    # Upload the excel doc and update the database with
+    # Two ways:
+    # 1. upload the excel and make the database represent the excel (replace)
+    # 2. uplaod the excel and append the questions to database (add)
+
+    '''
+    Takes a list of lists
+    Each list containes two items. The first item is a dictionary 
+    that specifies the exercise that the questions are for.
+    The second item is a list of dictionaries - each dictionary is a new question
+    This function will save the questions (add to existing database)
+    Example inner list:
+    [{"exercise": "letters"}, 
+    [{"subexercise":"C + V", "question":"hello", "meaning":"hello-meaning"}, 
+    {"subexercise":"Shift C + V", "question":"new", "meaning":"new-meaning"}]],
+    '''
+
     def post(self, request):
-        serializer = PracticeAttemptSerializer(data=request.data)
+        data = request.data
+        all_questions = []
+
+        for exercise in data:
+            for question in exercise[1]:
+                try:
+                    subexercise_name = question['subexercise']
+                    subexercise = Subexercise.objects.filter(
+                        subexercise_name=subexercise_name).first()
+
+                # If subexercise does exist - tell admin user to add that first
+                # Tell the admin which entry was wrong
+                # If this occurs, no questions will be added
+                except Subexercise.DoesNotExist:
+                    response_str = "Subexercise: '{}' does not exist".format(
+                        subexercise_name)
+                    response = [{"response": response_str}]
+                    return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+                try:
+                    new_question = {
+                        "subexercise_slug": subexercise.subexercise_slug,
+                        "question": question['question'],
+                        "translation": question['translation']
+                    }
+                    all_questions.append(new_question)
+                except:
+                    response_str = "Subexercise: '{}' does not exist".format(
+                        subexercise_name)
+                    response = [{"response": response_str}]
+                    return Response(response, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = QuestionSerializer(data=all_questions, many=True)
 
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-# /api/questions/subexercise/<slug:subexercise>/attempts
-# OR /api/practice/subexercise/<slug:subexercise>/attempts
-
-
-class QuestionSubexerciseAttemptsAPIView(APIView):
-
-    # GET - Returns a users attempts for a given subexercise - Auth Required
-    def get(self, request, subexercise):
-        return Response()
-
-# /api/questions/exercise/<slug:exercise>/attempts
-# OR /api/practice/exercise/<slug:exercise>/attempts
-
-
-class QuestionExerciseAttemptAPIView(APIView):
-    # GET - Returns a users attempts for a given exercise - Auth Required
-    def get(self, request, exercise):
-        return Response()
