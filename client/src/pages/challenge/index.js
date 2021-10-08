@@ -164,6 +164,9 @@ const Challenge = () => {
                   color="white">
                   I need some practice first
                 </Button>
+
+
+                
               </NextLink>
             </ButtonGroup>
           </VStack>
