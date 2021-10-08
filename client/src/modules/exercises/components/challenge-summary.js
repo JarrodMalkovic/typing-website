@@ -11,7 +11,6 @@ import {
   useTheme,
 } from '@chakra-ui/react';
 
-import Confetti from 'react-confetti';
 import PropTypes from 'prop-types';
 import { caculateWPM } from '../utils/calculate-wpm';
 import axios from 'axios';
@@ -45,7 +44,6 @@ const ExerciseSummary = ({
 
   return (
     <Box>
-      <Confetti numberOfPieces={500} gravity={0.1} recycle={false} />
       <Stack align={'center'}>
         <Heading>Woohoo! You finished a challenge! 🥳</Heading>
         <Heading as="h2" size="md">
