@@ -69,16 +69,27 @@ class QuestionTestCase(TestCase):
     # Query questions by their ID - expect valid ID's to return the questions
     def test_API_Question_by_id(self):
         print("---> Test: API Get question by specifying question ID")
+        q_ids = []
+        questions = Question.objects.all()
+        for q in questions:
+            q_ids.append(q.id)
+        num = 1
+        while num in q_ids:
+            num += 1
+            
         self.client = APIClient()
         access_token = self.get_access_token()
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + access_token)
-        response = self.client.get("http://127.0.0.1:8000/api/questions/18/")
+        route = "http://127.0.0.1:8000/api/questions/" + str(q_ids[0]) + "/"
+        response = self.client.get(route)
         self.assertEqual(response.data['question'],
                          "This is korean sentence 1")
-        response = self.client.get("http://127.0.0.1:8000/api/questions/19/")
+        route = "http://127.0.0.1:8000/api/questions/" + str(q_ids[1]) + "/"
+        response = self.client.get(route)
         self.assertEqual(response.data['question'],
                          "This is korean sentence 2")
-        response = self.client.get("http://127.0.0.1:8000/api/questions/3/")
+        fail_route = "http://127.0.0.1:8000/api/questions/" + str(num) + "/"
+        response = self.client.get(fail_route)
         self.assertEqual(response.data, {"detail": "Not found."})
 
         # Use PUT to update the question with proper data
@@ -89,8 +100,7 @@ class QuestionTestCase(TestCase):
             "translation": "Translation updated",
             "subexercise_slug": "short-sentences"
         }
-        response = self.client.put(
-            "http://127.0.0.1:8000/api/questions/19/", data)
+        response = self.client.put(route, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['question'],
                          "Korean sentence 2 updated")
@@ -105,7 +115,7 @@ class QuestionTestCase(TestCase):
                 "This field is required."
             ]
         }
-        response = self.client.put("http://127.0.0.1:8000/api/questions/19/", data)
+        response = self.client.put(route, data)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(response.data, expected_response)
 
