@@ -185,7 +185,9 @@ class UserTestCase(APITestCase):
             "http://127.0.0.1:8000/api/auth/login/", data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
+    # Tests if the current user API route provides the correct data
     def test_API_current_user(self):
+        print("---> Test: API Get the Current User")
         self.client = APIClient()
         user = User.objects.create_superuser(
             username="testUser2", email="newuser2@test.com", password="forttst123")
@@ -210,6 +212,243 @@ class UserTestCase(APITestCase):
         self.assertEqual(response.data['username'], 'testUser2')
         self.assertEqual(response.data['email'], 'newuser2@test.com')
         self.assertNotEqual(response.data['avatar'], None)
+        
+    # Tests if the delete user API route successfully deletes the user
+    # Without deleting others
+    def test_delete_user(self):
+        print("---> Test: API Delete the Current User")
+        self.client = APIClient()
+        user = User.objects.create_user(username="testUser2", email="newuser2@test.com", password="forttst123")
+        user2 = User.objects.create_user(username="testUser3", email="newuser3@test.com", password="forttst123")
+    
+        user_query = User.objects.filter(email="newuser2@test.com").first()
+        self.assertEqual(user_query.email, "newuser2@test.com")
+        user_query = User.objects.filter(email="newuser3@test.com").first()
+        self.assertEqual(user_query.email, "newuser3@test.com")
+        
+        data = {
+            "email": "newuser2@test.com",
+            "password": "forttst123"
+        }
+        response = self.client.post("http://127.0.0.1:8000/api/auth/login/", data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        access_token = response.data["access"]
+
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + access_token)
+        response = self.client.delete("http://127.0.0.1:8000/api/user/")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        user_query = User.objects.filter(email="newuser2@test.com").first()
+        self.assertIsNone(user_query)
+        user_query = User.objects.filter(email="newuser3@test.com").first()
+        self.assertEqual(user_query.email, "newuser3@test.com")
+
+    # Tests if the ban user API route cannot be accessed by non-admins
+    def test_ban_user_by_user(self):
+        print("---> Test: API Ban User Route Inaccessible by Non-Admin")
+        self.client = APIClient()
+        user = User.objects.create_user(username="testUser2", email="newuser2@test.com", password="forttst123")
+        user2 = User.objects.create_user(username="testUser3", email="newuser3@test.com", password="forttst123")
+        self.assertFalse(user.is_staff)
+                
+        data = {
+            "email": "newuser2@test.com",
+            "password": "forttst123"
+        }
+        response = self.client.post("http://127.0.0.1:8000/api/auth/login/", data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        access_token = response.data["access"]
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + access_token)
+        
+        route = "http://127.0.0.1:8000/api/user/" + str(user2.id) + "/ban/"
+        response = self.client.delete(route)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        
+    
+    # Tests if the ban user API route successfully bans the user
+    # Without banning others
+    def test_ban_user(self):
+        print("---> Test: API Ban a Specified User")
+        self.client = APIClient()
+        super_user = User.objects.create_superuser(username="testsuperUser2", email="newsuperuser2@test.com", password="forttst123")
+        user = User.objects.create_user(username="testUser2", email="newuser2@test.com", password="forttst123")
+        user2 = User.objects.create_user(username="testUser3", email="newuser3@test.com", password="forttst123")
+            
+        user_query_1 = User.objects.filter(email="newuser2@test.com").first()
+        self.assertEqual(user_query_1.email, "newuser2@test.com")
+        user_query_2 = User.objects.filter(email="newuser3@test.com").first()
+        self.assertEqual(user_query_2.email, "newuser3@test.com")
+                
+        data = {
+            "email": "newsuperuser2@test.com",
+            "password": "forttst123"
+        }
+        response = self.client.post("http://127.0.0.1:8000/api/auth/login/", data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        access_token = response.data["access"]
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + access_token)
+        
+        route = "http://127.0.0.1:8000/api/user/" + str(user_query_1.id) + "/ban/"
+        response = self.client.delete(route)
+        user_query = User.objects.filter(email="newuser2@test.com").first()
+        self.assertIsNone(user_query)
+        user_query = User.objects.filter(email="newuser3@test.com").first()
+        self.assertEqual(user_query.email, "newuser3@test.com")
+        
+        
+    # Tests if the promote user API route cannot be accessed by non-admins
+    def test_promote_user_by_user(self):
+        print("---> Test: API Promote User Route Inaccessible by Non-Admin")
+        self.client = APIClient()
+        user = User.objects.create_user(username="testUser2", email="newuser2@test.com", password="forttst123")
+        user2 = User.objects.create_user(username="testUser3", email="newuser3@test.com", password="forttst123")
+        self.assertFalse(user.is_staff)
+                
+        data = {
+            "email": "newuser2@test.com",
+            "password": "forttst123"
+        }
+        response = self.client.post("http://127.0.0.1:8000/api/auth/login/", data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        access_token = response.data["access"]
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + access_token)
+        
+        route = "http://127.0.0.1:8000/api/user/" + str(user2.id) + "/promote/"
+        response = self.client.patch(route)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        
+            
+    # Tests if the promote user API route successfully promotes the user
+    # Without promoting others
+    def test_promote_user(self):
+        print("---> Test: API Ban a Specified User")
+        self.client = APIClient()
+        super_user = User.objects.create_superuser(username="testsuperUser2", email="newsuperuser2@test.com", password="forttst123")
+        user = User.objects.create_user(username="testUser2", email="newuser2@test.com", password="forttst123")
+        user2 = User.objects.create_user(username="testUser3", email="newuser3@test.com", password="forttst123")
+            
+        self.assertTrue(super_user.is_staff)
+        self.assertFalse(user.is_staff)
+        self.assertFalse(user2.is_staff)
+                
+        data = {
+            "email": "newsuperuser2@test.com",
+            "password": "forttst123"
+        }
+        response = self.client.post("http://127.0.0.1:8000/api/auth/login/", data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        access_token = response.data["access"]
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + access_token)
+        
+        route = "http://127.0.0.1:8000/api/user/" + str(user.id) + "/promote/"
+        response = self.client.patch(route)
+        user_query = User.objects.filter(email="newsuperuser2@test.com").first()
+        self.assertTrue(user_query.is_staff)
+        user_query = User.objects.filter(email="newuser2@test.com").first()
+        self.assertTrue(user_query.is_staff)
+        user_query = User.objects.filter(email="newuser3@test.com").first()
+        self.assertFalse(user_query.is_staff)
+        
+    # Tests if the demote user API route cannot be accessed by non-admins
+    def test_demote_user_by_user(self):
+        print("---> Test: API Demote User Route Inaccessible by Non-Admin")
+        self.client = APIClient()
+        user = User.objects.create_user(username="testUser2", email="newuser2@test.com", password="forttst123")
+        user2 = User.objects.create_user(username="testUser3", email="newuser3@test.com", password="forttst123")
+        self.assertFalse(user.is_staff)
+                
+        data = {
+            "email": "newuser2@test.com",
+            "password": "forttst123"
+        }
+        response = self.client.post("http://127.0.0.1:8000/api/auth/login/", data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        access_token = response.data["access"]
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + access_token)
+        
+        route = "http://127.0.0.1:8000/api/user/" + str(user2.id) + "/demote/"
+        response = self.client.patch(route)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        
+    # Tests if the demote user API route successfully demotes the user
+    # Without demoting others
+    def test_demote_user(self):
+        print("---> Test: API Demote a Specified User")
+        self.client = APIClient()
+        super_user = User.objects.create_superuser(username="testsuperUser2", email="newsuperuser2@test.com", password="forttst123")
+        super_user2 = User.objects.create_superuser(username="testUser2", email="newuser2@test.com", password="forttst123")
+        super_user3 = User.objects.create_superuser(username="testUser3", email="newuser3@test.com", password="forttst123")
+            
+        self.assertTrue(super_user.is_staff)
+        self.assertTrue(super_user2.is_staff)
+        self.assertTrue(super_user3.is_staff)
+                
+        data = {
+            "email": "newsuperuser2@test.com",
+            "password": "forttst123"
+        }
+        response = self.client.post("http://127.0.0.1:8000/api/auth/login/", data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        access_token = response.data["access"]
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + access_token)
+        
+        route = "http://127.0.0.1:8000/api/user/" + str(super_user2.id) + "/demote/"
+        response = self.client.patch(route)
+        user_query = User.objects.filter(email="newsuperuser2@test.com").first()
+        self.assertTrue(user_query.is_staff)
+        user_query = User.objects.filter(email="newuser2@test.com").first()
+        self.assertFalse(user_query.is_staff)
+        user_query = User.objects.filter(email="newuser3@test.com").first()
+        self.assertTrue(user_query.is_staff)
+        
+    # Tests if the demote user API route cannot be accessed by non-admins
+    def test_get_all_users_by_user(self):
+        print("---> Test: API Get All Users Route Inaccessible by Non-Admin")
+        self.client = APIClient()
+        user = User.objects.create_user(username="testUser2", email="newuser2@test.com", password="forttst123")
+        self.assertFalse(user.is_staff)
+                
+        data = {
+            "email": "newuser2@test.com",
+            "password": "forttst123"
+        }
+        response = self.client.post("http://127.0.0.1:8000/api/auth/login/", data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        access_token = response.data["access"]
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + access_token)
+        
+        route = "http://127.0.0.1:8000/api/users/?limit=5&page=1"
+        response = self.client.get(route)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        
+    # Tests that the correct users are returned for a given 
+    # page limit and specified page number
+    def test_get_all_users(self):
+        print("---> Test: API Users")
+        self.client = APIClient()
+        super_user = User.objects.create_superuser(username="testsuperUser2", email="newsuperuser2@test.com", password="forttst123")
+        for i in range(15):
+            username = "testingUser" + str(i)
+            email = "testingUser" + str(i) + "@test.com"
+            User.objects.create_user(username=username, email=email, password="forttst123")
+             
+        data = {
+            "email": "newsuperuser2@test.com",
+            "password": "forttst123"
+        }
+        response = self.client.post("http://127.0.0.1:8000/api/auth/login/", data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        access_token = response.data["access"]
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + access_token)
+        
+        route = "http://127.0.0.1:8000/api/users/?limit=5&page=1"
+        response = self.client.get(route)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+        self.assertEqual(response.data['pages'], 4)
+        index = 3
+        for user in response.data['users']:
+            self.assertEqual(user['email'], "testingUser" + str(index) + "@test.com")
+            index += 1
         
         
 if __name__ == '__main__':
