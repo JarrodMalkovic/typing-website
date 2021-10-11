@@ -12,6 +12,7 @@ services:
       - DB_USER=postgres
       - DB_PW=development
       - DB_NAME=postgres
+      - SECRET_KEY=test
     ports:
       - 8000:8000
     depends_on:
