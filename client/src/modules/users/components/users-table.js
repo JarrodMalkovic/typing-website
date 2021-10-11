@@ -29,7 +29,7 @@ import Spinner from '../../../common/components/spinner';
 
 const getUsers = async (page, limit, search) => {
   const { data } = await axios.get(
-    `${BASE_API_URL}/api/users/?${page}=page&limit=${limit}&search=${search}`,
+    `${BASE_API_URL}/api/users/?page=${page}&limit=${limit}&search=${search}`,
   );
 
   return data;
