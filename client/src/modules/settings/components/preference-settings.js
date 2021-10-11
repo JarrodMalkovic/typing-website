@@ -9,17 +9,8 @@ import {
   Stack,
   FormLabel,
   FormControl,
-  Button,
   useColorModeValue,
-  Input,
-  Textarea,
-  FormHelperText,
-  ButtonGroup,
-  Flex,
-  Avatar,
-  Icon,
   RadioGroup,
-  VStack,
   Radio,
   useColorMode,
 } from '@chakra-ui/react';
@@ -35,7 +26,7 @@ const PreferenceSettings = () => {
           columns={{ md: 3 }}
           spacing={{ md: 6 }}>
           <GridItem colSpan={{ md: 1 }}>
-            <Box px={[4, 0]}>
+            <Box>
               <Heading fontSize="lg" fontWeight="md" lineHeight="6">
                 Website Preferences
               </Heading>
@@ -49,7 +40,7 @@ const PreferenceSettings = () => {
             </Box>
           </GridItem>
           <GridItem mt={[5, null, 0]} colSpan={{ md: 2 }}>
-            <Stack px={4} py={5} spacing={6} p={{ sm: 6 }}>
+            <Stack pl={[0, 0, 6]} py={5} spacing={6}>
               <Box>
                 <FormControl as={GridItem}>
                   <FormLabel>Theme</FormLabel>

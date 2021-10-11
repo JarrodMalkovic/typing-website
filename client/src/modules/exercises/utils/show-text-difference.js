@@ -31,29 +31,7 @@ const calculateTextDifference = (
   }
 
   return word.split('').map((char, idx, chars) => {
-    // if (isCorrectAndComplete(idx, startIdx, finishIdx, word, currentIdx)) {
-    //   return (
-    //     <Box
-    //       key={idx}
-    //       as="span"
-    //       color={useColorModeValue(
-    //         theme.colors.green['500'],
-    //         theme.colors.green['400'],
-    //       )}
-    //       textDecoration={idx === currentIdx + 1 ? 'underline' : null}>
-    //       {char}
-    //     </Box>
-    //   );
-    // }
-
     const currWord = chars.slice(0, Math.min(idx + 1, currentIdx));
-    // if (typed) {
-    //   console.log(currWord.join(''));
-    //   console.log(typed);
-    //   console.log(Hangul.search(currWord.join(''), typed));
-
-    //   console.log({ startIdx, finishIdx, currentIdx });
-    // }
 
     if (
       isCorrect(idx, startIdx, finishIdx) &&
@@ -107,7 +85,6 @@ const showTextDifference = (word, target) => {
   let prevTriedIdx = -1;
 
   while (currentIdx >= 0) {
-    console.log('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
     const ranges = Hangul.rangeSearch(target, word.slice(0, currentIdx + 1));
 
     if (!ranges.length) {

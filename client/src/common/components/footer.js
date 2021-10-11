@@ -14,10 +14,9 @@ import ActiveNavLink from './active-nav-link';
 const Footer = () => {
   return (
     <Box
-    marginTop = "150px"
+      pt={'20'}
       color={useColorModeValue('gray.700', 'gray.200')}
-      as="footer" role="contentinfo" mx="auto" maxW="7xl" py="12" px={{ base: '4', md: '8' }}
-      >
+      margin={'0'}>
       <Container
         as={Stack}
         maxW={'container.xl'}
@@ -26,14 +25,13 @@ const Footer = () => {
         spacing={4}
         justify={{ base: 'center', md: 'space-between' }}
         align={{ base: 'center', md: 'center' }}>
-        <Text>© 2021 Korean Typing Website. All rights reserved</Text>
+        <Text>© 2021 KeyKorea. All rights reserved</Text>
         <Stack direction={'row'} spacing={6}>
           <ActiveNavLink
             name="Terms of Service"
             href="/legal/terms-of-service"
           />
           <ActiveNavLink name="Privacy Policy" href="/legal/privacy-policy" />
-          <ActiveNavLink name="Contact Us" href="/contact-us" />
         </Stack>
       </Container>
     </Box>

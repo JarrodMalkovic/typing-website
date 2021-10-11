@@ -15,16 +15,12 @@ import {
   Alert,
   AlertIcon,
   useToast,
-  Link,
-  Flex,
-  Spacer,
 } from '@chakra-ui/react';
 import { Field, Form, Formik } from 'formik';
-import NavLink from 'next/link';
-import { useRouter } from 'next/router';
 import { BASE_API_URL } from '../../../common/contstants/base-api-url';
 import { useAuth } from '../hooks/use-auth';
 import { setAuthToken } from '../utils/set-auth-token';
+import { displayErrors } from '../../../common/utils/display-errors';
 
 const SigninSchema = Yup.object({
   email: Yup.string().email('Invalid email').required('Required'),
@@ -51,12 +47,13 @@ const SigninForm = () => {
       localStorage.setItem('access-token', data.access);
       localStorage.setItem('refresh-token', data.refresh);
       setAuthToken(data.access);
+
       toast({
         title: 'Signed in.',
         description: 'You have successfully signed into KeyKorea.',
         status: 'success',
         position: 'top-right',
-        duration: 9000,
+        duration: 4000,
         isClosable: true,
       });
     },
@@ -69,11 +66,7 @@ const SigninForm = () => {
       w={{ base: 'sm', md: 'md' }}
       boxShadow={'lg'}
       p={8}>
-      {isError && (
-        <Alert marginBottom="6" status="error">
-          <AlertIcon /> Something went wrong!
-        </Alert>
-      )}
+      {isError && displayErrors(error)}
       <Formik
         onSubmit={mutate}
         initialValues={{
@@ -104,12 +97,7 @@ const SigninForm = () => {
                   </FormControl>
                 )}
               </Field>
-              <Flex>
-                <Spacer />
-                <NavLink href="/auth/forgot-password">
-                  <Link color={'blue.400'}>Forgot Password?</Link>
-                </NavLink>
-              </Flex>
+
               <Button
                 isLoading={isLoading}
                 type="submit"

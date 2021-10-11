@@ -11,14 +11,10 @@ import {
   Th,
   Td,
   chakra,
+  Heading,
   AlertIcon,
-  Spinner,
-  Stat,
-  HStack,
-  StatHelpText,
-  StatNumber,
-  StatLabel,
   Checkbox,
+  Box,
 } from '@chakra-ui/react';
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
 import {
@@ -34,7 +30,7 @@ import { BASE_API_URL } from '../../common/contstants/base-api-url';
 import { useQuery } from 'react-query';
 import NoQuestionsPanel from './no-questions-panel';
 import PropTypes from 'prop-types';
-import { isDictionSlug } from '../exercises/utils/is-diction-slug';
+import Spinner from '../../common/components/spinner';
 
 const IndeterminateCheckbox = React.forwardRef(
   ({ indeterminate, ...rest }, ref) => {
@@ -53,11 +49,16 @@ const getQuestions = async (exercise_slug) => {
   return res.data;
 };
 
-const DataTable = ({ exercise_slug, filter }) => {
+const DataTable = ({ exercise_slug, filter, isDictionExercise }) => {
   const [tableData, setTableData] = React.useState([]);
-  const { data: apiResponse, isLoading } = useQuery(
+  const {
+    data: apiResponse,
+    isLoading,
+    isError,
+  } = useQuery(
     ['dashboard', exercise_slug],
     () => getQuestions(exercise_slug),
+    { retry: 3, retryDelay: 0 },
   );
 
   React.useEffect(() => {
@@ -77,6 +78,10 @@ const DataTable = ({ exercise_slug, filter }) => {
       {
         Header: 'Question',
         accessor: 'question',
+      },
+      {
+        Header: 'Translation',
+        accessor: 'translation',
       },
       {
         Header: 'Date Created',
@@ -99,12 +104,16 @@ const DataTable = ({ exercise_slug, filter }) => {
       },
     ];
 
-    if (isDictionSlug(exercise_slug)) {
+    if (isDictionExercise) {
       columns.splice(columns.length - 1, 0, {
         Header: 'Audio',
         accessor: 'audio_url',
         Cell: ({ cell }) => {
-          return <audio controls="controls" src={cell.value} />;
+          return cell.value ? (
+            <audio controls="controls" src={cell.value} />
+          ) : (
+            <Text> No Audio File</Text>
+          );
         },
       });
     }
@@ -160,55 +169,64 @@ const DataTable = ({ exercise_slug, filter }) => {
           </Text>
         </Alert>
       )}
-      <Table {...getTableProps()}>
-        <Thead>
-          {headerGroups.map((headerGroup, idx) => (
-            <Tr key={idx} {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column, idx) => (
-                <Th
-                  key={idx}
-                  {...column.getHeaderProps(column.getSortByToggleProps())}
-                  isNumeric={column.isNumeric}>
-                  {column.render('Header')}
-                  <chakra.span pl="4">
-                    {column.isSorted ? (
-                      column.isSortedDesc ? (
-                        <TriangleDownIcon aria-label="sorted descending" />
-                      ) : (
-                        <TriangleUpIcon aria-label="sorted ascending" />
-                      )
-                    ) : null}
-                  </chakra.span>
-                </Th>
-              ))}
-            </Tr>
-          ))}
-        </Thead>
-        {!isLoading && data.length > 0 && (
-          <Tbody {...getTableBodyProps()}>
-            {rows.map((row, idx) => {
-              prepareRow(row);
-              return (
-                <Tr key={idx} {...row.getRowProps()}>
-                  {row.cells.map((cell, idx) => (
-                    <Td
-                      key={idx}
-                      {...cell.getCellProps()}
-                      isNumeric={cell.column.isNumeric}>
-                      {cell.render('Cell')}
-                    </Td>
-                  ))}
-                </Tr>
-              );
-            })}
-          </Tbody>
-        )}
-      </Table>
-      {apiResponse && apiResponse.length > 0 ? null : isLoading ? (
-        <Spinner color="blue.400" />
-      ) : (
-        <NoQuestionsPanel />
-      )}
+      <Box overflowX="auto" w="100%">
+        <Table {...getTableProps()}>
+          <Thead>
+            {headerGroups.map((headerGroup, idx) => (
+              <Tr key={idx} {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map((column, idx) => (
+                  <Th
+                    key={idx}
+                    {...column.getHeaderProps(column.getSortByToggleProps())}
+                    isNumeric={column.isNumeric}>
+                    {column.render('Header')}
+                    <chakra.span pl="4">
+                      {column.isSorted ? (
+                        column.isSortedDesc ? (
+                          <TriangleDownIcon aria-label="sorted descending" />
+                        ) : (
+                          <TriangleUpIcon aria-label="sorted ascending" />
+                        )
+                      ) : null}
+                    </chakra.span>
+                  </Th>
+                ))}
+              </Tr>
+            ))}
+          </Thead>
+          {!isLoading && data.length > 0 && (
+            <Tbody {...getTableBodyProps()}>
+              {rows.map((row, idx) => {
+                prepareRow(row);
+                return (
+                  <Tr key={idx} {...row.getRowProps()}>
+                    {row.cells.map((cell, idx) => (
+                      <Td
+                        key={idx}
+                        {...cell.getCellProps()}
+                        isNumeric={cell.column.isNumeric}>
+                        {cell.render('Cell')}
+                      </Td>
+                    ))}
+                  </Tr>
+                );
+              })}
+            </Tbody>
+          )}
+        </Table>
+        {isError ? (
+          <VStack mt="8">
+            <Heading size="md" textAlign="center">
+              Sorry, something went wrong.
+            </Heading>
+            <Text textAlign="center">Could not fetch questions data.</Text>
+          </VStack>
+        ) : isLoading ? (
+          <Spinner />
+        ) : apiResponse && apiResponse.length <= 0 ? (
+          <NoQuestionsPanel />
+        ) : null}
+      </Box>
     </VStack>
   );
 };

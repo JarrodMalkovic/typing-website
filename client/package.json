@@ -42,6 +42,7 @@
     "react-icons": "^4.2.0",
     "react-markdown": "^7.0.0",
     "react-mic-record": "^1.0.6",
+    "react-progressive-image": "^0.6.0",
     "react-query": "^3.21.0",
     "react-resizable": "^3.0.4",
     "react-simple-keyboard": "^3.2.73",

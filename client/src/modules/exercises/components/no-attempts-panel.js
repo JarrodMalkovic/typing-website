@@ -9,9 +9,20 @@ const NoAttemptsPanel = ({ slug }) => {
         No attempts for this category
       </Heading>
       <Text pb="2">Why not be first to take the #1 position?</Text>
-      <Button size="sm" bgColor="blue.400" color="white" variant="solid">
-        Go to Practice Mode
-      </Button>
+      <Link href="/practice">
+        <a>
+          <Button
+            size="sm"
+            bgColor="blue.400"
+            color="white"
+            variant="solid"
+            _hover={{
+              backgroundColor: 'blue.500',
+            }}>
+            Go to Practice Mode
+          </Button>
+        </a>
+      </Link>
     </VStack>
   );
 };

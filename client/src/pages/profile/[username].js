@@ -10,6 +10,7 @@ import {
   Image,
   Spacer,
   Grid,
+  VStack,
   Center,
   Text,
   Box,
@@ -18,7 +19,6 @@ import {
   Stat,
   StatLabel,
   StatNumber,
-  Spinner,
   StatHelpText,
   Stack,
 } from '@chakra-ui/react';
@@ -31,6 +31,7 @@ import { BASE_API_URL } from '../../common/contstants/base-api-url';
 import { calculateHumanReadableTimeString } from '../../common/utils/calculate-human-readable-time-string';
 import { humanized_time_span } from '../../common/utils/humanized-time-span';
 import { useTitle } from 'react-use';
+import Spinner from '../../common/components/spinner';
 
 const getProfile = async (username) => {
   const { data } = await axios.get(
@@ -41,8 +42,13 @@ const getProfile = async (username) => {
 
 const Profile = () => {
   const router = useRouter();
-  const { data, isLoading } = useQuery(['profile', router.query.username], () =>
-    getProfile(router.query.username),
+  const { data, isLoading, isError } = useQuery(
+    ['profile', router.query.username],
+    () => getProfile(router.query.username),
+    {
+      retry: 3,
+      retryDelay: 0,
+    },
   );
   const isMediumBreakpoint = useBreakpointValue({ md: false, base: true });
   const isSmallBreakpoint = useBreakpointValue({ sm: false, base: true });
@@ -60,18 +66,31 @@ const Profile = () => {
 
   useTitle(
     `KeyKorea - ${
-      isLoading ? 'Loading...' : `${data.user.username}'s Profile`
+      isLoading
+        ? 'Loading...'
+        : `${
+            data && data.user && data.user.username
+              ? data.user.username + 's Profile'
+              : 'Profile Not Found'
+          }`
     } `,
   );
 
   return (
     <Container pt="8" maxW="container.xl">
       <Stack spacing={4} width="100%" align="stretch">
-        {isLoading ? (
+        {isError ? (
+          <VStack>
+            <Heading>Sorry, something went wrong!</Heading>
+            <Text>
+              Could not find a user with the username {router.query.username}
+            </Text>
+          </VStack>
+        ) : isLoading ? (
           <Spinner />
         ) : (
           <Grid templateColumns="repeat(18, 1fr)" gap={'4'}>
-            <GridItem colSpan={[18, 18, 18, 6]}>
+            <GridItem colSpan={[18, 18, 18, 6]} overflowX="auto">
               <Box
                 border="1px solid"
                 borderColor={useColorModeValue('gray.200', 'gray.700')}
@@ -107,8 +126,7 @@ const Profile = () => {
               <Box
                 border="1px solid"
                 borderColor={useColorModeValue('gray.200', 'gray.700')}
-                rounded={'lg'}
-                mb="4">
+                rounded={'lg'}>
                 <Box
                   px={{ base: 2, md: 4 }}
                   py="2"
@@ -137,7 +155,7 @@ const Profile = () => {
                       <StatNumber>
                         {data.stats.wpm__avg
                           ? data.stats.wpm__avg.toFixed(2)
-                          : '0.00'}
+                          : 'N/A'}
                       </StatNumber>
                       <StatHelpText>Last 30 Days</StatHelpText>
                     </Stat>
@@ -154,7 +172,7 @@ const Profile = () => {
                         <StatNumber>
                           {data.stats.score__avg
                             ? data.stats.score__avg.toFixed(2)
-                            : '0.00'}
+                            : 'N/A'}
                         </StatNumber>
                         <StatHelpText>Last 30 Days</StatHelpText>
                       </Box>
@@ -172,9 +190,9 @@ const Profile = () => {
                         <StatNumber>
                           {data.stats.time_elapsed__avg
                             ? calculateHumanReadableTimeString(
-                                data.stats.time_elapsed__avg,
+                                data.stats.time_elapsed__avg * 1000,
                               )
-                            : '0.00s'}
+                            : 'N/A'}
                         </StatNumber>
                         <StatHelpText>Last 30 Days</StatHelpText>
                       </Box>

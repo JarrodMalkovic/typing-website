@@ -9,20 +9,12 @@ const StepButtons = ({ numSteps, activeStep, nextStep, prevStep }) => {
     <ButtonGroup>
       <Button
         size="sm"
-        color ="white"
-        backgroundColor = "#39aae1"
+        variant="ghost"
         isDisabled={activeStep === 0}
-        onClick={prevStep} 
-        _hover={{backgroundColor: "#f52d56"}}>
+        onClick={prevStep}>
         Prev
       </Button>
-      <Button 
-        size="sm" 
-        color ="white"
-        onClick={nextStep} 
-        disabled={numSteps === activeStep} 
-        backgroundColor = "#39aae1" 
-        _hover={{backgroundColor: "#f52d56"}}>
+      <Button size="sm" onClick={nextStep} disabled={numSteps === activeStep}>
         Next
       </Button>
     </ButtonGroup>

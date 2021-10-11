@@ -1,65 +1,68 @@
 import * as React from 'react';
 
-import { Heading, Wrap, Container, Image, Divider } from '@chakra-ui/react';
+import { Wrap, Text, Container, Image, VStack, Box } from '@chakra-ui/react';
 
 const Step1 = (
-  <Wrap position="absolute" justify="center">
-    <Image
-      src="/images/ubunutu1.png"
-      minW="40%"
-      mawW="40%"
-      height={300}
-      border="1px"
-    />
-    <Divider></Divider>
-    <Container minW="60vw">
-      <Heading as="h2" size="md" textAlign="center">
+  <Wrap justify="center" pt="8">
+    <VStack>
+      <Box maxW="500px">
+        <Image src="/images/ubunutu1.png" width="100%" height="auto" />
+      </Box>
+      <Text size="md" pt="8" textAlign="center">
         Install the ibus-hangul plugin from the Ubuntu Software app, and restart
         your computer.
-      </Heading>
-    </Container>
+      </Text>
+    </VStack>
   </Wrap>
 );
 
 const Step2 = (
-  <Wrap position="absolute" justify="center">
-    <Image src="/images/Linux 1.png" minW="40%" mawW="40%" height={300} />
-    <Divider></Divider>
+  <Wrap justify="center" pt="8">
+    <Box maxW="500px">
+      <Image src="/images/Linux 1.png" width="100%" height="auto" />
+    </Box>
     <Container minW="60vw">
-      <Heading as="h2" size="md" textAlign="center">
+      <Text size="md" pt="8" textAlign="center">
         Open Settings, and navigate to the Language and Region tab.
-      </Heading>
+      </Text>
     </Container>
   </Wrap>
 );
 
 const Step3 = (
-  <Wrap position="absolute" justify="center">
-    <Image src="/images/Linux 2.png" minW="40%" mawW="40%" height={300} />
-    <Image src="/images/ubuntu2.png" minW="40%" mawW="40%" height={300} />
-    <Divider></Divider>
+  <Wrap justify="center" pt="8">
+    <Box maxW="500px">
+      <Image src="/images/Linux 2.png" width="100%" height="auto" />
+    </Box>
+    <Box maxW="500px">
+      <Image src="/images/ubuntu2.png" width="100%" height="auto" />
+    </Box>
+
     <Container minW="60vw">
-      <Heading as="h2" size="md" textAlign="center">
+      <Text size="md" pt="8" textAlign="center">
         Click the plus button under the Input Sources heading, then the 3
         vertical dots at the button to open the expanded menu, then scroll to
         the bottom and find "Other". Once in other, search for "Korean" and
         select "Korean (Hangul)".
-      </Heading>
+      </Text>
     </Container>
   </Wrap>
 );
 
 const Step4 = (
-  <Wrap position="absolute" justify="center">
-    <Image src="/images/ubuntu3.png" minW="40%" mawW="40%" height={300} />
-    <Divider></Divider>
-    <Container minW="60vw">
-      <Heading as="h2" size="md" textAlign="center">
-        At the top right of the screen, select the language drop down menu,
-        select Korean (Hangul), and then click on it again and turn Hangul mode
-        on.
-      </Heading>
-    </Container>
+  <Wrap justify="center" pt="8">
+    <VStack>
+      <Box maxW="500px">
+        <Image src="/images/ubuntu3.png" width="100%" height="auto" />
+      </Box>
+      <Container minW="60vw">
+        <Text size="md" pt="8" textAlign="center">
+          At the top right of the screen, select the language drop down menu,
+          select Korean (Hangul), and then click on it again and turn Hangul
+          mode on.
+        </Text>
+      </Container>
+    </VStack>
   </Wrap>
 );
 

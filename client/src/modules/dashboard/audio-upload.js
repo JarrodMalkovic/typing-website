@@ -41,6 +41,10 @@ const AudioUpload = ({ setFieldValue }) => {
   const [audioBlobUrl, setAudioBlobUrl] = React.useState(null);
   const [isRecording, setIsRecording] = React.useState(false);
 
+  React.useEffect(() => {
+    return () => setFieldValue('audio_file', null);
+  }, []);
+
   const {
     getRootProps,
     getInputProps,
@@ -102,7 +106,6 @@ const AudioUpload = ({ setFieldValue }) => {
                   borderRadius="5px"
                   mb="2"
                   onStop={(recorded) => {
-                    console.log(recorded);
                     setAudioBlobUrl(recorded.blobURL);
                     setFieldValue(
                       'audio_file',
@@ -114,30 +117,26 @@ const AudioUpload = ({ setFieldValue }) => {
                 />
 
                 <Center>
-                  <ButtonGroup border="red" do borderBottom="red">
-                    <Tooltip label="Start Recording">
-                      <IconButton
-                        fontSize="30px"
-                        rounded="100%"
-                        backgroundColor="blue.400"
-                        color="white"
-                        onClick={() => setIsRecording(true)}
-                        isDisabled={isRecording}
-                        icon={<RiRecordCircleLine />}
-                      />
-                    </Tooltip>
-                    <Tooltip label="Stop Recording">
-                      <IconButton
-                        fontSize="30px"
-                        rounded="100%"
-                        backgroundColor="blue.400"
-                        color="white"
-                        onClick={() => setIsRecording(false)}
-                        isDisabled={!isRecording}
-                        icon={<RiStopCircleLine />}
-                      />
-                    </Tooltip>
-                  </ButtonGroup>
+                  <Tooltip
+                    label={isRecording ? 'Stop Recording' : 'Start Recording'}>
+                    <IconButton
+                      fontSize="30px"
+                      rounded="100%"
+                      backgroundColor={isRecording ? 'red.400' : 'blue.400'}
+                      color="white"
+                      _hover={{
+                        bgColor: isRecording ? 'red.500' : 'blue.500',
+                      }}
+                      onClick={() => setIsRecording(!isRecording)}
+                      icon={
+                        isRecording ? (
+                          <RiStopCircleLine />
+                        ) : (
+                          <RiRecordCircleLine />
+                        )
+                      }
+                    />
+                  </Tooltip>
                 </Center>
               </>
             </TabPanel>

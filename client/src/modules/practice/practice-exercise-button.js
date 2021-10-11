@@ -2,7 +2,6 @@ import * as React from 'react';
 
 import {
   VStack,
-  HStack,
   Text,
   WrapItem,
   Button,
@@ -10,17 +9,15 @@ import {
   Modal,
   ModalOverlay,
   Box,
-  Flex,
+  useColorModeValue,
   Center,
   Heading,
   ModalContent,
   ModalCloseButton,
   ModalBody,
-  Spinner,
   ModalFooter,
   ModalHeader,
   useDisclosure,
-  Container,
   Accordion,
   AccordionItem,
   AccordionButton,
@@ -32,6 +29,8 @@ import PropTypes from 'prop-types';
 import { useQuery } from 'react-query';
 import axios from 'axios';
 import { BASE_API_URL } from '../../common/contstants/base-api-url';
+import Spinner from '../../common/components/spinner';
+import NoSubexercisesPanel from '../exercises/components/no-subexercises-panel';
 
 const isSubexerciseDisabled = (
   subexercises,
@@ -61,11 +60,13 @@ const getSubexercises = async (slug) => {
 
 const PracticeExerciseButton = ({ name, img, slug, description }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { data, isLoading, isFetching } = useQuery(
+  const { data, isLoading, isError } = useQuery(
     slug,
     () => getSubexercises(slug),
     {
       enabled: isOpen,
+      retryDelay: 0,
+      retry: 3,
     },
   );
 
@@ -82,8 +83,12 @@ const PracticeExerciseButton = ({ name, img, slug, description }) => {
         </VStack>
       </WrapItem>
 
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
-        <ModalOverlay />
+      <Modal
+        blockScrollOnMount={false}
+        isOpen={isOpen}
+        onClose={onClose}
+        isCentered>
+        <ModalOverlay px="0" mx="0" />
         <ModalContent>
           <ModalHeader>
             <VStack>
@@ -91,13 +96,17 @@ const PracticeExerciseButton = ({ name, img, slug, description }) => {
               <Text fontSize="md">{description}</Text>
             </VStack>
           </ModalHeader>
-          <ModalBody></ModalBody>
+
           <ModalCloseButton />
           <ModalBody>
-            {isLoading || !data ? (
-              <Center>
-                <Spinner />
-              </Center>
+            {isError ? (
+              <Text textAlign="center">
+                There was an error getting subexercises for this exercise
+              </Text>
+            ) : isLoading ? (
+              <Spinner />
+            ) : !data || !data.length ? (
+              <NoSubexercisesPanel />
             ) : (
               <Accordion allowToggle>
                 {data.map((subExercise, idx) => (
@@ -106,7 +115,7 @@ const PracticeExerciseButton = ({ name, img, slug, description }) => {
                     <h2>
                       <AccordionButton>
                         <Box flex="1" textAlign="left">
-                          {subExercise.subexercise_name}
+                          Level {idx + 1} - {subExercise.subexercise_name}
                         </Box>
 
                         <AccordionIcon />
@@ -114,19 +123,18 @@ const PracticeExerciseButton = ({ name, img, slug, description }) => {
                     </h2>
                     <AccordionPanel>
                       <Box textAlign="center" padding="0px 20px">
-                        <Text>{subExercise.description}</Text>
+                        <Text color={useColorModeValue('gray.600', 'gray.300')}>
+                          {subExercise.description}
+                        </Text>
                         <Link
                           href={`/practice/${subExercise.exercise_slug}/subexercise/${subExercise.subexercise_slug}`}>
                           <Button
-                            width="50%"
+                            variant="ghost"
+                            color="blue.400"
                             flex="1"
                             textAlign="left"
-                            justify
-                            margin="10px"
-                            _hover={{
-                              color: 'teal.500',
-                            }}>
-                            Begin
+                            margin="10px">
+                            Start {subExercise.subexercise_name}
                           </Button>
                         </Link>
                       </Box>

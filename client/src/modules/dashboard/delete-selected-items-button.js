@@ -20,6 +20,7 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import { BASE_API_URL } from '../../common/contstants/base-api-url';
 import { useMutation, useQueryClient } from 'react-query';
+import { displayErrors } from '../../common/utils/display-errors';
 
 const deleteQuestions = async (selectedItems) => {
   const res = await axios.delete(`${BASE_API_URL}/api/questions/`, {
@@ -35,24 +36,30 @@ const DeleteSelectedItemsButton = ({ exercise_slug, selectedItems }) => {
   const cancelRef = React.useRef();
   const queryClient = useQueryClient();
 
-  const { mutate, isLoading } = useMutation(
+  const { mutate, isLoading, isError, error } = useMutation(
     () => deleteQuestions(selectedItems),
     {
       onSuccess: (data) => {
-        queryClient.setQueryData(exercise_slug, (old) => {
+        queryClient.setQueryData(['dashboard', exercise_slug], (old) => {
           const deletedQuestionIdsSet = new Set(data);
+
           return old.filter(
             (oldQuestion) => !deletedQuestionIdsSet.has(oldQuestion.id),
           );
         });
+
         toast({
-          title: 'Deleted questions.',
-          description: 'You have successfully deleted the selected questions.',
+          title: `Deleted question${selectedItems.length > 1 ? 's' : ''}.`,
+          description: `You have successfully deleted the selected question${
+            selectedItems.length > 1 ? 's' : ''
+          }.`,
           status: 'success',
           position: 'top-right',
-          duration: 9000,
+          duration: 4000,
           isClosable: true,
         });
+
+        onClose();
       },
     },
   );
@@ -69,7 +76,19 @@ const DeleteSelectedItemsButton = ({ exercise_slug, selectedItems }) => {
         isCentered>
         <AlertDialogOverlay>
           <AlertDialogContent>
-            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+            {isError && (
+              <AlertDialogHeader
+                fontSize="md"
+                fontWeight="normal"
+                pb="0"
+                mb="0">
+                {displayErrors(error)}
+              </AlertDialogHeader>
+            )}
+            <AlertDialogHeader
+              pt={isError ? '0' : '6'}
+              fontSize="lg"
+              fontWeight="bold">
               Delete {selectedItems.length}{' '}
               {selectedItems.length > 1 ? 'items' : 'item'}
             </AlertDialogHeader>

@@ -16,16 +16,15 @@ const ActiveNavLink = ({ name, href }) => {
       <Link
         px={2}
         py={1}
-        color={
+        backgroundColor={
           isActive(router.pathname, href)
-            ? useColorModeValue('#39aae1', '#39aae1')
-            : useColorModeValue('black', 'white')
+            ? useColorModeValue('gray.100', '#13141c')
+            : null
         }
         rounded={'md'}
         _hover={{
           textDecoration: 'none',
-          bg: useColorModeValue('gray.200', 'gray.700'),
-          color: useColorModeValue('#39aae1', '#39aae1'),
+          backgroundColor: useColorModeValue('gray.200', 'gray.700'),
         }}>
         {name}
       </Link>

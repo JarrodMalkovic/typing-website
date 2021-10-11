@@ -4,16 +4,9 @@ import {
   Container,
   Heading,
   VStack,
-  Flex,
-  Spacer,
+  Text,
   Box,
   SimpleGrid,
-  Tr,
-  Th,
-  Td,
-  Table,
-  Thead,
-  Tbody,
   useColorModeValue,
 } from '@chakra-ui/react';
 import StatsCard from '../modules/statistics/components/stats-card';
@@ -51,8 +44,10 @@ const Dashboard = () => {
     name: 'All Exercises',
   });
 
-  const { data, isLoading } = useQuery(['statistics', category.category], () =>
-    getStatistics(category.category),
+  const { data, isLoading, isError } = useQuery(
+    ['statistics', category.category],
+    () => getStatistics(category.category),
+    { retry: 3, retryDelay: 0 },
   );
 
   if (isAuthLoading) {
@@ -62,12 +57,24 @@ const Dashboard = () => {
   return (
     <Container pt="8" maxW="container.xl">
       <VStack spacing={4} width="100%" align="stretch">
-        <Flex>
+        <Box
+          display={{ base: '', md: 'flex' }}
+          alignItems={{ base: '', md: 'flex' }}
+          justifyContent={{ base: '', md: 'space-between' }}>
           <Heading>{category.name} Statistics</Heading>
-          <Spacer />
-          <StatisticsMenu setCategory={setCategory} />
-        </Flex>
-        {isLoading ? (
+          <StatisticsMenu
+            width={{ base: '100%', md: '48' }}
+            setCategory={setCategory}
+          />
+        </Box>
+        {isError ? (
+          <VStack mt="8">
+            <Heading size="md" textAlign="center">
+              Sorry, something went wrong.
+            </Heading>
+            <Text textAlign="center">Could not fetch statistics data.</Text>
+          </VStack>
+        ) : isLoading ? (
           <Spinner />
         ) : (
           <>

@@ -18,6 +18,7 @@ import { BASE_API_URL } from '../../../common/contstants/base-api-url';
 import { useMutation } from 'react-query';
 import { calculateTimeTaken } from '../utils/calculate-time-taken';
 import { calculateScore } from '../utils/calculate-score';
+import { displayErrors } from '../../../common/utils/display-errors';
 
 const submitChallengeAttempt = async (data) => {
   const res = await axios.post(`${BASE_API_URL}/api/challenge/`, data);
@@ -34,7 +35,7 @@ const ExerciseSummary = ({
   const [timeTaken] = React.useState(calculateTimeTaken(startDate, new Date()));
   const [score] = React.useState(calculateScore(accuracy, wpm));
 
-  const { mutate } = useMutation(() =>
+  const { mutate, isError, error } = useMutation(() =>
     submitChallengeAttempt({ wpm, time_elapsed: timeTaken, accuracy, score }),
   );
 
@@ -45,6 +46,7 @@ const ExerciseSummary = ({
   return (
     <Box>
       <Stack align={'center'}>
+        {isError && displayErrors(error)}
         <Heading>Woohoo! You finished a challenge! 🥳</Heading>
         <Heading as="h2" size="md">
           Challenge Summary
@@ -53,7 +55,7 @@ const ExerciseSummary = ({
           <Text>Speed: {wpm} WPM</Text>
           <Text>Accuracy: {accuracy}%</Text>
           <Text>Score: {score}</Text>
-          <Text>Time Taken: {timeTaken} seconds</Text>
+          <Text>Time Taken: {timeTaken.toFixed(2)} seconds</Text>
         </HStack>
         <ButtonGroup>
           <Button size="sm" onClick={restartChallengeMode}>

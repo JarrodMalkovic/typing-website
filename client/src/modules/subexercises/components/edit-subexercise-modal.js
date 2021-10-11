@@ -5,16 +5,14 @@ import {
   Input,
   FormControl,
   FormLabel,
-  Checkbox,
+  Textarea,
   VStack,
   Modal,
   ModalOverlay,
   ModalContent,
   ModalHeader,
   ModalCloseButton,
-  HStack,
   ModalBody,
-  Select,
   useToast,
   ModalFooter,
   ButtonGroup,
@@ -26,8 +24,12 @@ import axios from 'axios';
 import { useMutation, useQueryClient } from 'react-query';
 import { BASE_API_URL } from '../../../common/contstants/base-api-url';
 import PropTypes from 'prop-types';
+import { displayErrors } from '../../../common/utils/display-errors';
 
-const validationSchema = Yup.object({});
+const validationSchema = Yup.object({
+  subexercise_name: Yup.string().max(100).required('Required'),
+  description: Yup.string().max(500, 'Too long!').required('Required'),
+});
 
 const editSubexercise = async (data, subexercise_slug) => {
   const res = await axios.patch(
@@ -55,10 +57,10 @@ const EditSubexerciseModal = ({ isOpen, onClose, subexercise }) => {
 
         toast({
           title: 'Edited subexercise.',
-          description: 'You have successfully deleted the selected questions.',
+          description: 'You have successfully edited the subexercise.',
           status: 'success',
           position: 'top-right',
-          duration: 9000,
+          duration: 4000,
           isClosable: true,
         });
 
@@ -85,7 +87,7 @@ const EditSubexerciseModal = ({ isOpen, onClose, subexercise }) => {
               <ModalCloseButton />
               <ModalBody>
                 <VStack spacing="4">
-                  {isError && <h1>{JSON.stringify(error)}</h1>}
+                  {isError && displayErrors(error)}
                   <Stack spacing={4} w="full">
                     <Field name="subexercise_name">
                       {({ field, form }) => (
@@ -114,7 +116,7 @@ const EditSubexerciseModal = ({ isOpen, onClose, subexercise }) => {
                             form.errors.description && form.touched.description
                           }>
                           <FormLabel>Subexercise Description</FormLabel>
-                          <Input
+                          <Textarea
                             {...field}
                             id="description"
                             placeholder="Enter subexercise description"
@@ -137,7 +139,10 @@ const EditSubexerciseModal = ({ isOpen, onClose, subexercise }) => {
                     variant="solid"
                     bgColor="blue.400"
                     color="white"
-                    type="submit">
+                    type="submit"
+                    _hover={{
+                      bgColor: 'blue.500',
+                    }}>
                     Edit Subexercise
                   </Button>
                 </ButtonGroup>

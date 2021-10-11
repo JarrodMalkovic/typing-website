@@ -78,6 +78,9 @@ const Challenge = () => {
         <Container pt="8" maxW="container.xl">
           <ProgressBar
             bgColor={theme.colors.blue['400']}
+            isLabelVisible={
+              getCompletionPercentage(currentQuestionIndex, data.length) != 0
+            }
             baseBgColor={useColorModeValue(
               theme.colors.gray['200'],
               theme.colors.gray['700'],
@@ -116,71 +119,44 @@ const Challenge = () => {
           </Stack>
         </Container>
       ) : (
-        <Box position="relative">
-          <VStack spacing={5} width="100%">
-            <Image
-              minW="full"
-              opacity="30%"
-              linear-gradient="(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.25))"
-              src="/images/Basic.png"
-            />
-            <Heading fontSize="45px" padding="20px" position="absolute" top={0}>
+        <Container pt="8" maxW="container.xl">
+          <VStack spacing={4} width="100%">
+            <Heading textAlign="center" fontSize="45px">
               Challenge Mode
             </Heading>
+
             <Text
               fontSize="20px"
-              top={40}
               align="center"
-              position="absolute"
-              maxW="container.md"
-              textAlign = "center"
-              fontWeight = "medium"
-            >
+              color={useColorModeValue('gray.600', 'gray.200')}
+              maxW="container.md">
               This mode puts your korean typing skills to the ultimate test!
               Challenge Mode tests all your skills, containing exercises on
-              Letters, Sylabbles, Words, Short and Long Sentences and Dictation! 
-
-              <br></br>
-              <br></br>
-
-              <Text textAlign = "center">You can track how you go, and enter a
-              leaderboard with your other peers! Good Luck! </Text>
-            
+              Letters, Sylabbles, Words, Short Sentances, Long Sentances and
+              Diction!
             </Text>
 
-
-
-            <ButtonGroup position="absolute" top={80} padding = "50px">
+            <ButtonGroup pt="2">
               <Button
-                size="lg"
+                size="sm"
                 variant="ghost"
                 isLoading={isFetching}
                 onClick={refetch}
-                bgColor="#39aae1"
+                bgColor="blue.400"
                 _hover={{
-                  bg: '#f52c56',
+                  bg: 'blue.500',
                 }}
                 color="white">
                 Start Challenge
               </Button>
               <NextLink href="/practice">
-                <Button
-                  size="lg"
-                  variant="ghost"
-                  bgColor="#39aae1"
-                  _hover={{
-                    bg: '#f52c56',
-                  }}
-                  color="white">
+                <Button size="sm" variant="solid">
                   I need some practice first
                 </Button>
-
-
-                
               </NextLink>
             </ButtonGroup>
           </VStack>
-        </Box>
+        </Container>
       )}
     </>
   );

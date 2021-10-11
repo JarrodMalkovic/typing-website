@@ -21,12 +21,17 @@ import axios from 'axios';
 import { BASE_API_URL } from '../../../common/contstants/base-api-url';
 import { useAuth } from '../hooks/use-auth';
 import { setAuthToken } from '../utils/set-auth-token';
+import { displayErrors } from '../../../common/utils/display-errors';
+import { ALPHANUMERIC_REGEX } from '../../../common/contstants/alphanumeric-regex';
 
 const SignupSchema = Yup.object({
   username: Yup.string()
-    .min(2, 'Too short!')
-    .max(20, 'Too long!')
-    .required('Required'),
+    .max(50, 'Too long!')
+    .required('Required')
+    .matches(
+      ALPHANUMERIC_REGEX,
+      'Usernames must only contain letters or numbers',
+    ),
   email: Yup.string().email('Invalid email').required('Required'),
   password: Yup.string()
     .min(8, 'Too short!')
@@ -54,12 +59,13 @@ const SignupForm = () => {
       localStorage.setItem('access-token', data.access);
       localStorage.setItem('refresh-token', data.refresh);
       setAuthToken(data.access);
+
       toast({
         title: 'Account created.',
         description: 'You have successfully signed up for KeyKorea.',
         status: 'success',
         position: 'top-right',
-        duration: 9000,
+        duration: 4000,
         isClosable: true,
       });
     },
@@ -72,12 +78,7 @@ const SignupForm = () => {
       w={{ base: 'sm', md: 'md' }}
       boxShadow={'lg'}
       p={8}>
-      {isError && (
-        <Alert marginBottom="6" status="error">
-          <AlertIcon />
-          Something went wrong!
-        </Alert>
-      )}
+      {isError && displayErrors(error)}
       <Formik
         onSubmit={mutate}
         initialValues={{

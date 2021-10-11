@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from libgravatar import Gravatar
+from django.core.validators import RegexValidator
 
 
 class UserManager(BaseUserManager):
@@ -44,7 +45,9 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     """ Adapted from: https://dev.to/koladev/django-rest-authentication-cmh """
-    username = models.CharField(db_index=True, max_length=255, unique=True)
+    username = models.CharField(db_index=True, validators=[RegexValidator(r'^[\w]*$',
+                                                                          message='Field must be alphanumeric',
+                                                                          code='Invalid username')], max_length=50, unique=True)
     email = models.EmailField(db_index=True, unique=True, blank=True)
     avatar = models.CharField(max_length=255)
     bio = models.CharField(max_length=500)

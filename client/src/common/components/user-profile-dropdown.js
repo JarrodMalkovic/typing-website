@@ -18,6 +18,7 @@ import { FiChevronDown } from 'react-icons/fi';
 
 import Link from 'next/link';
 import { useAuth } from '../../modules/auth/hooks/use-auth';
+import { setAuthToken } from '../../modules/auth/utils/set-auth-token';
 
 // Adapated from: https://chakra-templates.dev/navigation/sidebar
 const UserProfileDropdown = () => {
@@ -27,6 +28,7 @@ const UserProfileDropdown = () => {
     dispatch({ type: 'logout' });
     localStorage.removeItem('refresh-token');
     localStorage.removeItem('access-token');
+    setAuthToken(undefined);
   };
 
   return (
@@ -53,9 +55,6 @@ const UserProfileDropdown = () => {
           </Link>
           <Link href="/past-attempts">
             <MenuItem>Past Attempts</MenuItem>
-          </Link>
-          <Link href="/leaderboard">
-            <MenuItem>Leaderboard</MenuItem>
           </Link>
           <Link href="/settings">
             <MenuItem>Settings</MenuItem>

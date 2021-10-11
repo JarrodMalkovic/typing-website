@@ -9,9 +9,20 @@ const NoPastAttemptsPanel = ({ slug }) => {
       <Heading py="2" size="sm">
         No attempts for this exercise yet
       </Heading>
-      <Button size="sm" bgColor="blue.400" color="white" variant="solid">
-        Go to Practice Mode
-      </Button>
+      <Link href="/practice">
+        <a>
+          <Button
+            size="sm"
+            bgColor="blue.400"
+            color="white"
+            variant="solid"
+            _hover={{
+              backgroundColor: 'blue.500',
+            }}>
+            Go to Practice Mode
+          </Button>
+        </a>
+      </Link>
     </VStack>
   );
 };

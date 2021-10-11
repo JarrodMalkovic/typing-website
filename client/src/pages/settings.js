@@ -7,6 +7,7 @@ import {
   Tabs,
   TabList,
   Tab,
+  Select,
   TabPanels,
   TabPanel,
   Portal,
@@ -51,6 +52,11 @@ const Dashboard = () => {
   useTitle('KeyKorea - Settings');
   const { isLoading: isAuthLoading } = useUnauthorizedRedirect('/auth/sign-in');
   const headingRef = React.useRef();
+  const [tabIndex, setTabIndex] = React.useState(0);
+
+  const handleTabsChange = (index) => {
+    setTabIndex(index);
+  };
 
   if (isAuthLoading) {
     return <Spinner />;
@@ -60,8 +66,22 @@ const Dashboard = () => {
     <Container pt="8" maxW="container.xl">
       <VStack spacing={2} width="100%" align="stretch">
         <Heading ref={headingRef} />
-        <Tabs isLazy variant="enclosed">
-          <TabList>
+        <Tabs
+          isLazy
+          variant="enclosed"
+          index={tabIndex}
+          onChange={handleTabsChange}>
+          <Select display={{ base: 'flex', lg: 'none' }}>
+            {tabs.map((value, idx) => (
+              <option
+                key={idx}
+                value={value.name}
+                onClick={() => setTabIndex(idx)}>
+                {value.name}
+              </option>
+            ))}
+          </Select>
+          <TabList display={{ base: 'none', lg: 'flex' }}>
             {tabs.map((tab, idx) => (
               <Tab key={idx}>{tab.name}</Tab>
             ))}

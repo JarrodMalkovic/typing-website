@@ -5,13 +5,13 @@ import { BASE_API_URL } from '../../../common/contstants/base-api-url';
 import createAuthRefreshInterceptor from 'axios-auth-refresh';
 import { refreshAuthLogic } from '../utils/refresh-auth-logic';
 import PropTypes from 'prop-types';
+import { useExercises } from '../../exercises/hooks/use-exercises';
 
 const defaultState = { user: null, isAuthenticated: false, isLoading: true };
 
 export const AuthContext = React.createContext(defaultState);
 
 export const AuthReducer = (initialState, action) => {
-  console.log(initialState);
   switch (action.type) {
     case 'login':
       return {
@@ -28,12 +28,6 @@ export const AuthReducer = (initialState, action) => {
         isLoading: false,
       };
     case 'update':
-      console.log({
-        ...initialState,
-        user: { ...initialState.user, username: action.payload },
-        isAuthenticated: true,
-        isLoading: false,
-      });
       return {
         ...initialState,
         user: { ...initialState.user, username: action.payload },
@@ -52,16 +46,22 @@ export const AuthReducer = (initialState, action) => {
 
 export const AuthProvider = ({ children }) => {
   const [state, dispatch] = React.useReducer(AuthReducer, defaultState);
+  const { refetch } = useExercises();
 
   React.useEffect(async () => {
     try {
-      // createAuthRefreshInterceptor(axios, refreshAuthLogic);
       setAuthToken(localStorage.getItem('access-token'));
       const res = await axios.get(`${BASE_API_URL}/api/auth/current-user/`);
       dispatch({ type: 'login', payload: res.data });
-      console.log(res.data);
+
+      if (res.data.isAdmin) {
+        refetch();
+      }
     } catch (error) {
       dispatch({ type: 'auth-error' });
+      setAuthToken();
+      localStorage.removeItem('access-token');
+      localStorage.removeItem('refresh-token');
     }
   }, []);
 

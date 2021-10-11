@@ -15,9 +15,11 @@ import ExcelUpload from './excel-upload';
 import { Field, Form, Formik } from 'formik';
 import axios from 'axios';
 import { BASE_API_URL } from '../../common/contstants/base-api-url';
-import { useMutation } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
+import { getRelatedCacheKeys } from '../../common/utils/get-related-cache-keys';
+import { displayErrors } from '../../common/utils/display-errors';
 
 const createQuestions = async (body) => {
   const { data } = await axios.post(
@@ -44,6 +46,7 @@ const getQuestions = async (slug) => {
 const generateEmptyTemplate = async () => {
   const wb = { SheetNames: [], Sheets: [] };
   const exercises = await getExercises();
+  console.log(exercises);
 
   exercises.forEach((exercise) => {
     if (exercise.allow_audio_files_in_questions) {
@@ -66,6 +69,7 @@ const generateEmptyTemplate = async () => {
   const data = new Blob([excelBuffer], {
     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8',
   });
+
   FileSaver.saveAs(data, `KeyKoreaEmptyTemplate.xlsx`);
 };
 
@@ -96,7 +100,16 @@ const generateSampleTemplate = async () => {
 };
 
 const AddMultipleQuestions = ({ onClose }) => {
-  const { mutate } = useMutation(createQuestions);
+  const queryClient = useQueryClient();
+
+  const { mutate, isError, isLoading, error } = useMutation(createQuestions, {
+    onSuccess: async () => {
+      onClose();
+
+      await queryClient.refetchQueries(['dashboard'], { active: true });
+    },
+  });
+
   return (
     <Formik
       initialValues={{
@@ -108,6 +121,7 @@ const AddMultipleQuestions = ({ onClose }) => {
           <ModalBody>
             <VStack w="full" textAlign="left" spacing="4">
               <Text textAlign="left" w="full">
+                {isError && displayErrors(error)}
                 Placeholder text which describes this form asdas das dasd
               </Text>
               <Box textAlign="left" w="full">
@@ -160,10 +174,14 @@ const AddMultipleQuestions = ({ onClose }) => {
             <ButtonGroup mt="4">
               <Button onClick={onClose}>Cancel</Button>
               <Button
+                isLoading={isLoading}
                 variant="solid"
                 bgColor="blue.400"
                 color="white"
-                type="submit">
+                type="submit"
+                _hover={{
+                  bgColor: 'blue.500',
+                }}>
                 Create Questions
               </Button>
             </ButtonGroup>
