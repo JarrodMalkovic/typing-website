@@ -1,204 +1,174 @@
 import * as React from 'react';
 
 import {
-  VStack,
   Image,
   Box,
   useColorModeValue,
   Text,
   Button,
   Heading,
-  HStack,
-  Divider,
+  Container,
+  SimpleGrid,
+  Stack,
+  Link,
+  Flex,
+  chakra,
+  ButtonGroup,
 } from '@chakra-ui/react';
+import NextLink from 'next/link';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { Container, Row, Col } from 'react-bootstrap';
-import { ArrowForwardIcon } from '@chakra-ui/icons';
-import Link from 'next/link';
 import { useAuth } from '../modules/auth/hooks/use-auth';
 import { useTitle } from 'react-use';
+import ProgressiveImage from 'react-progressive-image';
 
-const Home = (props) => {
+const Home = () => {
   useTitle('KeyKorea');
+
   const { state } = useAuth();
+  const learnMoreRef = React.useRef();
 
   return (
     <>
-      <Box>
-        <VStack spacing={5} width="100%">
-          <Box position="relative">
-            <Image
-              maxW="100vw"
-              opacity="85%"
-              linear-gradient="(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.25))"
-              src={useColorModeValue(
-                '/images/HomeDay.png',
-                '/images/Korea_Background.jpg',
-              )}
-            />
+      <Box
+        px={4}
+        position="relative"
+        paddingBottom={{ base: '20', lg: '40' }}
+        paddingTop={{ base: '20', lg: '40' }}
+        backgroundColor={useColorModeValue('gray.100', '#1c232e')}>
+        <Container maxW="container.xl">
+          <Box
+            textAlign={{ base: 'center', lg: 'left' }}
+            maxW={{ base: '100%', lg: '50%' }}>
+            <Heading size="2xl">
+              Learn how to use the <Box as="span">Korean Keyboard</Box>
+            </Heading>
             <Text
-              position="absolute"
-              fontSize="8vw"
-              fontWeight="bold"
-              top="20%"
-              left="5%"
-              transform="translate(-50% -50%)">
-              Key Korea
+              pt="4"
+              fontSize="xl"
+              color={useColorModeValue('gray.600', 'gray.300')}>
+              Placeholder Subheading Placeholder Subheading Placeholder
+              Subheading Placeholder Subheading Placeholder Subheading
+              Placeholder Subheading Placeholder Placeholder{' '}
             </Text>
-            <Text
-              position="absolute"
-              fontSize="6vw"
-              fontWeight="bold"
-              top="40%"
-              left="5%"
-              transform="translate(-50% -50%)">
-              안녕하세요?
-            </Text>
-
-            <Text
-              position="absolute"
-              fontSize="6vw"
-              fontWeight="bold"
-              top="40%"
-              left="5%"
-              trasnform="translate(-50% -50%)"
-              textColor="white">
-              {state.isAuthenticated ? state.username : ''}
-            </Text>
-            <Link href="/menu">
+            <ButtonGroup pt="4">
+              <NextLink
+                href={
+                  state && state.isAuthenticated
+                    ? '/get-started'
+                    : '/auth/sign-in'
+                }>
+                <a>
+                  <Button
+                    color="white"
+                    backgroundColor="blue.400"
+                    variant="solid"
+                    _hover={{
+                      backgroundColor: 'blue.500',
+                    }}>
+                    Get Started
+                  </Button>
+                </a>
+              </NextLink>
               <Button
-                bgColor="#f52d56"
-                position="absolute"
-                top="70%"
-                left="6%"
-                size="lg"
-                _hover={{
-                  bg: '#39aae1',
-                }}
-                color="white"
-                rightIcon={<ArrowForwardIcon />}>
-                Get Started!
+                onClick={() =>
+                  window.scrollTo({
+                    behavior: 'smooth',
+                    top: learnMoreRef.current.offsetTop,
+                  })
+                }>
+                Learn More
               </Button>
-            </Link>
-          </Box>
-        </VStack>
-      </Box>
-
-      <VStack height="1500px" margin="100px">
-        <Heading fontSize="60px" padding="50px">
-          About Us
-        </Heading>
-
-        <br></br>
-
-        <Container>
-          <Divider></Divider>
-          <Box marginTop="100px" marginBottom="100px">
-            <Row>
-              <Col xs={8} margin="20px">
-                <Box textAlign="center" padding="20px">
-                  <Heading paddingBottom="50px">Who We Are</Heading>
-                  <Text fontSize="20px" textAlign="justify">
-                    KeyKorea is a student designed website to help you learn the
-                    Korean Keyboard. Wether you're just starting out, or want
-                    some extra practice, KeyKorea is the best place for you to
-                    learn! With an intuitive and easy to use interface, you'll
-                    be a master of the Korean Keybaord in no time!
-                  </Text>
-                </Box>
-              </Col>
-              <Col>
-                <Image
-                  padding="20px"
-                  align="right"
-                  src="/images/challenge.png"
-                  minW="40%"
-                  mawW="40%"
-                  height={300}
-                  borderRadius="2%"
-                />
-              </Col>
-            </Row>
-          </Box>
-
-          <Divider></Divider>
-          <Box marginTop="100px" marginBottom="100px">
-            <Row>
-              <Col>
-                <Image
-                  padding="20px"
-                  align="right"
-                  src="/images/practice.png"
-                  minW="40%"
-                  mawW="40%"
-                  height={300}
-                  borderRadius="2%"
-                />
-              </Col>
-              <Col xs={8} margin="20px">
-                <Box textAlign="center" padding="20px">
-                  <Heading paddingBottom="50px">
-                    Designed For Your Success
-                  </Heading>
-                  <Text fontSize="20px" textAlign="justify">
-                    Everyone learns in different ways. For the first time in
-                    history, we can analyze how millions of people learn at once
-                    to create the most effective educational system possible and
-                    tailor it to each student. Our ultimate goal is to give
-                    everyone access to a private tutor experience through
-                    technology.
-                  </Text>
-                </Box>
-              </Col>
-            </Row>
-          </Box>
-
-          <Divider></Divider>
-          <Box marginTop="100px" marginBottom="100px">
-            <Row>
-              <Col xs={8} margin="20px">
-                <Box textAlign="center" padding="20px">
-                  <Heading paddingBottom="50px">
-                    Enhance Your Korean Typing Skills
-                  </Heading>
-                  <Text fontSize="20px" textAlign="justify">
-                    A passion for learning is the heart of everything we do.
-                    KeyKorea allows you to work through examples directly set by
-                    your lecturer! Either in our chill practice mode, or our
-                    challenge mode, where you can compete against other students
-                    on a global leaderboard!
-                  </Text>
-                </Box>
-              </Col>
-              <Col>
-                <Image
-                  padding="20px"
-                  align="right"
-                  src="/images/Keyboard.png"
-                  minW="40%"
-                  mawW="40%"
-                  height={300}
-                  borderRadius="2%"
-                />
-              </Col>
-            </Row>
+            </ButtonGroup>
           </Box>
         </Container>
-
-        {/* 
-    <HStack>
-      <VStack>
-        <Text> 
-          Add paragraph here
-        </Text>
-      </VStack>
-
-      <Image align = "right" src="/images/Mac - Step 2.png" minW="40%" mawW="40%" height={300} borderRadius = "2%"/>
-
-      
-    </HStack> */}
-      </VStack>
+        <Box
+          visibility={{ base: 'hidden', lg: 'visible' }}
+          width="50%"
+          position="absolute"
+          height="full"
+          right="0px"
+          bottom="0px"
+          top="0px"
+          clipPath="polygon(15% 0%, 100% 0%, 100% 100%, 0% 100%)">
+          <Image
+            as={ProgressiveImage}
+            height="100%"
+            width="100%"
+            objectFit="cover"
+            placeholder={useColorModeValue(
+              './images/korea-day-small.webp',
+              './images/korea-night-small.webp',
+            )}
+            src={useColorModeValue(
+              './images/korea-day.webp',
+              './images/korea-night.webp',
+            )}>
+            {(src, loading) => (
+              <Image
+                style={{ filter: loading ? 'blur(5px)' : '' }}
+                height="100%"
+                width="100%"
+                objectFit="cover"
+                src={src}
+              />
+            )}
+          </Image>
+        </Box>
+      </Box>
+      <Container ref={learnMoreRef} pt="20" maxW="7xl">
+        <SimpleGrid columns={{ base: 1, lg: 3 }} spacing={10}>
+          <Stack textAlign={{ base: 'center', lg: 'left' }}>
+            <Image
+              ml={{ base: 'auto', lg: '0' }}
+              mr={{ base: 'auto', lg: '0' }}
+              w="16"
+              h="16"
+              src="/images/challenge-small-icon.webp"
+            />
+            <Text fontWeight={600}>Who are we?</Text>
+            <Text color={useColorModeValue('gray.600', 'gray.400')}>
+              KeyKorea is a student designed website to help you learn the
+              Korean Keyboard. Wether you're just starting out, or want some
+              extra practice, KeyKorea is the best place for you to learn! With
+              an intuitive and easy to use interface, you'll be a master of the
+              Korean Keybaord in no time!
+            </Text>
+          </Stack>
+          <Stack textAlign={{ base: 'center', lg: 'left' }}>
+            <Image
+              ml={{ base: 'auto', lg: '0' }}
+              mr={{ base: 'auto', lg: '0' }}
+              w="16"
+              h="16"
+              src="/images/practice-small-icon.webp"
+            />
+            <Text fontWeight={600}> Designed For Your Success</Text>
+            <Text color={useColorModeValue('gray.600', 'gray.400')}>
+              Everyone learns in different ways. For the first time in history,
+              we can analyze how millions of people learn at once to create the
+              most effective educational system possible and tailor it to each
+              student. Our ultimate goal is to give everyone access to a private
+              tutor experience through technology.
+            </Text>
+          </Stack>
+          <Stack textAlign={{ base: 'center', lg: 'left' }}>
+            <Image
+              ml={{ base: 'auto', lg: '0' }}
+              mr={{ base: 'auto', lg: '0' }}
+              w="16"
+              h="16"
+              src="/images/keyboard-small-icon.webp"
+            />
+            <Text fontWeight={600}> Enhance Your Korean Typing Skills</Text>
+            <Text color={useColorModeValue('gray.600', 'gray.400')}>
+              A passion for learning is the heart of everything we do. KeyKorea
+              allows you to work through examples directly set by your lecturer!
+              Either in our chill practice mode, or our challenge mode, where
+              you can compete against other students on a global leaderboard!
+            </Text>
+          </Stack>
+        </SimpleGrid>
+      </Container>
     </>
   );
 };
