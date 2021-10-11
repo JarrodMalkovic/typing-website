@@ -12,7 +12,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalCloseButton,
-  HStack,
+  Textarea,
   ModalBody,
   useToast,
   ModalFooter,
@@ -25,21 +25,20 @@ import axios from 'axios';
 import { useMutation, useQueryClient } from 'react-query';
 import { BASE_API_URL } from '../../../common/contstants/base-api-url';
 import PropTypes from 'prop-types';
+import { displayErrors } from '../../../common/utils/display-errors';
 
-const validationSchema = Yup.object({});
+const validationSchema = Yup.object({
+  exercise_name: Yup.string().max(100).required('Required'),
+  description: Yup.string().max(500, 'Too long!').required('Required'),
+  allow_in_challenge_mode: Yup.bool().required(),
+  allow_audio_files_in_questions: Yup.bool().required(),
+  hidden: Yup.bool().required(),
+});
 
 const editExercise = async (data, exercise_slug) => {
-  const formData = new FormData();
-
-  console.log(data);
-
-  Object.keys(data).forEach(
-    (key) => data[key] && formData.append(key, data[key]),
-  );
-
   const res = await axios.patch(
     `${BASE_API_URL}/api/exercises/${exercise_slug}/`,
-    formData,
+    data,
   );
 
   return res.data;
@@ -48,8 +47,6 @@ const editExercise = async (data, exercise_slug) => {
 const EditExerciseModal = ({ exercise, isOpen, onOpen, onClose }) => {
   const queryClient = useQueryClient();
   const toast = useToast();
-
-  console.log(exercise);
 
   const { mutate, isError, error, isLoading } = useMutation(
     (data) => editExercise(data, exercise.exercise_slug),
@@ -64,13 +61,15 @@ const EditExerciseModal = ({ exercise, isOpen, onOpen, onClose }) => {
         });
 
         toast({
-          title: 'Edited exercises.',
-          description: 'You have successfully deleted the selected questions.',
+          title: 'Edited exercise.',
+          description: 'You have successfully deleted the exercise.',
           status: 'success',
           position: 'top-right',
-          duration: 9000,
+          duration: 4000,
           isClosable: true,
         });
+
+        onClose();
       },
     },
   );
@@ -96,7 +95,7 @@ const EditExerciseModal = ({ exercise, isOpen, onOpen, onClose }) => {
               <ModalCloseButton />
               <ModalBody>
                 <VStack spacing="4">
-                  {isError && <h1>{JSON.stringify(error)}</h1>}
+                  {isError && displayErrors(error)}
                   <Stack spacing={4} w="full">
                     <Field name="exercise_name">
                       {({ field, form }) => (
@@ -125,7 +124,7 @@ const EditExerciseModal = ({ exercise, isOpen, onOpen, onClose }) => {
                             form.errors.description && form.touched.description
                           }>
                           <FormLabel>Exercise Description</FormLabel>
-                          <Input
+                          <Textarea
                             {...field}
                             id="description"
                             placeholder="Enter exercise description"
@@ -221,8 +220,11 @@ const EditExerciseModal = ({ exercise, isOpen, onOpen, onClose }) => {
                     variant="solid"
                     bgColor="blue.400"
                     color="white"
-                    type="submit">
-                    Create Exercise
+                    type="submit"
+                    _hover={{
+                      bgColor: 'blue.500',
+                    }}>
+                    Edit Exercise
                   </Button>
                 </ButtonGroup>
               </ModalFooter>

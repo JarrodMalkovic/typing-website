@@ -7,29 +7,21 @@ import {
   Heading,
   Text,
   AlertDialog,
-  AlertDialogCloseButton,
   AlertDialogContent,
   AlertDialogBody,
   AlertDialogOverlay,
-  Stack,
   AlertDialogHeader,
-  FormLabel,
-  FormControl,
+  useToast,
   AlertDialogFooter,
   Button,
   useColorModeValue,
-  Input,
-  Textarea,
-  FormHelperText,
-  ButtonGroup,
-  Flex,
-  Avatar,
-  Icon,
 } from '@chakra-ui/react';
 import { useMutation } from 'react-query';
 import axios from 'axios';
 import { BASE_API_URL } from '../../../common/contstants/base-api-url';
 import { useAuth } from '../../auth/hooks/use-auth';
+import { displayErrors } from '../../../common/utils/display-errors';
+import { setAuthToken } from '../../auth/utils/set-auth-token';
 
 const deleteAccount = async () => {
   const { data } = await axios.delete(`${BASE_API_URL}/api/user/`);
@@ -41,11 +33,23 @@ const DeleteAccountSettings = () => {
   const onClose = () => setIsOpen(false);
   const cancelRef = React.useRef();
   const { dispatch } = useAuth();
+  const toast = useToast();
 
-  const mutation = useMutation(deleteAccount, {
+  const { mutate, isLoading, isError, error } = useMutation(deleteAccount, {
     onSuccess: () => {
       dispatch({ type: 'logout' });
+      setAuthToken();
+      localStorage.removeItem('access-token');
+      localStorage.removeItem('refresh-token');
       onClose();
+      toast({
+        title: 'Deleted account',
+        description: 'You have successfully deleted your account',
+        status: 'success',
+        position: 'top-right',
+        duration: 4000,
+        isClosable: true,
+      });
     },
   });
 
@@ -57,7 +61,7 @@ const DeleteAccountSettings = () => {
           columns={{ md: 3 }}
           spacing={{ md: 6 }}>
           <GridItem colSpan={{ md: 1 }}>
-            <Box px={[4, 0]}>
+            <Box>
               <Heading fontSize="lg" fontWeight="md" lineHeight="6">
                 Delete Account
               </Heading>
@@ -71,7 +75,7 @@ const DeleteAccountSettings = () => {
             </Box>
           </GridItem>
           <GridItem mt={[5, null, 0]} colSpan={{ md: 2 }}>
-            <Box px={{ base: 4, sm: 6 }} py={3} textAlign="right">
+            <Box pl={[0, 0, 6]} py={3} textAlign="right">
               <Button
                 onClick={() => setIsOpen(true)}
                 variant="solid"
@@ -104,6 +108,7 @@ const DeleteAccountSettings = () => {
             </AlertDialogHeader>
 
             <AlertDialogBody>
+              {isError && displayErrors(error)}
               Are you sure? You can't undo this action afterwards.
             </AlertDialogBody>
 
@@ -111,7 +116,7 @@ const DeleteAccountSettings = () => {
               <Button ref={cancelRef} onClick={onClose}>
                 Cancel
               </Button>
-              <Button colorScheme="red" onClick={mutation.mutate} ml={3}>
+              <Button colorScheme="red" onClick={mutate} ml={3}>
                 Delete
               </Button>
             </AlertDialogFooter>

@@ -79,10 +79,16 @@ const ImageUpload = ({ setFieldValue }) => {
           Drag and drop some files here, or click to select files
         </Text>
       </Flex>{' '}
-      <Text>Exercise Image Preview</Text>
-      <Center>
-        <Image src={file} />
-      </Center>
+      {file && (
+        <>
+          <Text mt="2" fontSize="sm">
+            Exercise Image Preview
+          </Text>
+          <Center>
+            <Image src={file} />
+          </Center>
+        </>
+      )}
     </Box>
   );
 };

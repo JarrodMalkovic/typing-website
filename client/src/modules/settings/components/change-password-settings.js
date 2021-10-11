@@ -11,30 +11,25 @@ import {
   FormControl,
   Button,
   useColorModeValue,
+  useToast,
   Input,
-  Textarea,
-  FormHelperText,
   FormErrorMessage,
-  ButtonGroup,
-  Flex,
-  Avatar,
-  Icon,
 } from '@chakra-ui/react';
 import { useMutation } from 'react-query';
 import axios from 'axios';
 import { BASE_API_URL } from '../../../common/contstants/base-api-url';
 import { Field, Form, Formik } from 'formik';
 import * as Yup from 'yup';
+import { displayErrors } from '../../../common/utils/display-errors';
 
 const ChangePasswordSchema = Yup.object({
   password: Yup.string()
     .min(8, 'Too short!')
     .max(50, 'Too long!')
     .required('Required'),
-  confirmPassword: Yup.string().oneOf(
-    [Yup.ref('password'), null],
-    'Passwords must match',
-  ),
+  confirmPassword: Yup.string()
+    .required('Required')
+    .oneOf([Yup.ref('password'), null], 'Passwords must match'),
 });
 
 const changePassword = async (body) => {
@@ -47,7 +42,18 @@ const changePassword = async (body) => {
 };
 
 const ChangePasswordSettings = () => {
-  const mutation = useMutation(changePassword);
+  const toast = useToast();
+  const { mutate, isLoading, isError, error } = useMutation(changePassword, {
+    onSuccess: () =>
+      toast({
+        title: 'Updated password',
+        description: 'You have successfully updated your password',
+        status: 'success',
+        position: 'top-right',
+        duration: 4000,
+        isClosable: true,
+      }),
+  });
 
   return (
     <>
@@ -57,7 +63,7 @@ const ChangePasswordSettings = () => {
           columns={{ md: 3 }}
           spacing={{ md: 6 }}>
           <GridItem colSpan={{ md: 1 }}>
-            <Box px={[4, 0]}>
+            <Box>
               <Heading fontSize="lg" fontWeight="md" lineHeight="6">
                 Change Password
               </Heading>
@@ -77,10 +83,10 @@ const ChangePasswordSettings = () => {
                 confirmPassword: '',
               }}
               validationSchema={ChangePasswordSchema}
-              onSubmit={mutation.mutate}>
+              onSubmit={mutate}>
               {() => (
                 <Form>
-                  <Stack px={4} py={5} spacing={6} p={{ sm: 6 }}>
+                  <Stack pl={[0, 0, 6]} py={5} spacing={6}>
                     <Field name="password">
                       {({ field, form }) => (
                         <FormControl
@@ -88,11 +94,13 @@ const ChangePasswordSettings = () => {
                             form.errors.password && form.touched.password
                           }
                           as={GridItem}>
+                          {isError && displayErrors(error)}
                           <FormLabel>New Password</FormLabel>
                           <Input
                             {...field}
                             type="tel"
                             width="100%"
+                            type="password"
                             rounded="md"
                           />
                           <FormErrorMessage>
@@ -116,6 +124,7 @@ const ChangePasswordSettings = () => {
                             type="tel"
                             width="100%"
                             rounded="md"
+                            type="password"
                           />
                           <FormErrorMessage>
                             {form.errors.confirmPassword}
@@ -124,13 +133,13 @@ const ChangePasswordSettings = () => {
                       )}
                     </Field>
                   </Stack>
-                  <Box px={{ base: 4, sm: 6 }} py={3} textAlign="right">
+                  <Box py={3} textAlign="right">
                     <Button
                       type="submit"
-                      isLoading={mutation.isLoading}
+                      isLoading={isLoading}
                       variant="solid"
                       fontWeight="md">
-                      {mutation.isLoading ? 'Updating...' : 'Update Password'}
+                      {isLoading ? 'Updating...' : 'Update Password'}
                     </Button>
                   </Box>
                 </Form>

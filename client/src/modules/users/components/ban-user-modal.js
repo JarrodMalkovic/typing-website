@@ -14,6 +14,7 @@ import axios from 'axios';
 import { BASE_API_URL } from '../../../common/contstants/base-api-url';
 import { useMutation, useQueryClient } from 'react-query';
 import { getRelatedCacheKeys } from '../../../common/utils/get-related-cache-keys';
+import { displayErrors } from '../../../common/utils/display-errors';
 
 const banUser = async (userId) => {
   const { data } = await axios.delete(
@@ -25,22 +26,25 @@ const banUser = async (userId) => {
 const BanUserModal = ({ isOpen, onClose, cancelRef, username, userId }) => {
   const queryClient = useQueryClient();
 
-  const { mutate, isLoading } = useMutation(() => banUser(userId), {
-    onSuccess: () => {
-      const keys = getRelatedCacheKeys(queryClient, 'users');
+  const { mutate, isLoading, isError, error } = useMutation(
+    () => banUser(userId),
+    {
+      onSuccess: () => {
+        const keys = getRelatedCacheKeys(queryClient, 'users');
 
-      keys.forEach((key) =>
-        queryClient.setQueryData(key, (old) => {
-          return {
-            ...old,
-            users: old.users.filter((oldRow) => oldRow.id !== userId),
-          };
-        }),
-      );
+        keys.forEach((key) =>
+          queryClient.setQueryData(key, (old) => {
+            return {
+              ...old,
+              users: old.users.filter((oldRow) => oldRow.id !== userId),
+            };
+          }),
+        );
 
-      onClose();
+        onClose();
+      },
     },
-  });
+  );
 
   return (
     <AlertDialog
@@ -55,6 +59,7 @@ const BanUserModal = ({ isOpen, onClose, cancelRef, username, userId }) => {
           </AlertDialogHeader>
 
           <AlertDialogBody>
+            {isError && displayErrors(error)}
             Are you sure you want to permanently ban "{username}"? You can't
             undo this action afterwards.
           </AlertDialogBody>

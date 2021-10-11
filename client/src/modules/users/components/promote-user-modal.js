@@ -18,6 +18,7 @@ import axios from 'axios';
 import { BASE_API_URL } from '../../../common/contstants/base-api-url';
 import { useMutation, useQueryClient } from 'react-query';
 import { getRelatedCacheKeys } from '../../../common/utils/get-related-cache-keys';
+import { displayErrors } from '../../../common/utils/display-errors';
 
 const promoteUser = async (userId) => {
   const { data } = await axios.patch(
@@ -29,24 +30,27 @@ const promoteUser = async (userId) => {
 const PromoteUserModal = ({ username, userId, isOpen, onClose, finalRef }) => {
   const queryClient = useQueryClient();
 
-  const { mutate, isLoading } = useMutation(() => promoteUser(userId), {
-    onSuccess: (data) => {
-      const keys = getRelatedCacheKeys(queryClient, 'users');
+  const { mutate, isLoading, isError, error } = useMutation(
+    () => promoteUser(userId),
+    {
+      onSuccess: (data) => {
+        const keys = getRelatedCacheKeys(queryClient, 'users');
 
-      keys.forEach((key) =>
-        queryClient.setQueryData(key, (old) => {
-          return {
-            ...old,
-            users: old.users.map((oldRow) =>
-              oldRow.id === userId ? data : oldRow,
-            ),
-          };
-        }),
-      );
+        keys.forEach((key) =>
+          queryClient.setQueryData(key, (old) => {
+            return {
+              ...old,
+              users: old.users.map((oldRow) =>
+                oldRow.id === userId ? data : oldRow,
+              ),
+            };
+          }),
+        );
 
-      onClose();
+        onClose();
+      },
     },
-  });
+  );
 
   return (
     <Modal
@@ -58,7 +62,10 @@ const PromoteUserModal = ({ username, userId, isOpen, onClose, finalRef }) => {
       <ModalContent>
         <ModalHeader>Promote "{username}"</ModalHeader>
         <ModalCloseButton />
-        <ModalBody>Are you sure you want to promote "{username}"?</ModalBody>
+        <ModalBody>
+          {isError && displayErrors(error)}Are you sure you want to promote "
+          {username}"?
+        </ModalBody>
         <ModalFooter>
           <ButtonGroup>
             <Button onClick={onClose}>Cancel</Button>
@@ -68,7 +75,10 @@ const PromoteUserModal = ({ username, userId, isOpen, onClose, finalRef }) => {
               bgColor="blue.400"
               color="white"
               type="submit"
-              onClick={mutate}>
+              onClick={mutate}
+              _hover={{
+                bgColor: 'blue.500',
+              }}>
               Promote "{username}"
             </Button>
           </ButtonGroup>

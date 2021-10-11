@@ -8,7 +8,7 @@ import {
   Th,
   Tr,
   Td,
-  Button,
+  Box,
   Tbody,
   Thead,
   ButtonGroup,
@@ -19,6 +19,8 @@ import axios from 'axios';
 import { BASE_API_URL } from '../../../common/contstants/base-api-url';
 import EditSubexerciseButtton from './edit-subexercise-button';
 import DeleteSubexerciseButton from './delete-subexercise-button';
+import Spinner from '../../../common/components/spinner';
+import NoSubexercisesPanel from './no-subexercises-panel';
 
 const reorderSubexercises = async ({ body, exercise_slug }) => {
   const { data } = await axios.patch(
@@ -29,7 +31,15 @@ const reorderSubexercises = async ({ body, exercise_slug }) => {
   return data;
 };
 
-const Table = ({ columns, records, setRecords, exercise_slug }) => {
+const Table = ({
+  columns,
+  records,
+  setRecords,
+  exercise_slug,
+  isLoading,
+  apiResponse,
+  isError,
+}) => {
   const { mutate } = useMutation(reorderSubexercises);
 
   const getRowId = React.useCallback((row) => {
@@ -67,38 +77,53 @@ const Table = ({ columns, records, setRecords, exercise_slug }) => {
         {},
       );
 
-    console.log(dragRecord);
     mutate({ body: reordered, exercise_slug });
   };
 
   return (
-    <DndProvider backend={HTML5Backend}>
-      <ChakraTable {...getTableProps()}>
-        <Thead>
-          {headerGroups.map((headerGroup) => (
-            <Tr {...headerGroup.getHeaderGroupProps()}>
-              <Th />
-              {headerGroup.headers.map((column) => (
-                <Th {...column.getHeaderProps()}>{column.render('Header')}</Th>
-              ))}
-            </Tr>
-          ))}
-        </Thead>
-        <Tbody {...getTableBodyProps()}>
-          {rows.map(
-            (row, index) =>
-              prepareRow(row) || (
-                <Row
-                  index={index}
-                  row={row}
-                  moveRow={moveRow}
-                  {...row.getRowProps()}
-                />
-              ),
-          )}
-        </Tbody>
-      </ChakraTable>
-    </DndProvider>
+    <Box overflowX="auto">
+      <DndProvider backend={HTML5Backend}>
+        <ChakraTable {...getTableProps()}>
+          <Thead>
+            {headerGroups.map((headerGroup) => (
+              <Tr {...headerGroup.getHeaderGroupProps()}>
+                <Th />
+                {headerGroup.headers.map((column) => (
+                  <Th {...column.getHeaderProps()}>
+                    {column.render('Header')}
+                  </Th>
+                ))}
+              </Tr>
+            ))}
+          </Thead>
+          <Tbody {...getTableBodyProps()}>
+            {rows.map(
+              (row, index) =>
+                prepareRow(row) || (
+                  <Row
+                    index={index}
+                    row={row}
+                    moveRow={moveRow}
+                    {...row.getRowProps()}
+                  />
+                ),
+            )}
+          </Tbody>
+        </ChakraTable>
+        {isError ? (
+          <VStack mt="8">
+            <Heading size="md" textAlign="center">
+              Sorry, something went wrong.
+            </Heading>
+            <Text textAlign="center">Could not fetch subexercise data.</Text>
+          </VStack>
+        ) : isLoading ? (
+          <Spinner />
+        ) : apiResponse && apiResponse.length <= 0 ? (
+          <NoSubexercisesPanel />
+        ) : null}
+      </DndProvider>
+    </Box>
   );
 };
 
@@ -178,14 +203,19 @@ const getSubexercises = async (exercise_slug) => {
 
 const SubexercisesTable = ({ exercise_slug }) => {
   const [tableData, setTableData] = React.useState([]);
-  const { data: apiResponse, isLoading } = useQuery(
+  const {
+    data: apiResponse,
+    isLoading,
+    isError,
+  } = useQuery(
     ['subexercise', 'dashboard', exercise_slug],
     () => getSubexercises(exercise_slug),
+    { retry: 3, retryDelay: 0 },
   );
 
   React.useEffect(() => {
     setTableData(apiResponse || []);
-  }, [apiResponse]);
+  }, [apiResponse, isLoading]);
 
   const [columns, data] = React.useMemo(() => {
     const columns = [
@@ -226,8 +256,11 @@ const SubexercisesTable = ({ exercise_slug }) => {
     <Table
       columns={columns}
       records={data}
+      apiResponse={apiResponse}
+      isLoading={isLoading}
       setRecords={setTableData}
       exercise_slug={exercise_slug}
+      isError={isError}
     />
   );
 };

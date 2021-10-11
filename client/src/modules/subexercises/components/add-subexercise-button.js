@@ -14,6 +14,9 @@ const AddSubexerciseButton = (props) => {
         onClick={onOpen}
         leftIcon={<AddIcon />}
         variant="solid"
+        _hover={{
+          bgColor: 'blue.500',
+        }}
         {...props}>
         Add Subexercise
       </Button>

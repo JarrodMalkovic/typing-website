@@ -24,13 +24,7 @@ const SignUp = () => {
   return (
     <Box position="relative">
       <VStack spacing={5} width="100%">
-        <Image
-          minW="full"
-          opacity="30%"
-          linear-gradient="(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.25))"
-          src="/images/Basic.png"
-        />
-        <Flex align={'center'} justify={'center'} position="absolute">
+        <Flex align={'center'} justify={'center'}>
           <Stack spacing={8} mx={'auto'} maxW={'lg'} py={12} px={6}>
             <Stack align={'center'}>
               <Heading fontSize={'4xl'}>Sign up</Heading>

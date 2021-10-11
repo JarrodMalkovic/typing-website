@@ -10,6 +10,7 @@ import {
   Stack,
   FormLabel,
   Link,
+  useToast,
   FormControl,
   Button,
   useColorModeValue,
@@ -27,6 +28,20 @@ import { useMutation, useQuery } from 'react-query';
 import axios from 'axios';
 import { BASE_API_URL } from '../../../common/contstants/base-api-url';
 import { useAuth } from '../../auth/hooks/use-auth';
+import { displayErrors } from '../../../common/utils/display-errors';
+import * as Yup from 'yup';
+import { ALPHANUMERIC_REGEX } from '../../../common/contstants/alphanumeric-regex';
+
+const validationSchema = Yup.object({
+  username: Yup.string()
+    .required('Required!')
+    .matches(
+      ALPHANUMERIC_REGEX,
+      'Usernames must only contain letters or numbers',
+    )
+    .max(50),
+  bio: Yup.string().required('Required!').max(500),
+});
 
 const getProfileSettings = async () => {
   const { data } = await axios.get(`${BASE_API_URL}/api/user/profile/`);
@@ -40,11 +55,24 @@ const updateProfileSettings = async (body) => {
 
 const ProfileSettings = () => {
   const { dispatch } = useAuth();
+  const toast = useToast();
   const { data, isLoading } = useQuery('profile-setttings', getProfileSettings);
-  const mutation = useMutation(updateProfileSettings, {
+  const {
+    mutate,
+    isError,
+    isLoading: isMutationLoading,
+    error,
+  } = useMutation(updateProfileSettings, {
     onSuccess: (data) => {
-      console.log(data);
       dispatch({ type: 'update', payload: data.username });
+      toast({
+        title: 'Updated profile',
+        description: 'You have successfully updated your profile',
+        status: 'success',
+        position: 'top-right',
+        duration: 4000,
+        isClosable: true,
+      });
     },
   });
 
@@ -56,7 +84,7 @@ const ProfileSettings = () => {
           columns={{ md: 3 }}
           spacing={{ md: 6 }}>
           <GridItem colSpan={{ md: 1 }}>
-            <Box px={[4, 0]}>
+            <Box>
               <Heading fontSize="lg" fontWeight="md" lineHeight="6">
                 Profile
               </Heading>
@@ -76,16 +104,18 @@ const ProfileSettings = () => {
                 username: (data && data.username) || '',
                 bio: (data && data.bio) || '',
               }}
-              onSubmit={mutation.mutate}>
+              onSubmit={mutate}
+              validationSchema={validationSchema}>
               {() => (
                 <Form>
-                  <Stack px={4} py={5} spacing={6} p={{ sm: 6 }}>
+                  <Stack pl={[0, 0, 6]} py={5} spacing={6}>
                     <Field name="username">
                       {({ field, form }) => (
                         <FormControl
                           isInvalid={
                             form.errors.username && form.touched.username
                           }>
+                          {isError && displayErrors(error)}
                           <Skeleton width="100px" isLoaded={!isLoading}>
                             <FormLabel>Username</FormLabel>
                           </Skeleton>
@@ -115,9 +145,15 @@ const ProfileSettings = () => {
                             />
                           </Skeleton>
                           <Skeleton w="200px" isLoaded={!isLoading}>
-                            <FormHelperText>
-                              Brief description for your profile
-                            </FormHelperText>
+                            {form.errors.bio ? (
+                              <FormErrorMessage>
+                                {form.errors.bio}
+                              </FormErrorMessage>
+                            ) : (
+                              <FormHelperText>
+                                Brief description for your profile
+                              </FormHelperText>
+                            )}
                           </Skeleton>
                         </FormControl>
                       )}
@@ -125,12 +161,7 @@ const ProfileSettings = () => {
 
                     <FormControl>
                       <Skeleton width="100px" isLoaded={!isLoading}>
-                        <FormLabel
-                          fontSize="sm"
-                          fontWeight="md"
-                          color={useColorModeValue('gray.700', 'gray.50')}>
-                          Photo
-                        </FormLabel>
+                        <FormLabel>Photo</FormLabel>
                       </Skeleton>
                       <Skeleton w="200px" isLoaded={!isLoading}>
                         <Flex alignItems="center" mt={1}>
@@ -168,15 +199,13 @@ const ProfileSettings = () => {
                       </Skeleton>
                     </FormControl>
                   </Stack>
-                  <Box px={{ base: 4, sm: 6 }} py={3} textAlign="right">
+                  <Box py={3} textAlign="right">
                     <Button
-                      isLoading={mutation.isLoading}
+                      isLoading={isMutationLoading}
                       type="submit"
                       variant="solid"
                       fontWeight="md">
-                      {mutation.isLoading
-                        ? 'Saving...'
-                        : 'Save Profile Changes'}
+                      {isMutationLoading ? 'Saving...' : 'Save Profile Changes'}
                     </Button>
                   </Box>
                 </Form>
