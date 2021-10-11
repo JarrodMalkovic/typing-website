@@ -54,10 +54,12 @@ const Exercise = () => {
   const { subexercise, exercise } = router.query;
 
   const { data, isLoading, isError, error } = useQuery(
-    subexercise,
+    ['practice', 'questions', subexercise],
     () => getQuestions(subexercise),
     { retry: 3, retryDelay: 0 },
   );
+
+  console.log(data);
 
   const [accuracy, setAccuracy] = React.useState(100);
   const [wordsTyped, setWordsTyped] = React.useState(0);
