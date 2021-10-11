@@ -315,6 +315,27 @@ class QuestionExcelUpload(APIView):
     # 1. upload the excel and make the database represent the excel (replace)
     # 2. uplaod the excel and append the questions to database (add)
 
+    # Checks if there any duplicate questions provided in the excel document
+    def check_duplicates(self, data):
+        new_data = []
+        
+        for exercise in data:
+            new_data.append([exercise[0], []])
+                        
+        for i in range(len(data)):
+            for j in range(len(data[i][1])):
+                question = data[i][1][j]['question']
+                translation = data[i][1][j]['translation']
+                found = 0
+                for k in range(len(new_data)):
+                    for l in range(len(new_data[i][1])):
+                        if(len(new_data[k][1]) != 0):
+                            if question == new_data[k][1][l]['question'] and translation == new_data[k][1][l]['translation']:
+                                found = 1
+                if found == 0:
+                    new_data[i][1].append(data[i][1][j])
+        return new_data
+
     '''
     Takes a list of lists
     Each list containes two items. The first item is a dictionary
@@ -326,11 +347,9 @@ class QuestionExcelUpload(APIView):
     [{"subexercise":"C + V", "question":"hello", "meaning":"hello-meaning"},
     {"subexercise":"Shift C + V", "question":"new", "meaning":"new-meaning"}]],
     '''
-
     def post(self, request):
-        data = request.data
+        data = self.check_duplicates(request.data['data'])
         all_questions = []
-
         for exercise in data:
             for question in exercise[1]:
                 try:
@@ -340,14 +359,23 @@ class QuestionExcelUpload(APIView):
                 except Subexercise.DoesNotExist:
                     raise APIException(detail='Subexercise "{}" does not exist'.format(
                         subexercise_name))
-
-                new_question = {
-                    "subexercise_slug": subexercise.subexercise_slug,
-                    "question": question['question'],
-                    "translation": question['translation']
-                }
-
-                all_questions.append(new_question)
+                    
+                try:
+                    # Prevents adding a question that exists in database already
+                    question_exist = Question.objects.get(question=question['question'], translation=question['translation'])
+                    continue
+                except:
+                    try:
+                        new_question = {
+                        "subexercise_slug": subexercise.subexercise_slug,
+                        "question": question['question'],
+                        "translation": question['translation']
+                        }
+                        all_questions.append(new_question)
+                    except:
+                        response_str = "Subexercise: '{}' does not exist".format(subexercise_name)
+                        response = [{"response": response_str}]
+                        return Response(response, status=status.HTTP_400_BAD_REQUEST)
 
         serializer = QuestionSerializer(data=all_questions, many=True)
 
