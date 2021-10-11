@@ -14,6 +14,8 @@ import {
   Flex,
   chakra,
   ButtonGroup,
+  HStack,
+  Divider,
 } from '@chakra-ui/react';
 import NextLink from 'next/link';
 

@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import { Container, Flex, Heading, Spacer, VStack } from '@chakra-ui/react';
+
 import {
   LINUX,
   MAC,

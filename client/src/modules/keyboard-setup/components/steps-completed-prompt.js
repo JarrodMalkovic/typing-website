@@ -31,12 +31,13 @@ const StepsCompletedPrompt = ({ os }) => {
     <Box pt="8">
       <VStack>
         <Heading textAlign="center" as="h2" size="md">
-          Woohoo! You have completed the keyboard setup instructions for {os} 🥳
+          Well done! You have completed the keyboard setup instructions for {os}
+          !
         </Heading>
         {isKoreanText !== null ? (
           isKoreanText ? (
             <Container>
-              <Text textAlign="center">
+              <Text textAlign="center" color="#39aae1">
                 Everything looks setup correctly! Have fun practicing your
                 korean typing skills!
               </Text>
@@ -51,8 +52,9 @@ const StepsCompletedPrompt = ({ os }) => {
               </Link>
             </Container>
           ) : (
-            <Text textAlign="center">
-              Oh no! Looks like the was an error setting up your keyboard 😞
+            <Text textAlign="center" color="#f52d56">
+              Oh no! You are not typing in Hangul. Ensure that your keyboard is
+              setup in Korean.
             </Text>
           )
         ) : (

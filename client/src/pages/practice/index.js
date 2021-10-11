@@ -6,14 +6,9 @@ import {
   VStack,
   Text,
   Wrap,
-  Image,
-  Center,
-  Box,
-  Divider,
   useColorModeValue,
 } from '@chakra-ui/react';
 
-import Link from 'next/link';
 import PracticeExerciseButton from '../../modules/practice/practice-exercise-button';
 import { useExercises } from '../../modules/exercises/hooks/use-exercises';
 import { useUnauthorizedRedirect } from '../../modules/auth/hooks/use-unauthorized-redirect';

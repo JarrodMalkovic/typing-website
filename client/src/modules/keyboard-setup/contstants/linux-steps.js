@@ -51,16 +51,18 @@ const Step3 = (
 
 const Step4 = (
   <Wrap justify="center" pt="8">
-    <Box maxW="500px">
-      <Image src="/images/ubuntu3.png" width="100%" height="auto" />
-    </Box>
-    <Container minW="60vw">
-      <Text size="md" pt="8" textAlign="center">
-        At the top right of the screen, select the language drop down menu,
-        select Korean (Hangul), and then click on it again and turn Hangul mode
-        on.
-      </Text>
-    </Container>
+    <VStack>
+      <Box maxW="500px">
+        <Image src="/images/ubuntu3.png" width="100%" height="auto" />
+      </Box>
+      <Container minW="60vw">
+        <Text size="md" pt="8" textAlign="center">
+          At the top right of the screen, select the language drop down menu,
+          select Korean (Hangul), and then click on it again and turn Hangul
+          mode on.
+        </Text>
+      </Container>
+    </VStack>
   </Wrap>
 );
 

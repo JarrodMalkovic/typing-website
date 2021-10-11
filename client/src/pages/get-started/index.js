@@ -14,14 +14,12 @@ import {
 
 import Link from 'next/link';
 import { Tooltip } from '@chakra-ui/react';
-import { useTitle } from 'react-use';
 
 const Menu = () => {
-  useTitle('KeyKorea - Get Started');
   return (
     <Box position="relative" mt={10}>
       <VStack padding="20px" width="100%">
-        <Heading textAlign="center" fontSize="45px" padding="20px">
+        <Heading fontSize="45px" padding="20px">
           Begin Your Journey!
         </Heading>
 
@@ -40,11 +38,17 @@ const Menu = () => {
                     padding="20px"
                     maxW="container.lg"
                     _hover={{ color: '#39aae1' }}>
-                    <Image
-                      src="/images/setup.png"
-                      boxSize="200px"
-                      margin="10px"
-                    />
+                    <Box
+                      border="4px"
+                      borderRadius="5%"
+                      borderColor="gray"
+                      _hover={{ borderColor: '#39aae1' }}>
+                      <Image
+                        src="/images/menu_setup.png"
+                        boxSize="250px"
+                        margin="10px"
+                      />
+                    </Box>
                     <Text
                       mt="10px"
                       textAlign="center"
@@ -68,11 +72,17 @@ const Menu = () => {
                     padding="20px"
                     maxW="container.lg"
                     _hover={{ color: '#39aae1' }}>
-                    <Image
-                      src="/images/practice.png"
-                      boxSize="200px"
-                      margin="10px"
-                    />
+                    <Box
+                      border="4px"
+                      borderRadius="5%"
+                      borderColor="gray"
+                      _hover={{ borderColor: '#39aae1' }}>
+                      <Image
+                        src="/images/menu_practice.png"
+                        boxSize="250px"
+                        margin="10px"
+                      />
+                    </Box>
                     <Text
                       mt="10px"
                       textAlign="center"
@@ -96,11 +106,17 @@ const Menu = () => {
                     padding="20px"
                     maxW="container.lg"
                     _hover={{ color: '#39aae1' }}>
-                    <Image
-                      src="/images/challenge.png"
-                      boxSize="200px"
-                      margin="10px"
-                    />
+                    <Box
+                      border="4px"
+                      borderRadius="5%"
+                      borderColor="gray"
+                      _hover={{ borderColor: '#39aae1' }}>
+                      <Image
+                        src="/images/menu_challenge.png"
+                        boxSize="250px"
+                        margin="10px"
+                      />
+                    </Box>
                     <Text
                       mt="10px"
                       textAlign="center"
