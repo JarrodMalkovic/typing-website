@@ -21,7 +21,7 @@ const Menu = () => {
   return (
     <Box position="relative" mt={10}>
       <VStack padding="20px" width="100%">
-        <Heading fontSize="45px" padding="20px">
+        <Heading textAlign="center" fontSize="45px" padding="20px">
           Begin Your Journey!
         </Heading>
 
