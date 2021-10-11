@@ -128,14 +128,16 @@ const PracticeExerciseButton = ({ name, img, slug, description }) => {
                         </Text>
                         <Link
                           href={`/practice/${subExercise.exercise_slug}/subexercise/${subExercise.subexercise_slug}`}>
-                          <Button
-                            variant="ghost"
-                            color="blue.400"
-                            flex="1"
-                            textAlign="left"
-                            margin="10px">
-                            Start {subExercise.subexercise_name}
-                          </Button>
+                          <a>
+                            <Button
+                              variant="ghost"
+                              color="blue.400"
+                              flex="1"
+                              textAlign="left"
+                              margin="10px">
+                              Start {subExercise.subexercise_name}
+                            </Button>
+                          </a>
                         </Link>
                       </Box>
                     </AccordionPanel>
