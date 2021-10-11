@@ -56,7 +56,6 @@ const VirtualKeyboard = ({ inputRef }) => {
       event.key.toLowerCase();
 
     const key = document.querySelector(`div[data-skbtn="${dataSkbtn}"]`);
-    console.log(key);
     if (key) key.classList.add(colorMode === 'light' ? 'down' : 'down-dark');
   };
 
