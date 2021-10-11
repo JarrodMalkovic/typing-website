@@ -65,8 +65,7 @@ const Dashboard = () => {
           <AddExerciseButton />
         </Flex>
         <Text>
-          This is a short sentence which describes what this dashboard is all
-          about
+          Add new exercise modules or edit existing modules.
         </Text>
         <ExercisesTable filter={filter} />
       </VStack>
