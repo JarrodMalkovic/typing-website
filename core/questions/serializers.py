@@ -37,6 +37,9 @@ class QuestionSerializer(serializers.ModelSerializer):
         instance.audio_url = validated_data.get(
             'audio_url', instance.audio_url)
 
+        instance.translation = validated_data.get(
+            'translation', instance.translation)
+
         instance.save()
         return instance
 
