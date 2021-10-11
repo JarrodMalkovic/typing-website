@@ -34,7 +34,7 @@ const validationSchema = Yup.object({
     .max(100, 'Too long!')
     .required('Required')
     .matches(
-      /^[\w\-\s]+$/,
+      /^[\w\-\s-+]+$/,
       'Subexercise names must only contain letters or numbers',
     ),
   description: Yup.string().max(500, 'Too long!').required('Required'),
