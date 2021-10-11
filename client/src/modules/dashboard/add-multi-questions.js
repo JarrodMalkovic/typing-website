@@ -22,7 +22,7 @@ import * as XLSX from 'xlsx';
 const createQuestions = async (body) => {
   const { data } = await axios.post(
     `${BASE_API_URL}/api/upload-questions/`,
-    body.questions,
+    {'data': body.questions},
   );
 
   return body;
