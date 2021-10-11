@@ -26,13 +26,14 @@ class QuestionSubexerciseAPIView(APIView):
     def get(self, request, subexercise):
         try:
             current_subexercise = Subexercise.objects.get(
-                subexercise_slug=subexercise)
+                subexercise_slug=subexercise, exercise_slug__hidden=False)
 
             level_request = current_subexercise.level
             current_exercise_slug = current_subexercise.exercise_slug
 
             if level_request == 1:
-                questions = Question.objects.filter(subexercise_slug=subexercise)
+                questions = Question.objects.filter(
+                    subexercise_slug=subexercise)
                 serializers = QuestionSerializer(questions, many=True)
                 return Response(serializers.data, status=status.HTTP_200_OK)
 
@@ -44,7 +45,7 @@ class QuestionSubexerciseAPIView(APIView):
 
             if len(attempts) == 0:
                 raise APIException(
-                    detail="You must complete previous subexercises before this one")
+                    detail="You must complete previous subexercises before this one", code=status.HTTP_400_BAD_REQUEST)
 
             questions = Question.objects.filter(
                 subexercise_slug=subexercise)
@@ -53,7 +54,8 @@ class QuestionSubexerciseAPIView(APIView):
 
             return Response(serializers.data, status=status.HTTP_200_OK)
         except Subexercise.DoesNotExist:
-            return Response([], status=status.HTTP_200_OK)
+            raise APIException(
+                detail="This subexercise does not exist", code=status.HTTP_400_BAD_REQUEST)
 
 
 class QuestionSubexerciseOrderedAPIView(APIView):
@@ -158,16 +160,23 @@ class QuestionExerciseAttemptAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request, exercise):
+        page = int(request.GET.get('page', 0))
+        limit = min(int(request.GET.get('limit', 10)), 50)
+        skip = page * limit
+
         attempts = PracticeAttempt.objects.filter(
             subexercise_slug_id__exercise_slug_id=exercise, user=request.user)
 
-        serializers = PracticeAttemptSerializer(attempts, many=True)
-        return Response(serializers.data, status=status.HTTP_200_OK)
+        serializers = PracticeAttemptSerializer(
+            attempts[skip:skip + limit], many=True)
+
+        return Response({'pages': math.ceil(len(attempts) / limit), 'attempts': serializers.data}, status=status.HTTP_200_OK)
 
 
 class QuestionLeaderboardAPIView(APIView):
 
     def get(self, request):
+        print('test')
         category = request.GET.get('category', 'all')
 
         top_attempts = None
@@ -175,16 +184,16 @@ class QuestionLeaderboardAPIView(APIView):
 
         if category == 'all':
             top_attempts = PracticeAttempt.objects.select_related(
-                'user').order_by("-score")[:20]
+                'user').order_by("-score")[:10]
             serializers = PracticeAttemptSerializer(top_attempts, many=True)
         elif category == 'challenge':
             top_attempts = ChallengeAttempt.objects.select_related(
-                'user').order_by("-score")[:20]
+                'user').order_by("-score")[:10]
             serializers = ChallengeAttemptSerializer(top_attempts, many=True)
         else:
             top_attempts = PracticeAttempt.objects.filter(
                 subexercise_slug_id__exercise_slug_id=category).select_related(
-                'user').order_by("-score")[:20]
+                'user').order_by("-score")[:10]
             serializers = PracticeAttemptSerializer(top_attempts, many=True)
 
         return Response(serializers.data, status=status.HTTP_200_OK)
@@ -308,13 +317,13 @@ class QuestionExcelUpload(APIView):
 
     '''
     Takes a list of lists
-    Each list containes two items. The first item is a dictionary 
+    Each list containes two items. The first item is a dictionary
     that specifies the exercise that the questions are for.
     The second item is a list of dictionaries - each dictionary is a new question
     This function will save the questions (add to existing database)
     Example inner list:
-    [{"exercise": "letters"}, 
-    [{"subexercise":"C + V", "question":"hello", "meaning":"hello-meaning"}, 
+    [{"exercise": "letters"},
+    [{"subexercise":"C + V", "question":"hello", "meaning":"hello-meaning"},
     {"subexercise":"Shift C + V", "question":"new", "meaning":"new-meaning"}]],
     '''
 
@@ -326,30 +335,19 @@ class QuestionExcelUpload(APIView):
             for question in exercise[1]:
                 try:
                     subexercise_name = question['subexercise']
-                    subexercise = Subexercise.objects.filter(
-                        subexercise_name=subexercise_name).first()
-
-                # If subexercise does exist - tell admin user to add that first
-                # Tell the admin which entry was wrong
-                # If this occurs, no questions will be added
+                    subexercise = Subexercise.objects.get(
+                        subexercise_name=subexercise_name)
                 except Subexercise.DoesNotExist:
-                    response_str = "Subexercise: '{}' does not exist".format(
-                        subexercise_name)
-                    response = [{"response": response_str}]
-                    return Response(response, status=status.HTTP_400_BAD_REQUEST)
+                    raise APIException(detail='Subexercise "{}" does not exist'.format(
+                        subexercise_name))
 
-                try:
-                    new_question = {
-                        "subexercise_slug": subexercise.subexercise_slug,
-                        "question": question['question'],
-                        "translation": question['translation']
-                    }
-                    all_questions.append(new_question)
-                except:
-                    response_str = "Subexercise: '{}' does not exist".format(
-                        subexercise_name)
-                    response = [{"response": response_str}]
-                    return Response(response, status=status.HTTP_400_BAD_REQUEST)
+                new_question = {
+                    "subexercise_slug": subexercise.subexercise_slug,
+                    "question": question['question'],
+                    "translation": question['translation']
+                }
+
+                all_questions.append(new_question)
 
         serializer = QuestionSerializer(data=all_questions, many=True)
 

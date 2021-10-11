@@ -11,7 +11,7 @@ class UserSerializer(serializers.ModelSerializer):
     """ Adapated from: https://dev.to/koladev/django-rest-authentication-cmh """
     created = serializers.DateTimeField(read_only=True)
     updated = serializers.DateTimeField(read_only=True)
-    isAdmin = serializers.CharField(source='is_staff')
+    isAdmin = serializers.BooleanField(source='is_staff')
 
     class Meta:
         model = User
