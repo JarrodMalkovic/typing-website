@@ -83,8 +83,12 @@ const PracticeExerciseButton = ({ name, img, slug, description }) => {
         </VStack>
       </WrapItem>
 
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
-        <ModalOverlay />
+      <Modal
+        blockScrollOnMount={false}
+        isOpen={isOpen}
+        onClose={onClose}
+        isCentered>
+        <ModalOverlay px="0" mx="0" />
         <ModalContent>
           <ModalHeader>
             <VStack>
