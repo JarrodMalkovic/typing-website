@@ -53,7 +53,7 @@ class CreateSubexerciseAPIView(APIView):
         request.data.update({"level": len(subexercises) + 1})
 
         serializer = SubexerciseSerializer(
-            data=request.data)
+            data=request.data, partial=True)
 
         if serializer.is_valid():
             serializer.save()
@@ -80,7 +80,6 @@ class ReorderSubexercisesAPIView(APIView):
 
 
 class GetSubexercisesAPIVIew(APIView):
-    permission_classes = [IsAdminUserOrReadOnlyAndIsAuthenticated]
 
     def get(self, _, exercise_slug):
         subexercises = Subexercise.objects.filter(exercise_slug=exercise_slug) \

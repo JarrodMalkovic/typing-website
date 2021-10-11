@@ -13,7 +13,6 @@ import {
   Link,
 } from '@chakra-ui/react';
 
-import Confetti from 'react-confetti';
 import { HANGUL_REGEX } from '../../../common/contstants/hangul-regex';
 import PropTypes from 'prop-types';
 
@@ -27,17 +26,18 @@ const StepsCompletedPrompt = ({ os }) => {
       ? setIsKoreanText(Boolean(lastKeyPressed.match(HANGUL_REGEX)))
       : setIsKoreanText(null);
   };
-  //Make Confetti cover thr whole screen!!!!
+
   return (
-    <Box>
+    <Box pt="8">
       <VStack>
-        <Heading as="h2" size="md" position="relative" top="200px">
-          Woohoo! You have completed the keyboard setup instructions for {os} 🥳
+        <Heading textAlign="center" as="h2" size="md">
+          Well done! You have completed the keyboard setup instructions for {os}
+          !
         </Heading>
         {isKoreanText !== null ? (
           isKoreanText ? (
             <Container>
-              <Text position="relative" top="200px">
+              <Text textAlign="center" color="#39aae1">
                 Everything looks setup correctly! Have fun practicing your
                 korean typing skills!
               </Text>
@@ -52,12 +52,13 @@ const StepsCompletedPrompt = ({ os }) => {
               </Link>
             </Container>
           ) : (
-            <Text position="relative" top="200px">
-              Oh no! Looks like the was an error setting up your keyboard 😞
+            <Text textAlign="center" color="#f52d56">
+              Oh no! You are not typing in Hangul. Ensure that your keyboard is
+              setup in Korean.
             </Text>
           )
         ) : (
-          <Text position="relative" top="200px">
+          <Text textAlign="center">
             Type in the text box below to check your keyboard is setup properly!
           </Text>
         )}
@@ -68,9 +69,7 @@ const StepsCompletedPrompt = ({ os }) => {
           boxShadow={'lg'}
           paddingBottom={4}
           px={4}
-          paddingTop={4}
-          position="relative"
-          top="200px">
+          paddingTop={4}>
           <Stack spacing={4}>
             <Input onChange={handleChange} />
           </Stack>

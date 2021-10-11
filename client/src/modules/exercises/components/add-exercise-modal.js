@@ -19,6 +19,7 @@ import {
   ButtonGroup,
   Button,
   FormErrorMessage,
+  Textarea,
   Stack,
 } from '@chakra-ui/react';
 import axios from 'axios';
@@ -26,19 +27,28 @@ import { useMutation, useQueryClient } from 'react-query';
 import { BASE_API_URL } from '../../../common/contstants/base-api-url';
 import PropTypes from 'prop-types';
 import ImageUpload from './image-upload';
+import { displayErrors } from '../../../common/utils/display-errors';
 
-const validationSchema = Yup.object({});
+const validationSchema = Yup.object({
+  exercise_name: Yup.string()
+    .max(100)
+    .required('Required')
+    .matches(
+      /^[\w\-\s-+]+$/,
+      'Exercise names must only contain letters or numbers',
+    ),
+  description: Yup.string().max(500, 'Too long!').required('Required'),
+  allow_in_challenge_mode: Yup.bool().required(),
+  allow_audio_files_in_questions: Yup.bool().required(),
+  hidden: Yup.bool().required(),
+  image_file: Yup.mixed().required('Required'),
+});
 
 const addExercise = async (data) => {
   const formData = new FormData();
 
   Object.keys(data).forEach(
-    (key) => data[key] && formData.append(key, data[key]),
-  );
-
-  formData.append(
-    'exercise_slug',
-    data.exercise_name.toLowerCase().split(' ').join('-'),
+    (key) => data[key] != null && formData.append(key, data[key]),
   );
 
   const res = await axios.post(`${BASE_API_URL}/api/exercises/`, formData);
@@ -61,9 +71,11 @@ const AddExerciseModal = ({ isOpen, onOpen, onClose }) => {
         description: 'You have successfully deleted the selected questions.',
         status: 'success',
         position: 'top-right',
-        duration: 9000,
+        duration: 4000,
         isClosable: true,
       });
+
+      onClose();
     },
   });
 
@@ -88,7 +100,7 @@ const AddExerciseModal = ({ isOpen, onOpen, onClose }) => {
               <ModalCloseButton />
               <ModalBody>
                 <VStack spacing="4">
-                  {isError && <h1>{JSON.stringify(error)}</h1>}
+                  {isError && displayErrors(error)}
                   <Stack spacing={4} w="full">
                     <Field name="exercise_name">
                       {({ field, form }) => (
@@ -117,7 +129,7 @@ const AddExerciseModal = ({ isOpen, onOpen, onClose }) => {
                             form.errors.description && form.touched.description
                           }>
                           <FormLabel>Exercise Description</FormLabel>
-                          <Input
+                          <Textarea
                             {...field}
                             id="description"
                             placeholder="Enter exercise description"
@@ -150,7 +162,12 @@ const AddExerciseModal = ({ isOpen, onOpen, onClose }) => {
                           <Checkbox
                             {...field}
                             id="allow_in_challenge_mode"
-                            value={values.allow_in_challenge_mode}>
+                            onChange={(e) =>
+                              setFieldValue(
+                                'allow_in_challenge_mode',
+                                e.target.checked,
+                              )
+                            }>
                             Allow in Challenge Mode
                           </Checkbox>
 
@@ -170,7 +187,12 @@ const AddExerciseModal = ({ isOpen, onOpen, onClose }) => {
                           <Checkbox
                             {...field}
                             id="allow_audio_files_in_questions"
-                            value={values.allow_audio_files_in_questions}>
+                            onChange={(e) =>
+                              setFieldValue(
+                                'allow_audio_files_in_questions',
+                                e.target.checked,
+                              )
+                            }>
                             Allow audio files in questions
                           </Checkbox>
 
@@ -187,7 +209,9 @@ const AddExerciseModal = ({ isOpen, onOpen, onClose }) => {
                           <Checkbox
                             {...field}
                             id="hidden"
-                            value={values.hidden}>
+                            onChange={(e) =>
+                              setFieldValue('hidden', e.target.checked)
+                            }>
                             Hidden
                           </Checkbox>
 
@@ -208,7 +232,10 @@ const AddExerciseModal = ({ isOpen, onOpen, onClose }) => {
                     variant="solid"
                     bgColor="blue.400"
                     color="white"
-                    type="submit">
+                    type="submit"
+                    _hover={{
+                      bgColor: 'blue.500',
+                    }}>
                     Create Exercise
                   </Button>
                 </ButtonGroup>

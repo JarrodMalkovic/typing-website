@@ -6492,6 +6492,11 @@ react-mic-record@^1.0.6:
   resolved "https://registry.npmjs.org/react-mic-record/-/react-mic-record-1.0.6.tgz"
   integrity sha512-fgYYwj7UpKWkN/pXGxfH/l7UKImUCBKNJF4Wt8mbfgFMHkEUZatlms9DbwmrAHtogjTEGGzOYuCDUk95du4vug==
 
+react-progressive-image@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/react-progressive-image/-/react-progressive-image-0.6.0.tgz#56b1c7153a6e1ebbe2a3bbf8f98c37410fbc67c2"
+  integrity sha512-/yc8N3lHskPQkubm+QH5RIQHA89Sigv7p9UkvbHzKVE2OBb6njhmquk7GW/f2Y//mzk5DesFHN/hV5RWhd6IXA==
+
 react-query@^3.21.0:
   version "3.24.4"
   resolved "https://registry.npmjs.org/react-query/-/react-query-3.24.4.tgz"

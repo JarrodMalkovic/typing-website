@@ -6,14 +6,15 @@ import {
   Table,
   Thead,
   Tbody,
+  Heading,
   Tr,
   Alert,
   Th,
   Td,
   chakra,
   AlertIcon,
-  Spinner,
   Checkbox,
+  Box,
 } from '@chakra-ui/react';
 import { TriangleDownIcon, TriangleUpIcon } from '@chakra-ui/icons';
 import {
@@ -28,6 +29,8 @@ import { useQuery } from 'react-query';
 import PropTypes from 'prop-types';
 import DeleteSelectedExercisesButton from './delete-selected-exercises-button';
 import EditExerciseButton from './edit-exercise-button';
+import Spinner from '../../../common/components/spinner';
+import NoExercisesPanel from './no-exercises-panel';
 
 const IndeterminateCheckbox = React.forwardRef(
   ({ indeterminate, ...rest }, ref) => {
@@ -46,10 +49,14 @@ const getQuestions = async () => {
 
 const ExercisesTable = ({ filter }) => {
   const [tableData, setTableData] = React.useState([]);
-  const { data: apiResponse, isLoading } = useQuery(
-    ['exercises', 'dashboard'],
-    () => getQuestions(),
-  );
+  const {
+    data: apiResponse,
+    isLoading,
+    isError,
+  } = useQuery(['exercises', 'dashboard'], () => getQuestions(), {
+    retry: 3,
+    retryDelay: 0,
+  });
 
   React.useEffect(() => {
     setTableData(apiResponse || []);
@@ -133,53 +140,64 @@ const ExercisesTable = ({ filter }) => {
           </Text>
         </Alert>
       )}
-      <Table {...getTableProps()}>
-        <Thead>
-          {headerGroups.map((headerGroup, idx) => (
-            <Tr key={idx} {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column, idx) => (
-                <Th
-                  key={idx}
-                  {...column.getHeaderProps(column.getSortByToggleProps())}
-                  isNumeric={column.isNumeric}>
-                  {column.render('Header')}
-                  <chakra.span pl="4">
-                    {column.isSorted ? (
-                      column.isSortedDesc ? (
-                        <TriangleDownIcon aria-label="sorted descending" />
-                      ) : (
-                        <TriangleUpIcon aria-label="sorted ascending" />
-                      )
-                    ) : null}
-                  </chakra.span>
-                </Th>
-              ))}
-            </Tr>
-          ))}
-        </Thead>
-        {!isLoading && data.length > 0 && (
-          <Tbody {...getTableBodyProps()}>
-            {rows.map((row, idx) => {
-              prepareRow(row);
-              return (
-                <Tr key={idx} {...row.getRowProps()}>
-                  {row.cells.map((cell, idx) => (
-                    <Td
-                      key={idx}
-                      {...cell.getCellProps()}
-                      isNumeric={cell.column.isNumeric}>
-                      {cell.render('Cell')}
-                    </Td>
-                  ))}
-                </Tr>
-              );
-            })}
-          </Tbody>
-        )}
-      </Table>
-      {apiResponse && apiResponse.length > 0 ? null : isLoading ? (
-        <Spinner color="blue.400" />
-      ) : null}
+      <Box overflowX="auto" w="full">
+        <Table {...getTableProps()}>
+          <Thead>
+            {headerGroups.map((headerGroup, idx) => (
+              <Tr key={idx} {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map((column, idx) => (
+                  <Th
+                    key={idx}
+                    {...column.getHeaderProps(column.getSortByToggleProps())}
+                    isNumeric={column.isNumeric}>
+                    {column.render('Header')}
+                    <chakra.span pl="4">
+                      {column.isSorted ? (
+                        column.isSortedDesc ? (
+                          <TriangleDownIcon aria-label="sorted descending" />
+                        ) : (
+                          <TriangleUpIcon aria-label="sorted ascending" />
+                        )
+                      ) : null}
+                    </chakra.span>
+                  </Th>
+                ))}
+              </Tr>
+            ))}
+          </Thead>
+          {!isLoading && data.length > 0 && (
+            <Tbody {...getTableBodyProps()}>
+              {rows.map((row, idx) => {
+                prepareRow(row);
+                return (
+                  <Tr key={idx} {...row.getRowProps()}>
+                    {row.cells.map((cell, idx) => (
+                      <Td
+                        key={idx}
+                        {...cell.getCellProps()}
+                        isNumeric={cell.column.isNumeric}>
+                        {cell.render('Cell')}
+                      </Td>
+                    ))}
+                  </Tr>
+                );
+              })}
+            </Tbody>
+          )}
+        </Table>
+        {isError ? (
+          <VStack mt="8">
+            <Heading size="md" textAlign="center">
+              Sorry, something went wrong.
+            </Heading>{' '}
+            <Text textAlign="center">Could not fetch exercises data.</Text>
+          </VStack>
+        ) : isLoading ? (
+          <Spinner />
+        ) : apiResponse && apiResponse.length <= 0 ? (
+          <NoExercisesPanel />
+        ) : null}
+      </Box>
     </VStack>
   );
 };

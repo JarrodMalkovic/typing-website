@@ -19,8 +19,9 @@ import PropTypes from 'prop-types';
 import axios from 'axios';
 import { BASE_API_URL } from '../../../common/contstants/base-api-url';
 import { useMutation, useQueryClient } from 'react-query';
+import { displayErrors } from '../../../common/utils/display-errors';
 
-const deleteQuestions = async (selectedItems) => {
+const deleteExercises = async (selectedItems) => {
   const { data } = await axios.delete(`${BASE_API_URL}/api/exercises/`, {
     data: {
       exercises: selectedItems.map((item) => item.original.exercise_slug),
@@ -36,8 +37,8 @@ const DeleteSelectedExercisesButton = ({ selectedItems }) => {
   const cancelRef = React.useRef();
   const queryClient = useQueryClient();
 
-  const { mutate, isLoading } = useMutation(
-    () => deleteQuestions(selectedItems),
+  const { mutate, isLoading, isError, error } = useMutation(
+    () => deleteExercises(selectedItems),
     {
       onSuccess: (data) => {
         queryClient.setQueryData(['exercises', 'dashboard'], (old) => {
@@ -50,13 +51,17 @@ const DeleteSelectedExercisesButton = ({ selectedItems }) => {
         });
 
         toast({
-          title: 'Deleted exercises.',
-          description: 'You have successfully deleted the selected questions.',
+          title: `Deleted exercise${selectedItems.length > 1 ? 's' : ''}.`,
+          description: `You have successfully deleted the selected exercises${
+            selectedItems.length > 1 ? 's' : ''
+          }.`,
           status: 'success',
           position: 'top-right',
-          duration: 9000,
+          duration: 4000,
           isClosable: true,
         });
+
+        onClose();
       },
     },
   );
@@ -79,6 +84,7 @@ const DeleteSelectedExercisesButton = ({ selectedItems }) => {
             </AlertDialogHeader>
 
             <AlertDialogBody>
+              {isError && displayErrors(error)}
               <Text>
                 Are you sure? This will delete the following{' '}
                 {selectedItems.length > 1 ? 'items' : 'item'}:

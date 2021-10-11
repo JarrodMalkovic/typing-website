@@ -6,13 +6,16 @@ import {
   Table,
   Thead,
   Tbody,
+  VStack,
+  Heading,
+  Avatar,
   Tr,
+  HStack,
+  Text,
   Th,
+  Box,
   Td,
   Link,
-  Heading,
-  Spinner,
-  VStack,
 } from '@chakra-ui/react';
 import axios from 'axios';
 import { BASE_API_URL } from '../../../common/contstants/base-api-url';
@@ -21,15 +24,12 @@ import { useQuery } from 'react-query';
 import NavLink from 'next/link';
 import { calculateHumanReadableTimeString } from '../../../common/utils/calculate-human-readable-time-string';
 import NoAttemptsPanel from '../../exercises/components/no-attempts-panel';
+import Spinner from '../../../common/components/spinner';
 
 const getLeaderboard = async (category) => {
   const res =
     category === 'All Exercises'
       ? await axios.get(`${BASE_API_URL}/api/questions/leaderboard/`)
-      : category === 'Challenge'
-      ? await axios.get(
-          `${BASE_API_URL}/api/challenge/leaderboard/?category=challenge`,
-        )
       : await axios.get(
           `${BASE_API_URL}/api/questions/leaderboard/?category=${category}`,
         );
@@ -38,18 +38,24 @@ const getLeaderboard = async (category) => {
 };
 
 const LeaderboardTable = ({ category }) => {
-  const { isLoading, data } = useQuery(['leaderboard', category], () =>
-    getLeaderboard(category),
+  const { isLoading, data, isError } = useQuery(
+    ['leaderboard', category],
+    () => getLeaderboard(category),
+    {
+      retry: 3,
+      retryDelay: 0,
+    },
   );
 
   return (
-    <VStack spacing="4">
+    <Box spacing="4" overflowX="auto">
       <Table variant="simple">
         <Thead>
           <Tr>
             <Th> Rank </Th>
-            {!isChallenge(category) && <Th>Subexercise</Th>}
             <Th>User</Th>
+
+            {!isChallenge(category) && <Th>Subexercise</Th>}
 
             <Th isNumeric>Score</Th>
             <Th isNumeric>WPM</Th>
@@ -62,20 +68,24 @@ const LeaderboardTable = ({ category }) => {
             data.map((row, idx) => (
               <Tr>
                 <Td>#{idx + 1}</Td>
+                <Td>
+                  <NavLink href={`/profile/${row.user.username}`}>
+                    <HStack>
+                      <Avatar src={row.user.avatar} size="sm" />
+                      <Link
+                        _hover={{
+                          color: 'blue.400',
+                          textDecoration: 'underline',
+                        }}>
+                        {row.user.username}
+                      </Link>
+                    </HStack>
+                  </NavLink>
+                </Td>
+
                 {!isChallenge(category) && (
                   <Td>{row.subexercise_slug.subexercise_name}</Td>
                 )}
-                <Td>
-                  <NavLink href={`/profile/${row.user.username}`}>
-                    <Link
-                      _hover={{
-                        color: 'blue.400',
-                        textDecoration: 'underline',
-                      }}>
-                      {row.user.username}
-                    </Link>
-                  </NavLink>
-                </Td>
 
                 <Td isNumeric>{row.score.toFixed(2)}</Td>
                 <Td isNumeric>{row.wpm.toFixed(2)}</Td>
@@ -87,9 +97,19 @@ const LeaderboardTable = ({ category }) => {
             ))}
         </Tbody>
       </Table>
-      {isLoading && <Spinner color="blue.400" />}
-      {!isLoading && data.length <= 0 && <NoAttemptsPanel />}
-    </VStack>
+      {isLoading ? (
+        <Spinner />
+      ) : isError ? (
+        <VStack mt="8">
+          <Heading size="md" textAlign="center">
+            Sorry, something went wrong.
+          </Heading>{' '}
+          <Text textAlign="center">Could not fetch leaderboard data.</Text>
+        </VStack>
+      ) : (
+        data.length <= 0 && <NoAttemptsPanel />
+      )}
+    </Box>
   );
 };
 

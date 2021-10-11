@@ -1,5 +1,6 @@
 import { Box } from '@chakra-ui/react';
 
+// From https://undraw.co/illustrations
 const NoData = () => {
   return (
     <Box

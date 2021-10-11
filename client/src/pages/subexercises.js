@@ -9,8 +9,8 @@ import {
   Tab,
   TabPanels,
   TabPanel,
-  Flex,
-  Spacer,
+  Select,
+  Box,
   Text,
 } from '@chakra-ui/react';
 import SubexercisesTable from '../modules/subexercises/components/subexercises-table';
@@ -23,7 +23,12 @@ import Spinner from '../common/components/spinner';
 const Dashboard = () => {
   useTitle('KeyKorea - Subexercises Dashboard');
   const { isLoading: isAuthLoading } = useNonAdminRedirect('/');
-  const { data: exercises, isLoading } = useExercises();
+  const { data: exercises, isLoading, isError } = useExercises();
+  const [tabIndex, setTabIndex] = React.useState(0);
+
+  const handleTabsChange = (index) => {
+    setTabIndex(index);
+  };
 
   if (isAuthLoading) {
     return <Spinner />;
@@ -32,21 +37,47 @@ const Dashboard = () => {
   return (
     <Container pt="8" maxW="container.xl">
       <VStack spacing={2} width="100%" align="stretch">
-        <Flex>
-          <Heading>Subxercise Dashboard</Heading>
-          <Spacer />
+        <Box
+          display={{ base: '', md: 'flex' }}
+          alignItems={{ base: '', md: 'flex' }}
+          justifyContent={{ base: '', md: 'space-between' }}>
+          <Box>
+            <Heading>Subxercise Dashboard</Heading>
+            <Text>
+              This is a short sentence which describes what this dashboard is
+              all about
+            </Text>
+          </Box>
 
-          <AddSubexerciseButton />
-        </Flex>
-        <Text>
-          This is a short sentence which describes what this dashboard is all
-          about
-        </Text>
-        {isLoading ? (
-          <h1>Loading</h1>
+          <AddSubexerciseButton width={{ base: '100%', md: '48' }} />
+        </Box>
+
+        {isError ? (
+          <VStack my="8">
+            <Heading size="md" textAlign="center">
+              Sorry, something went wrong.
+            </Heading>
+            <Text textAlign="center">Could not exercise data.</Text>
+          </VStack>
+        ) : isLoading ? (
+          <Spinner />
         ) : (
-          <Tabs isLazy variant="enclosed">
-            <TabList>
+          <Tabs
+            isLazy
+            variant="enclosed"
+            index={tabIndex}
+            onChange={handleTabsChange}>
+            <Select display={{ base: 'flex', lg: 'none' }}>
+              {Object.entries(exercises).map(([key, value], idx) => (
+                <option
+                  key={idx}
+                  value={value.exercise_name}
+                  onClick={() => setTabIndex(idx)}>
+                  {value.exercise_name}
+                </option>
+              ))}
+            </Select>
+            <TabList display={{ base: 'none', lg: 'flex' }}>
               {Object.entries(exercises).map(([key, value], idx) => (
                 <Tab key={idx}>{value.exercise_name}</Tab>
               ))}

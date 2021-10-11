@@ -5,6 +5,7 @@ import {
   AlertDialogContent,
   AlertDialogBody,
   AlertDialogOverlay,
+  Box,
   AlertDialogHeader,
   AlertDialogFooter,
   Button,
@@ -13,10 +14,9 @@ import {
 import axios from 'axios';
 import { BASE_API_URL } from '../../../common/contstants/base-api-url';
 import { useMutation, useQueryClient } from 'react-query';
+import { displayErrors } from '../../../common/utils/display-errors';
 
 const deleteSubexercise = async (subexercise_slug) => {
-  console.log('x');
-
   const { data } = await axios.delete(
     `${BASE_API_URL}/api/subexercises/subexercise/${subexercise_slug}/`,
   );
@@ -32,7 +32,7 @@ const DeleteSubexerciseModal = ({
 }) => {
   const queryClient = useQueryClient();
 
-  const { mutate, isLoading } = useMutation(
+  const { mutate, isLoading, isError, error } = useMutation(
     () => deleteSubexercise(subexercise.subexercise_slug),
     {
       onSuccess: () => {
@@ -61,6 +61,7 @@ const DeleteSubexerciseModal = ({
           </AlertDialogHeader>
 
           <AlertDialogBody>
+            {isError && displayErrors(error)}
             Are you sure you want to permanently delete "
             {subexercise.subexercise_name}"? You can't undo this action
             afterwards.

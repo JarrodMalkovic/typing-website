@@ -38,7 +38,7 @@ const ExcelUpload = ({ setFieldValue }) => {
         data.push(XLSX.utils.sheet_to_json(ws));
         questions.push(data);
       });
-      console.log(questions);
+
       setFieldValue('questions', questions);
     };
 

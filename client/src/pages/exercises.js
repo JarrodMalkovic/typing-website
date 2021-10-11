@@ -4,23 +4,13 @@ import {
   Container,
   Heading,
   VStack,
-  Tabs,
-  TabList,
-  Tab,
-  TabPanels,
-  TabPanel,
   Flex,
   Input,
   InputGroup,
   InputLeftElement,
-  Image,
-  Spacer,
   Box,
   Text,
 } from '@chakra-ui/react';
-import DataTable from '../modules/dashboard/data-table';
-import AddQuestionButton from '../modules/dashboard/add-question-button';
-import { exercises } from '../common/contstants/exercises';
 import { SearchIcon } from '@chakra-ui/icons';
 import AddExerciseButton from '../modules/exercises/components/add-exercise-button';
 import ExercisesTable from '../modules/exercises/components/exercises-table';
@@ -44,30 +34,34 @@ const Dashboard = () => {
   return (
     <Container pt="8" maxW="container.xl">
       <VStack spacing={2} width="100%" align="stretch">
-        <Flex>
-          <Heading>Exercise Dashboard</Heading>
-          <Spacer />
+        <Box
+          display={{ base: '', lg: 'flex' }}
+          alignItems={{ base: '', lg: 'flex' }}
+          justifyContent={{ base: '', lg: 'space-between' }}>
           <Box>
-            <InputGroup>
-              <InputLeftElement
-                pointerEvents="none"
-                children={<SearchIcon />}
-              />
-              <Input
-                w="xs"
-                mr="3"
-                placeholder="Search exercises..."
-                value={filter}
-                onChange={handleChange}
-              />
-            </InputGroup>
+            <Heading>Exercise Dashboard</Heading>{' '}
+            <Text>Add new exercise modules or edit existing modules.</Text>
           </Box>
-          <AddExerciseButton />
-        </Flex>
-        <Text>
-          This is a short sentence which describes what this dashboard is all
-          about
-        </Text>
+          <Flex flexDir={{ base: 'column', md: 'row' }}>
+            <Flex>
+              <InputGroup>
+                <InputLeftElement
+                  pointerEvents="none"
+                  children={<SearchIcon />}
+                />
+                <Input
+                  w={{ base: '100%', md: 'xs' }}
+                  mr={{ base: '0', md: '4' }}
+                  mt={{ base: '2', md: '0' }}
+                  placeholder="Search exercises..."
+                  value={filter}
+                  onChange={handleChange}
+                />
+              </InputGroup>
+            </Flex>
+            <AddExerciseButton mt={{ base: '2', md: '0' }} />
+          </Flex>
+        </Box>
         <ExercisesTable filter={filter} />
       </VStack>
     </Container>

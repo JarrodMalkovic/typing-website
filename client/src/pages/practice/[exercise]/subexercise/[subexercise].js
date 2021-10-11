@@ -18,6 +18,7 @@ import { BASE_API_URL } from '../../../../common/contstants/base-api-url';
 import Spinner from '../../../../common/components/spinner';
 import { useUnauthorizedRedirect } from '../../../../modules/auth/hooks/use-unauthorized-redirect';
 import { useTitle } from 'react-use';
+import { displayErrors } from '../../../../common/utils/display-errors';
 
 const getCompletionPercentage = (currentQuestionIndex, totalQuestions) =>
   Math.ceil((currentQuestionIndex / totalQuestions) * 100);
@@ -52,9 +53,13 @@ const Exercise = () => {
   const router = useRouter();
   const { subexercise, exercise } = router.query;
 
-  const { data, isLoading, isError } = useQuery(subexercise, () =>
-    getQuestions(subexercise),
+  const { data, isLoading, isError, error } = useQuery(
+    ['practice', 'questions', subexercise],
+    () => getQuestions(subexercise),
+    { retry: 3, retryDelay: 0 },
   );
+
+  console.log(data);
 
   const [accuracy, setAccuracy] = React.useState(100);
   const [wordsTyped, setWordsTyped] = React.useState(0);
@@ -79,17 +84,15 @@ const Exercise = () => {
     setCurrentQuestionIndex(getCurrentQuestionIndex(subexercise));
   }, [subexercise]);
 
-  if (isError) {
-    return <Heading>An error occured</Heading>;
-  }
-
   if (isAuthLoading) {
     return <Spinner />;
   }
 
   return (
     <Container pt="8" maxW="container.xl">
-      {isLoading ? (
+      {isError ? (
+        displayErrors(error)
+      ) : isLoading ? (
         <Spinner />
       ) : (
         <>
@@ -103,6 +106,9 @@ const Exercise = () => {
               theme.colors.gray['700'],
               theme.colors.gray['200'],
             )}
+            isLabelVisible={
+              getCompletionPercentage(currentQuestionIndex, data.length) != 0
+            }
             completed={getCompletionPercentage(
               currentQuestionIndex,
               data.length,

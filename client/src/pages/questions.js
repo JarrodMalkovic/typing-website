@@ -16,14 +16,13 @@ import {
   Image,
   Spacer,
   Box,
+  Select,
   Text,
 } from '@chakra-ui/react';
 import DataTable from '../modules/dashboard/data-table';
 import AddQuestionButton from '../modules/dashboard/add-question-button';
 import { SearchIcon } from '@chakra-ui/icons';
 import { useExercises } from '../modules/exercises/hooks/use-exercises';
-import ExportToExcel from '../modules/dashboard/upload-questions-button';
-import UploadQuestions from '../modules/dashboard/file-upload';
 import { useNonAdminRedirect } from '../modules/auth/hooks/use-non-admin-redirect';
 import Spinner from '../common/components/spinner';
 import { useTitle } from 'react-use';
@@ -33,6 +32,12 @@ const Dashboard = () => {
   const { isLoading: isAuthLoading } = useNonAdminRedirect('/');
   const [filter, setFilter] = React.useState('');
   const { data: exercises, isLoading } = useExercises();
+  const [tabIndex, setTabIndex] = React.useState(0);
+
+  const handleTabsChange = (index) => {
+    setTabIndex(index);
+    setFilter('');
+  };
 
   const handleChange = (event) => {
     setFilter(event.target.value);
@@ -45,35 +50,59 @@ const Dashboard = () => {
   return (
     <Container pt="8" maxW="container.xl">
       <VStack spacing={2} width="100%" align="stretch">
-        <Flex>
-          <Heading>Question Dashboard</Heading>
-          <Spacer />
-          <Box>
-            <InputGroup>
-              <InputLeftElement
-                pointerEvents="none"
-                children={<SearchIcon />}
-              />
-              <Input
-                w="xs"
-                mr="4"
-                placeholder="Search rows..."
-                value={filter}
-                onChange={handleChange}
-              />
-            </InputGroup>
-          </Box>
-          <AddQuestionButton />
-        </Flex>
-        <Text>
-          This is a short sentence which describes what this dashboard is all
-          about
-        </Text>
-        {isLoading ? (
+        <Box
+          display={{ base: '', lg: 'flex' }}
+          alignItems={{ base: '', lg: 'flex' }}
+          justifyContent={{ base: '', lg: 'space-between' }}>
+          <Flex>
+            <Box>
+              <Heading>Question Dashboard</Heading>
+              <Text>
+                This is a short sentence which describes what this dashboard is
+                all about
+              </Text>
+            </Box>
+          </Flex>
+          <Flex flexDir={{ base: 'column', md: 'row' }}>
+            <Flex>
+              <InputGroup>
+                <InputLeftElement
+                  pointerEvents="none"
+                  children={<SearchIcon />}
+                />
+                <Input
+                  w={{ base: '100%', md: 'xs' }}
+                  mr={{ base: '0', md: '4' }}
+                  mt={{ base: '2', md: '0' }}
+                  placeholder="Search rows..."
+                  value={filter}
+                  onChange={handleChange}
+                />
+              </InputGroup>
+            </Flex>
+            <AddQuestionButton mt={{ base: '2', md: '0' }} />
+          </Flex>
+        </Box>
+
+        {isLoading || !exercises ? (
           <Spinner />
         ) : (
-          <Tabs isLazy variant="enclosed" top={40}>
-            <TabList>
+          <Tabs
+            isLazy
+            variant="enclosed"
+            index={tabIndex}
+            onChange={handleTabsChange}>
+            <Select display={{ base: 'flex', lg: 'none' }}>
+              {Object.entries(exercises).map(([key, value], idx) => (
+                <option
+                  key={idx}
+                  value={value.exercise_name}
+                  onClick={() => setTabIndex(idx)}>
+                  {value.exercise_name}
+                </option>
+              ))}
+            </Select>
+            <TabList display={{ base: 'none', lg: 'flex' }}>
               {Object.entries(exercises).map(([key, value], idx) => (
                 <Tab key={idx}>{value.exercise_name}</Tab>
               ))}
@@ -83,6 +112,7 @@ const Dashboard = () => {
                 <TabPanel paddingX="0" key={idx}>
                   <DataTable
                     exercise_slug={value.exercise_slug}
+                    isDictionExercise={value.allow_audio_files_in_questions}
                     filter={filter}
                   />
                 </TabPanel>

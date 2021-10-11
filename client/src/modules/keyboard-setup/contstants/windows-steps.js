@@ -1,60 +1,91 @@
 import * as React from 'react';
 
-import { Wrap, Container, Image, Divider, Heading } from '@chakra-ui/react';
+import {
+  Wrap,
+  Container,
+  Image,
+  Divider,
+  Heading,
+  Center,
+  Text,
+  VStack,
+  HStack,
+  Box,
+} from '@chakra-ui/react';
 
 const Step1 = (
-  <Wrap position="absolute" justify="center">
-    <Container minW="60vw">
-      <Divider></Divider>
-      <Heading as="h2" size="md" textAlign="center">
-        Click on the ‘’magnifying glass icon’’ or ‘’Search Windows box’’ on the
-        left side of your taskbar. (If you can’t find it, right-click on the
-        taskbar and choose Search -> Show search icon).
-      </Heading>
-    </Container>
+  <Wrap justify="center" pt="8">
+    <VStack>
+      <Image src="/images/Windows_1.png" width="auto" maxH="400px" />
+      <Container minW="60vw">
+        <Text size="md" pt="8" textAlign="center">
+          Click the "Start" button and select "Settings"
+        </Text>
+      </Container>
+    </VStack>
   </Wrap>
 );
 
 const Step2 = (
-  <Wrap position="absolute" justify="center">
-    <Container minW="60vw">
-      <Divider></Divider>
-      <Heading as="h2" size="md" textAlign="center">
-        Type “add a language” into the search box. Click on the ‘’Add a language
-        to this device’’ under System settings marked with a gear icon.
-      </Heading>
-    </Container>
+  <Wrap justify="center" pt="8">
+    <VStack>
+      <Image src="/images/Windows_2.png" width="auto" maxH="400px" />
+      <Container minW="60vw">
+        <Text size="md" pt="8" textAlign="center">
+          Select "Time & Language"
+        </Text>
+      </Container>
+    </VStack>
   </Wrap>
 );
 
 const Step3 = (
-  <Wrap position="absolute" justify="center">
-    <Image src="/images/windows 1.png" minW="40%" mawW="40%" height={300} />
-    <Image src="/images/windows 2.png" minW="40%" maxW="40%" height={300} />
-    <Divider></Divider>
+  <Wrap justify="center" pt="8">
+    <Box>
+      <Image src="/images/Windows_3.png" width="auto" maxH="500px" />
+    </Box>
+    <Box>
+      <Image src="/images/Windows_4.png" width="auto" maxH="500px" />
+    </Box>
+
     <Container minW="60vw">
-      <Heading as="h2" size="md" textAlign="center">
-        Under “Region & language” tab click the “+ Add a language”. In "ADD A
-        LANGUAGE" settings choose “한국어 Korean” or any other language you
-        desire.
-      </Heading>
+      <Text size="md" pt="8" textAlign="center">
+        Select "Language" and click on the following.
+      </Text>
     </Container>
   </Wrap>
 );
 
 const Step4 = (
-  <Wrap position="absolute" justify="center">
+  <Wrap justify="center" pt="8">
+    <Box>
+      <Image src="/images/Windows_5.png" width="auto" maxH="400px" />
+    </Box>
+    <Box>
+      <Image src="/images/Windows_6.png" width="auto" maxH="400px" />
+    </Box>
     <Container minW="60vw">
-      <Divider></Divider>
-      <Heading as="h2" size="md" textAlign="center">
-        A pop-up should appear with the notification saying “We are adding a new
-        feature to Windows.”. Wait for a bit. This alert prompts you to adjust
-        some settings. Unless you have some specific needs and especially if
-        it’s your first time using Korean keyboard you may just leave everything
-        as it is. Default settings are the most commonly used ones. We suggest
-        you choose 2-Set Korean because it is the only national standard for
-        Hangul keyboard.
-      </Heading>
+      <Text size="md" pt="8" textAlign="center">
+        Select "Language" and click on the following.
+      </Text>
+    </Container>
+  </Wrap>
+);
+
+const Step5 = (
+  <Wrap justify="center" pt="8">
+    <Box>
+      <Image src="/images/Windows_7.png" width="auto" maxH="400px" />
+    </Box>
+    <Box>
+      <Image src="/images/Windows_8.png" width="auto" maxH="400px" />
+    </Box>
+    <Container minW="60vw">
+      <Text size="md" pt="8" textAlign="center">
+        Now the Korean Keyboard is available for use. Ensure that "2-Beolsik"
+        keyboard type is selected. You Should be able to switch to Korean
+        Keyboard as seen from the bottom righ corner of the screen.
+      </Text>
     </Container>
   </Wrap>
 );
@@ -63,7 +94,8 @@ const windowsSteps = [
   { label: 'Step 1', description: 'Starting', content: Step1 },
   { label: 'Step 2', description: 'Adding a Language', content: Step2 },
   { label: 'Step 3', description: 'Setting Korean Keyboard', content: Step3 },
-  { label: 'Step 4', description: 'Final Step', content: Step4 },
+  { label: 'Step 4', description: 'Installing Korean', content: Step4 },
+  { label: 'Step 5', description: 'Switch to Korean', content: Step5 },
 ];
 
 export { windowsSteps };

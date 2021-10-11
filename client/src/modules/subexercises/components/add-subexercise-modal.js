@@ -5,14 +5,13 @@ import {
   Input,
   FormControl,
   FormLabel,
-  Checkbox,
+  Textarea,
   VStack,
   Modal,
   ModalOverlay,
   ModalContent,
   ModalHeader,
   ModalCloseButton,
-  HStack,
   ModalBody,
   Select,
   useToast,
@@ -27,14 +26,22 @@ import { useMutation, useQueryClient } from 'react-query';
 import { BASE_API_URL } from '../../../common/contstants/base-api-url';
 import PropTypes from 'prop-types';
 import { useExercises } from '../../exercises/hooks/use-exercises';
+import { displayErrors } from '../../../common/utils/display-errors';
 
-const validationSchema = Yup.object({});
+const validationSchema = Yup.object({
+  exercise_slug: Yup.string().max(100).required('Required'),
+  subexercise_name: Yup.string()
+    .max(100, 'Too long!')
+    .required('Required')
+    .matches(
+      /^[\w\-\s-+]+$/,
+      'Subexercise names must only contain letters or numbers',
+    ),
+  description: Yup.string().max(500, 'Too long!').required('Required'),
+});
 
 const addSubexercise = async (data) => {
-  const res = await axios.post(`${BASE_API_URL}/api/subexercises/`, {
-    ...data,
-    subexercise_slug: data.subexercise_name.toLowerCase().split(' ').join('-'),
-  });
+  const res = await axios.post(`${BASE_API_URL}/api/subexercises/`, data);
 
   return res.data;
 };
@@ -50,16 +57,20 @@ const AddSubexerciseModal = ({ isOpen, onOpen, onClose }) => {
       queryClient.setQueryData(
         ['subexercise', 'dashboard', data.exercise_slug],
         (old) => {
+          if (!Array.isArray(old)) {
+            return [data];
+          }
+
           return [...old, data];
         },
       );
 
       toast({
-        title: 'Added exercises.',
-        description: 'You have successfully deleted the selected questions.',
+        title: 'Added subexercise.',
+        description: 'You have successfully added a new subexercise.',
         status: 'success',
         position: 'top-right',
-        duration: 9000,
+        duration: 4000,
         isClosable: true,
       });
 
@@ -86,7 +97,7 @@ const AddSubexerciseModal = ({ isOpen, onOpen, onClose }) => {
               <ModalCloseButton />
               <ModalBody>
                 <VStack spacing="4">
-                  {isError && <h1>{JSON.stringify(error)}</h1>}
+                  {isError && displayErrors(error)}
                   <Stack spacing={4} w="full">
                     <Field name="exercise_slug" as="select">
                       {({ field, form }) => (
@@ -97,7 +108,7 @@ const AddSubexerciseModal = ({ isOpen, onOpen, onClose }) => {
                           }>
                           <FormLabel>Exercise Type</FormLabel>
                           <Select {...field} placeholder="Select exercise">
-                            {isExercisesLoading
+                            {isExercisesLoading || !exercises
                               ? null
                               : Object.entries(exercises).map(
                                   ([key, value], idx) => (
@@ -142,7 +153,7 @@ const AddSubexerciseModal = ({ isOpen, onOpen, onClose }) => {
                             form.errors.description && form.touched.description
                           }>
                           <FormLabel>Subexercise Description</FormLabel>
-                          <Input
+                          <Textarea
                             {...field}
                             id="description"
                             placeholder="Enter subexercise description"
@@ -165,7 +176,10 @@ const AddSubexerciseModal = ({ isOpen, onOpen, onClose }) => {
                     variant="solid"
                     bgColor="blue.400"
                     color="white"
-                    type="submit">
+                    type="submit"
+                    _hover={{
+                      bgColor: 'blue.500',
+                    }}>
                     Create Subexercise
                   </Button>
                 </ButtonGroup>

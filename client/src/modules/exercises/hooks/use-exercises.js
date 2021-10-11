@@ -7,4 +7,5 @@ const getExercises = async () => {
   return data;
 };
 
-export const useExercises = () => useQuery('exercises', getExercises);
+export const useExercises = () =>
+  useQuery('exercises', getExercises, { retry: 3, retryDelay: 0 });

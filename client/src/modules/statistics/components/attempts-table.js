@@ -8,17 +8,11 @@ import {
   Tbody,
   Avatar,
   HStack,
-  Flex,
-  Tooltip,
-  IconButton,
+  VStack,
   Text,
+  Heading,
+  Box,
   Link,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
-  Select,
 } from '@chakra-ui/react';
 import { useQuery } from 'react-query';
 import axios from 'axios';
@@ -26,12 +20,10 @@ import { BASE_API_URL } from '../../../common/contstants/base-api-url';
 import { calculateHumanReadableTimeString } from '../../../common/utils/calculate-human-readable-time-string';
 import NavLink from 'next/link';
 import { useTable, usePagination } from 'react-table';
-import {
-  ArrowLeftIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  ArrowRightIcon,
-} from '@chakra-ui/icons';
+import { humanReadableDateString } from '../../../common/utils/human-readable-date-string';
+import PaginationButtons from '../../../common/components/pagination-buttons';
+import Spinner from '../../../common/components/spinner';
+import NoAttemptsPanel from './no-attempts-tabel';
 
 const getAttempts = async (category, page, limit) => {
   const { data } =
@@ -53,8 +45,8 @@ const getAttempts = async (category, page, limit) => {
 const AttemptsTable = ({ category }) => {
   const [data, setData] = React.useState({ attempts: [], pages: 0 });
 
-  const columns = React.useMemo(
-    () => [
+  const columns = React.useMemo(() => {
+    const columns = [
       {
         Header: 'User',
         accessor: 'user',
@@ -74,24 +66,45 @@ const AttemptsTable = ({ category }) => {
         ),
       },
       {
+        Header: 'Completed At',
+        accessor: 'created_at',
+        Cell: (cell) => humanReadableDateString(cell.row.original.created_at),
+      },
+      {
+        Header: 'Subexercise',
+        Cell: (cell) => {
+          const subexercise = cell.row.original.subexercise_slug;
+          return subexercise ? subexercise.subexercise_name : 'N/A';
+        },
+        show: false,
+      },
+      {
         Header: 'Score',
         accessor: 'score',
+        Cell: (cell) => cell.row.original.score.toFixed(2),
       },
       {
         Header: 'WPM',
         accessor: 'wpm',
+        Cell: (cell) => cell.row.original.wpm.toFixed(2),
       },
       {
         Header: 'Accuracy',
         accessor: 'accuracy',
+        Cell: (cell) => `%${cell.row.original.accuracy.toFixed(2)}`,
       },
       {
         Header: 'Time Elapsed',
         accessor: 'time_elapsed',
+        Cell: (cell) =>
+          calculateHumanReadableTimeString(
+            cell.row.original.time_elapsed * 1000,
+          ),
       },
-    ],
-    [],
-  );
+    ];
+
+    return columns;
+  }, []);
 
   const {
     getTableProps,
@@ -119,11 +132,14 @@ const AttemptsTable = ({ category }) => {
     usePagination,
   );
 
-  console.log(data);
-
-  const { data: apiResponse } = useQuery(
+  const {
+    data: apiResponse,
+    isLoading,
+    isError,
+  } = useQuery(
     ['stats', 'attempts', category, { limit: pageSize, page: pageIndex }],
     () => getAttempts(category, pageIndex, pageSize),
+    { keepPreviousData: true, retry: 3, retryDelay: 0 },
   );
 
   React.useEffect(() => {
@@ -131,7 +147,7 @@ const AttemptsTable = ({ category }) => {
   }, [apiResponse]);
 
   return (
-    <>
+    <Box overflowX="auto">
       <Table {...getTableProps()}>
         <Thead>
           {headerGroups.map((headerGroup) => (
@@ -163,88 +179,32 @@ const AttemptsTable = ({ category }) => {
           })}
         </Tbody>
       </Table>
-
-      <Flex justifyContent="space-between" m={4} alignItems="center">
-        <Flex>
-          <Tooltip label="First Page">
-            <IconButton
-              onClick={() => gotoPage(0)}
-              isDisabled={!canPreviousPage}
-              icon={<ArrowLeftIcon h={3} w={3} />}
-              mr={4}
-            />
-          </Tooltip>
-          <Tooltip label="Previous Page">
-            <IconButton
-              onClick={previousPage}
-              isDisabled={!canPreviousPage}
-              icon={<ChevronLeftIcon h={6} w={6} />}
-            />
-          </Tooltip>
-        </Flex>
-
-        <Flex alignItems="center">
-          <Text flexShrink="0" mr={8}>
-            Page{' '}
-            <Text fontWeight="bold" as="span">
-              {pageIndex + 1}
-            </Text>{' '}
-            of{' '}
-            <Text fontWeight="bold" as="span">
-              {pageOptions.length}
-            </Text>
-          </Text>
-          <Text flexShrink="0">Go to page:</Text>{' '}
-          <NumberInput
-            ml={2}
-            mr={8}
-            w={28}
-            min={1}
-            max={pageOptions.length}
-            onChange={(value) => {
-              const page = value ? value - 1 : 0;
-              gotoPage(page);
-            }}
-            defaultValue={pageIndex + 1}>
-            <NumberInputField />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
-          <Select
-            w={32}
-            value={pageSize}
-            onChange={(e) => {
-              setPageSize(Number(e.target.value));
-            }}>
-            {[10, 20, 30, 40, 50].map((pageSize) => (
-              <option key={pageSize} value={pageSize}>
-                Show {pageSize}
-              </option>
-            ))}
-          </Select>
-        </Flex>
-
-        <Flex>
-          <Tooltip label="Next Page">
-            <IconButton
-              onClick={nextPage}
-              isDisabled={!canNextPage}
-              icon={<ChevronRightIcon h={6} w={6} />}
-            />
-          </Tooltip>
-          <Tooltip label="Last Page">
-            <IconButton
-              onClick={() => gotoPage(pageCount - 1)}
-              isDisabled={!canNextPage}
-              icon={<ArrowRightIcon h={3} w={3} />}
-              ml={4}
-            />
-          </Tooltip>
-        </Flex>
-      </Flex>
-    </>
+      {isError ? (
+        <VStack my="8">
+          <Heading size="md" textAlign="center">
+            Sorry, something went wrong.
+          </Heading>
+          <Text textAlign="center">Could not fetch attempts data.</Text>
+        </VStack>
+      ) : isLoading ? (
+        <Spinner />
+      ) : apiResponse.attempts && apiResponse.attempts.length <= 0 ? (
+        <NoAttemptsPanel />
+      ) : apiResponse.attempts && apiResponse.attempts.length > 0 ? (
+        <PaginationButtons
+          pageOptions={pageOptions}
+          pageCount={pageCount}
+          canNextPage={canNextPage}
+          nextPage={nextPage}
+          previousPage={previousPage}
+          canPreviousPage={canPreviousPage}
+          pageSize={pageSize}
+          pageIndex={pageIndex}
+          setPageSize={setPageSize}
+          gotoPage={gotoPage}
+        />
+      ) : null}
+    </Box>
   );
 };
 

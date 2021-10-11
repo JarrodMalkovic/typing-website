@@ -19,17 +19,18 @@ import {
   FormErrorMessage,
   FormLabel,
   VStack,
-  Select,
+  Textarea,
 } from '@chakra-ui/react';
 import axios from 'axios';
 import { BASE_API_URL } from '../../common/contstants/base-api-url';
 import { useMutation, useQueryClient } from 'react-query';
 import PropTypes from 'prop-types';
-import { useSubexercises } from '../subexercises/hooks/use-subexercises';
+import { displayErrors } from '../../common/utils/display-errors';
 
 const validationSchema = Yup.object({
   subexercise_slug: Yup.string().required('Required!'),
-  question: Yup.string().required('Required!').max(100),
+  question: Yup.string().required('Required!').max(500),
+  translation: Yup.string().required('Required!').max(500),
 });
 
 const editQuestion = async (data, questionId) => {
@@ -46,27 +47,17 @@ const EditQuestionButton = ({ row, exercise }) => {
   const toast = useToast();
   const queryClient = useQueryClient();
 
-  const { data: subexercises } = useSubexercises(exercise);
-
   const { mutate, isError, error, isLoading } = useMutation(
     (data) => editQuestion(data, row.id),
     {
       onSuccess: (data) => {
-        const subexercise_name = subexercises.find(
-          (subexercise) =>
-            subexercise.subexercise_slug === data.subexercise_slug,
-        ).subexercise_name;
-
         queryClient.setQueryData(['dashboard', exercise], (old) =>
           old.map((oldRow) =>
             oldRow.id === row.id
               ? {
                   ...oldRow,
                   ...data,
-                  subexercise_slug: {
-                    subexercise_name,
-                    subexercise_slug: data.exercise_slug,
-                  },
+                  subexercise_slug: { ...oldRow.subexercise_slug },
                 }
               : oldRow,
           ),
@@ -77,7 +68,7 @@ const EditQuestionButton = ({ row, exercise }) => {
           description: 'You have successfully edited a question',
           status: 'success',
           position: 'top-right',
-          duration: 9000,
+          duration: 4000,
           isClosable: true,
         });
 
@@ -100,12 +91,13 @@ const EditQuestionButton = ({ row, exercise }) => {
         <ModalOverlay />
         <ModalContent>
           <Formik
+            onSubmit={mutate}
             initialValues={{
               subexercise_slug: row.subexercise_slug['subexercise_slug'],
               question: row.question,
               translation: row.translation,
             }}
-            onSubmit={mutate}
+            enableReinitialize={true}
             validationSchema={validationSchema}>
             {({ values }) => (
               <Form>
@@ -113,7 +105,7 @@ const EditQuestionButton = ({ row, exercise }) => {
                 <ModalCloseButton />
                 <ModalBody>
                   <VStack spacing="4">
-                    {isError && <h1>{JSON.stringify(error)}</h1>}
+                    {isError && displayErrors(error)}
                     <Stack spacing={4} w="full">
                       <Field name="question">
                         {({ field, form }) => (
@@ -122,7 +114,7 @@ const EditQuestionButton = ({ row, exercise }) => {
                               form.errors.question && form.touched.question
                             }>
                             <FormLabel>Question</FormLabel>
-                            <Input
+                            <Textarea
                               {...field}
                               id="question"
                               placeholder="Enter question"
@@ -142,7 +134,7 @@ const EditQuestionButton = ({ row, exercise }) => {
                               form.touched.translation
                             }>
                             <FormLabel>Translation</FormLabel>
-                            <Input
+                            <Textarea
                               {...field}
                               id="translation"
                               placeholder="Enter translation"
@@ -162,11 +154,14 @@ const EditQuestionButton = ({ row, exercise }) => {
                     <Button onClick={onClose}>Cancel</Button>
                     <Button
                       isLoading={isLoading}
+                      type="submit"
                       variant="solid"
                       bgColor="blue.400"
                       color="white"
-                      type="submit">
-                      Create Exercise
+                      _hover={{
+                        bgColor: 'blue.500',
+                      }}>
+                      Edit Question
                     </Button>
                   </ButtonGroup>
                 </ModalFooter>

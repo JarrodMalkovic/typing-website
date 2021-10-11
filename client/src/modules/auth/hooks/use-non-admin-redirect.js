@@ -7,14 +7,18 @@ const useNonAdminRedirect = (redirectRoute = '/') => {
   const router = useRouter();
 
   const {
-    state: { isAuthenticated, isLoading, user },
+    state: { isLoading, user },
   } = useAuth();
 
   if (isServer()) {
     return { isLoading };
   }
 
-  if (user && !user.isAdmin && !isLoading) {
+  if (!isLoading && !user) {
+    router.push(redirectRoute);
+  }
+
+  if (!isLoading && user && !user.isAdmin) {
     router.push(redirectRoute);
   }
 
