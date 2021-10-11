@@ -14,8 +14,6 @@ const useUnauthorizedRedirect = (redirectRoute = '/') => {
     return { isLoading };
   }
 
-  console.log({ isAuthenticated, isLoading });
-
   if (!isAuthenticated && !isLoading) {
     router.push(redirectRoute);
   }

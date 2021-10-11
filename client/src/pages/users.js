@@ -50,9 +50,17 @@ const Dashboard = () => {
   return (
     <Container pt="8" maxW="container.xl">
       <VStack spacing={2} width="100%" align="stretch">
-        <Flex>
-          <Heading>User Management</Heading>
-          <Spacer />
+        <Box
+          display={{ base: '', md: 'flex' }}
+          alignItems={{ base: '', md: 'flex' }}
+          justifyContent={{ base: '', md: 'space-between' }}>
+          <Box>
+            <Heading>User Management</Heading>
+            <Text>
+              This is a short sentence which describes what this dashboard is
+              all about
+            </Text>
+          </Box>
           <HStack spacing={-8}>
             <InputGroup>
               <InputLeftElement
@@ -60,7 +68,7 @@ const Dashboard = () => {
                 children={<SearchIcon />}
               />
               <Input
-                w="xs"
+                width={{ base: '100%', md: 'xs' }}
                 mr="4"
                 placeholder="Search users"
                 value={search}
@@ -68,11 +76,7 @@ const Dashboard = () => {
               />
             </InputGroup>
           </HStack>
-        </Flex>
-        <Text>
-          This is a short sentence which describes what this dashboard is all
-          about
-        </Text>
+        </Box>
         <UsersTable search={search} />
       </VStack>
     </Container>

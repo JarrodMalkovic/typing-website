@@ -20,6 +20,7 @@ import { useAuth } from '../../modules/auth/hooks/use-auth';
 
 const Links = [
   { name: 'Keyboard Setup', href: '/setup', requiresAuth: false },
+  { name: 'Leaderboard', href: '/leaderboard', requiresAuth: false },
   { name: 'Practice', href: '/practice', requiresAuth: true },
   { name: 'Challenge', href: '/challenge', requiresAuth: true },
 ];
@@ -41,15 +42,15 @@ const Navbar = () => {
             size={'md'}
             icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
             aria-label={'Open Menu'}
-            display={{ md: 'none' }}
+            display={{ lg: 'none' }}
             onClick={isOpen ? onClose : onOpen}
           />
-          <HStack spacing={8} alignItems={'center'}>
+          <HStack spacing={4} alignItems={'center'}>
             <Logo />
             <HStack
               as={'nav'}
               spacing={4}
-              display={{ base: 'none', md: 'flex' }}>
+              display={{ base: 'none', lg: 'flex' }}>
               {Links.map((link) => {
                 if (link.requiresAuth && !state.isAuthenticated) {
                   return null;
@@ -68,12 +69,12 @@ const Navbar = () => {
           <Flex alignItems={'center'}>
             <HStack as={'nav'} spacing={4}>
               <DarkModeToggle />
-              {state.isAuthenticated ? (
+              {state && state.isAuthenticated ? (
                 <UserProfileDropdown />
               ) : (
                 <>
                   <ActiveNavLink name={'Sign In'} href={'/auth/sign-in'} />
-                  <Box display={{ base: 'none', md: 'flex' }}>
+                  <Box display={{ base: 'none', lg: 'flex' }}>
                     <ActiveNavLink name={'Sign Up'} href={'/auth/sign-up'} />
                   </Box>
                 </>
@@ -83,10 +84,10 @@ const Navbar = () => {
         </Flex>
 
         {isOpen && (
-          <Box pb={4} display={{ md: 'none' }}>
+          <Box pb={4} display={{ lg: 'none' }}>
             <Stack as={'nav'} spacing={4}>
               {Links.map((link) => {
-                if (link.requiresAuth && !state.isAuthenticated) {
+                if (link.requiresAuth && state && !state.isAuthenticated) {
                   return null;
                 }
 
