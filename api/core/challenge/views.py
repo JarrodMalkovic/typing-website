@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status, permissions, generics
 from core.challenge.models import ChallengeAttempt
 from core.questions.models import Question
+import math
 
 
 class ChallengeAPIView(APIView):
@@ -30,6 +31,12 @@ class ChallengeAttemptsAPIView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
+        page = int(request.GET.get('page', 0))
+        limit = min(int(request.GET.get('limit', 10)), 50)
+        skip = page * limit
+
         attempts = ChallengeAttempt.objects.filter(user=request.user)
-        serializers = ChallengeAttemptSerializer(attempts, many=True)
-        return Response(serializers.data, status=status.HTTP_200_OK)
+        serializers = ChallengeAttemptSerializer(
+            attempts[skip:skip + limit], many=True)
+
+        return Response({'pages': math.ceil(len(attempts) / limit), 'attempts': serializers.data}, status=status.HTTP_200_OK)

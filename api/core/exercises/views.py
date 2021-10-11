@@ -10,7 +10,7 @@ from myapi.permissions import IsAdminUserOrReadOnlyAndIsAuthenticated
 
 
 class ExerciseAPIView(APIView):
-    permission_classes = [IsAdminUserOrReadOnlyAndIsAuthenticated]
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
     def get(self, request):
         if request.user.is_staff or request.user.is_superuser:
@@ -34,7 +34,7 @@ class ExerciseAPIView(APIView):
         request.data['image'] = uploaded_image.get('secure_url')
 
         serializer = CreateExerciseSerializer(
-            data=request.data)
+            data=request.data, partial=True)
 
         if serializer.is_valid():
             serializer.save()

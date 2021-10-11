@@ -29,6 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get(
     'SECRET_KEY', dotenv_values(".env").get('SECRET_KEY'))
 
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get(
     'ENVIRONMENT', dotenv_values(".env").get('ENVIRONMENT')) == 'DEVELOPMENT'
@@ -101,16 +102,16 @@ WSGI_APPLICATION = 'myapi.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('DB_NAME', ''),
-        'USER': os.environ.get('DB_USER', ''),
-        'PASSWORD': os.environ.get('DB_PW', ''),
-        'HOST': os.environ.get('DB_HOST', ''),
-        'PORT': os.environ.get('DB_PORT', '')
+        'NAME': os.environ.get('DB_NAME', 'postgres'),
+        'USER': os.environ.get('DB_USER', 'postgres'),
+        'PASSWORD': os.environ.get('DB_PW', 'development'),
+        'HOST': os.environ.get('DB_HOST', 'localhost'),
+        'PORT': os.environ.get('DB_PORT', '3001')
     }
 }
 
-DATABASES['default'] = dj_database_url.config(
-    default="postgres://postgres:development@postgres:5432/postgres")
+# DATABASES['default'] = dj_database_url.config(
+#     default="postgresql://postgres:@localhost:3001/postgres")
 
 AUTH_USER_MODEL = 'core_user.User'
 
@@ -133,7 +134,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=5),
 }
 
 
