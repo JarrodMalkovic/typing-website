@@ -318,10 +318,13 @@ class QuestionExcelUpload(APIView):
     
     def remove_empty_questions(self, data):
         new_data = data
-        for exercise in new_data:
-            for question in exercise[1]:
-                if question['subexercise'] == '' or question['subexercise'] == "":
-                    exercise[1].remove(question)
+        try:
+            for exercise in new_data:
+                for question in exercise[1]:
+                    if question['subexercise'] == '' or question['subexercise'] == "":
+                        exercise[1].remove(question)
+        except:
+            raise APIException(detail='Specify all subexercises - some are blank. No questions added.')
         return new_data
 
     # Checks if there any duplicate questions provided in the excel document
