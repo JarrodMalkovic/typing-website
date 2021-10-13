@@ -332,16 +332,19 @@ class QuestionExcelUpload(APIView):
                         
         for i in range(len(data)):
             for j in range(len(data[i][1])):
-                question = data[i][1][j]['question']
-                translation = data[i][1][j]['translation']
-                found = 0
-                for k in range(len(new_data)):
-                    for l in range(len(new_data[i][1])):
-                        if(len(new_data[k][1]) != 0):
-                            if question == new_data[k][1][l]['question'] and translation == new_data[k][1][l]['translation']:
-                                found = 1
-                if found == 0:
-                    new_data[i][1].append(data[i][1][j])
+                try:
+                    question = data[i][1][j]['question']
+                    translation = data[i][1][j]['translation']
+                    found = 0
+                    for k in range(len(new_data)):
+                        for l in range(len(new_data[i][1])):
+                            if(len(new_data[k][1]) != 0):
+                                if question == new_data[k][1][l]['question'] and translation == new_data[k][1][l]['translation']:
+                                    found = 1
+                    if found == 0:
+                        new_data[i][1].append(data[i][1][j])
+                except:
+                    raise APIException(detail='Specify all questions and translations - some are blank. No questions added.')
         return new_data
 
     '''
@@ -374,16 +377,20 @@ class QuestionExcelUpload(APIView):
                     question_exist = Question.objects.get(question=question['question'], translation=question['translation'])
                     continue
                 except:
-                    try:
-                        new_question = {
-                        "subexercise_slug": subexercise.subexercise_slug,
-                        "question": question['question'],
-                        "translation": question['translation']
-                        }
-                        all_questions.append(new_question)
-                    except:
-                        raise APIException(detail='Subexercise "{}" does not exist'.format(
-                        subexercise_name))
+                    if question['question'] is '':
+                        # print("ENTER")
+                        raise APIException(detail='Specify all questions - some are blank. No questions added.')
+                    elif question['translation'] is '':
+                        raise APIException(detail='Specify all translations - some are blank. No questions added.')
+                    elif subexercise.subexercise_slug is '':
+                        raise APIException(detail='Specify all subexercises - some are blank. No questions added.')
+                        
+                    new_question = {
+                    "subexercise_slug": subexercise.subexercise_slug,
+                    "question": question['question'],
+                    "translation": question['translation']
+                    }
+                    all_questions.append(new_question)
 
         serializer = QuestionSerializer(data=all_questions, many=True)
 
