@@ -133,21 +133,22 @@ class ExcelDocumentTestCase(TestCase):
                   [{"subexercise":"C + V", "question":"hello", "translation":"hello-meaning"}, {"subexercise":"Shift C + V", "question":"new", "translation":"new-meaning"}]]]
             
         response = self.client.post("http://127.0.0.1:8000/api/upload-questions/", json.dumps({"data":data}), content_type="application/json")
-        expected_response = {
-            "response": "Subexercise: 'C + V' does not exist"
-        }
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertEqual(response.data[0], expected_response)
+        expected_response = 'Subexercise "C + V" does not exist'
+        self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
+        self.assertEqual((response.data['detail']), expected_response)
 
 
     # Send valid data to be uploaded to database - expect 201 created
     def test_question_upload_valid_data(self):
         print("---> Test: API Excel Upload with Valid Data")
+        self.client = APIClient()
+        access_token = self.get_superuser_access_token()
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + access_token)
         data =  [[{"exercise": "short-sentences"}, 
                   [{"subexercise":"Short Sentences", "question":"sentence one", "translation":"s-one-meaning"}, {"subexercise":"Short Sentences", "question":"sentence two", "translation":"s-two-meaning"}]],
                 [{"exercise": "letter"}, 
                   [{"subexercise":"Basic Left Hand", "question":"letters one", "translation":"l-one-meaning"}, {"subexercise":"Basic Left Hand", "question":"letters two", "translation":"l-two-meaning"}]]]
-        response = self.client.post("http://127.0.0.1:8000/api/upload-questions/", {"data":data},    content_type="application/json")
+        response = self.client.post("http://127.0.0.1:8000/api/upload-questions/", json.dumps({"data":data}),  content_type="application/json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)        
         
         questions = Question.objects.all()
@@ -184,11 +185,14 @@ class ExcelDocumentTestCase(TestCase):
     # Send data containing questions already in database - expect only distinct new data to be put in database
     def test_question_upload_with_database_duplicates(self):
         print("---> Test: API Excel Upload with Database Duplicate Data")
+        self.client = APIClient()
+        access_token = self.get_superuser_access_token()
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + access_token)
         data =  [[{"exercise": "short-sentences"}, 
                   [{"subexercise":"Short Sentences", "question":"This is korean sentence: 1", "translation":"This is sentence translation: 1"}, {"subexercise":"Short Sentences", "question":"sentence two", "translation":"s-two-meaning"}]],
                 [{"exercise": "letter"}, 
                   [{"subexercise":"Basic Left Hand", "question":"letters one", "translation":"l-one-meaning"}, {"subexercise":"Basic Left Hand", "question":"letters two", "translation":"l-two-meaning"}]]]
-        response = self.client.post("http://127.0.0.1:8000/api/upload-questions/", {"data":data}, content_type="application/json")
+        response = self.client.post("http://127.0.0.1:8000/api/upload-questions/", json.dumps({"data":data}), content_type="application/json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)        
         
         questions = Question.objects.all()
@@ -198,14 +202,50 @@ class ExcelDocumentTestCase(TestCase):
     # To be a duplicate, the subexercise, sentence and translation must be the same
     def test_question_upload_with_duplicates(self):
         print("---> Test: API Excel Upload with Duplicate Data")
+        self.client = APIClient()
+        access_token = self.get_superuser_access_token()
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + access_token)
         data =  [[{"exercise": "short-sentences"}, 
                   [{"subexercise":"Short Sentences", "question":"sentence one", "translation":"s-one-meaning"}, {"subexercise":"Short Sentences", "question":"sentence two", "translation":"s-two-meaning"}]],
                 [{"exercise": "letter"}, 
                   [{"subexercise":"Basic Left Hand", "question":"letters one", "translation":"l-one-meaning"}, {"subexercise":"Basic Left Hand", "question":"letters one", "translation":"l-one-meaning"}]]]
-        response = self.client.post("http://127.0.0.1:8000/api/upload-questions/", {"data":data}, content_type="application/json")
+        response = self.client.post("http://127.0.0.1:8000/api/upload-questions/", json.dumps({"data":data}), content_type="application/json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         questions = Question.objects.all()
         self.assertEqual(len(questions), 9)
+        
+    def test_empty_upload(self):
+        print("---> Test: API Excel Upload with Empty Data")
+        self.client = APIClient()
+        access_token = self.get_superuser_access_token()
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + access_token)
+        data = [[{'exercise': 'Letters'}, [{'subexercise': '', 'question': '', 'translation': ''}]], [{'exercise': 'Syllables'}, [{'subexercise': '', 'question': '', 'translation': ''}]], [{'exercise': 'Words'}, [{'subexercise': '', 'question': '', 'translation': ''}]], [{'exercise': 'Short Sentences'}, [{'subexercise': '', 'question': '', 'translation': ''}]], [{'exercise': 'Long Sentences'}, [{'subexercise': '', 'question': '', 'translation': ''}]]]
+        
+        response = self.client.post("http://127.0.0.1:8000/api/upload-questions/", json.dumps({"data":data}), content_type="application/json")
+        # print(response)
+        # print(response.data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        questions = Question.objects.all()
+        self.assertEqual(len(questions), 6)
+        
+        
+    # A user should be denied access to this API route 
+    def test_user_access_denied(self):
+        print("---> Test: API User Denied Access to Upload Excel")
+        self.client = APIClient()
+        access_token = self.get_user_access_token()
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + access_token)
+        
+        data = [[{'exercise': 'Long Sentences'}, [{'subexercise': '', 'question': '', 'translation': ''}]]]
+        
+        response = self.client.post("http://127.0.0.1:8000/api/upload-questions/", json.dumps({"data":data}), content_type="application/json")
+        expected_response = {
+            "detail": "You do not have permission to perform this action."
+        }
+        self.assertEqual(response.data, expected_response)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+                 
+         
 
 if __name__ == '__main__':
     TestCase.main(verbosity=2)
