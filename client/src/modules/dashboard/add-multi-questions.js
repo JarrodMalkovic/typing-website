@@ -96,7 +96,7 @@ const generateSampleTemplate = async () => {
   const data = new Blob([excelBuffer], {
     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8',
   });
-  FileSaver.saveAs(data, `KeyKoreaEmptyTemplate.xlsx`);
+  FileSaver.saveAs(data, `KeyKoreaEmptySampleTemplate.xlsx`);
 };
 
 const AddMultipleQuestions = ({ onClose }) => {
