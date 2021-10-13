@@ -214,6 +214,8 @@ class ExcelDocumentTestCase(TestCase):
         questions = Question.objects.all()
         self.assertEqual(len(questions), 9)
         
+    # Tests if when no the subexercises or questions are blank
+    # no error is thrown or no empty questions are added
     def test_empty_upload(self):
         print("---> Test: API Excel Upload with Empty Data")
         self.client = APIClient()
@@ -222,14 +224,57 @@ class ExcelDocumentTestCase(TestCase):
         data = [[{'exercise': 'Letters'}, [{'subexercise': '', 'question': '', 'translation': ''}]], [{'exercise': 'Syllables'}, [{'subexercise': '', 'question': '', 'translation': ''}]], [{'exercise': 'Words'}, [{'subexercise': '', 'question': '', 'translation': ''}]], [{'exercise': 'Short Sentences'}, [{'subexercise': '', 'question': '', 'translation': ''}]], [{'exercise': 'Long Sentences'}, [{'subexercise': '', 'question': '', 'translation': ''}]]]
         
         response = self.client.post("http://127.0.0.1:8000/api/upload-questions/", json.dumps({"data":data}), content_type="application/json")
-        # print(response)
-        # print(response.data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         questions = Question.objects.all()
         self.assertEqual(len(questions), 6)
+       
+    # Tests if, when no question is specified, an error message is thrown
+    # No questions added if this is the case
+    def test_no_question_specified(self):
+        print("---> Test: API Excel Upload with Question Left Blank")
+        self.client = APIClient()
+        access_token = self.get_superuser_access_token()
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + access_token)
+        
+        data = [[{'exercise': 'Letters'}, 
+                 [{'subexercise': 'Basic Left Hand', 'question': '', 'translation': 'blank'},
+                    {'subexercise': 'Basic Left Hand', 'question': 'not blank', 'translation': 'not blank'}]]]
         
         
-    # A user should be denied access to this API route 
+        response = self.client.post("http://127.0.0.1:8000/api/upload-questions/", json.dumps({"data":data}), content_type="application/json")
+        
+        expected_response = {
+            'detail': 'Specify all questions - some are blank. No questions added.'
+        }        
+        self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
+        self.assertEqual(response.data, expected_response)
+        questions = Question.objects.all()
+        self.assertEqual(len(questions), 6)
+        
+    # Tests if, when no translation is specified, an error message is thrown
+    # No questions added if this is the case
+    def test_no_translation_specified(self):
+        print("---> Test: API Excel Upload with Translation Left Blank")
+        self.client = APIClient()
+        access_token = self.get_superuser_access_token()
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + access_token)
+        
+        data = [[{'exercise': 'Letters'}, 
+                 [{'subexercise': 'Basic Left Hand', 'question': 'not blank', 'translation': 'blank'},
+                    {'subexercise': 'Basic Left Hand', 'question': 'not blank', 'translation': ''}]]]
+        
+        
+        response = self.client.post("http://127.0.0.1:8000/api/upload-questions/", json.dumps({"data":data}), content_type="application/json")
+        
+        expected_response = {
+            'detail': 'Specify all translations - some are blank. No questions added.'
+        }        
+        self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
+        self.assertEqual(response.data, expected_response)
+        questions = Question.objects.all()
+        self.assertEqual(len(questions), 6)
+        
+    # Tests if a user is denied access to this API route 
     def test_user_access_denied(self):
         print("---> Test: API User Denied Access to Upload Excel")
         self.client = APIClient()
