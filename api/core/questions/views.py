@@ -310,15 +310,23 @@ class QuestionExcelDownload(APIView):
 
 
 class QuestionExcelUpload(APIView):
+    permission_classes = [permissions.IsAdminUser]
     # Upload the excel doc and update the database with
     # Two ways:
     # 1. upload the excel and make the database represent the excel (replace)
     # 2. uplaod the excel and append the questions to database (add)
+    
+    def remove_empty_questions(self, data):
+        new_data = data
+        for exercise in new_data:
+            for question in exercise[1]:
+                if question['subexercise'] == '' or question['subexercise'] == "":
+                    exercise[1].remove(question)
+        return new_data
 
     # Checks if there any duplicate questions provided in the excel document
     def check_duplicates(self, data):
         new_data = []
-        
         for exercise in data:
             new_data.append([exercise[0], []])
                         
@@ -348,9 +356,10 @@ class QuestionExcelUpload(APIView):
     {"subexercise":"Shift C + V", "question":"new", "meaning":"new-meaning"}]],
     '''
     def post(self, request):
-        data = self.check_duplicates(request.data['data'])
+        filled_data = self.remove_empty_questions(request.data['data'])
+        filtered_data = self.check_duplicates(filled_data)
         all_questions = []
-        for exercise in data:
+        for exercise in filtered_data:
             for question in exercise[1]:
                 try:
                     subexercise_name = question['subexercise']
@@ -373,9 +382,8 @@ class QuestionExcelUpload(APIView):
                         }
                         all_questions.append(new_question)
                     except:
-                        response_str = "Subexercise: '{}' does not exist".format(subexercise_name)
-                        response = [{"response": response_str}]
-                        return Response(response, status=status.HTTP_400_BAD_REQUEST)
+                        raise APIException(detail='Subexercise "{}" does not exist'.format(
+                        subexercise_name))
 
         serializer = QuestionSerializer(data=all_questions, many=True)
 
