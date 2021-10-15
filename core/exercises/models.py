@@ -15,6 +15,7 @@ class Exercise(models.Model):
     allow_audio_files_in_questions = models.BooleanField()
     hidden = models.BooleanField()
     created_at = models.DateTimeField(auto_now_add=True)
+    level = models.IntegerField()
 
     def __str__(self):
         return f"{self.exercise_name}"
