@@ -42,15 +42,14 @@ const Home = () => {
             textAlign={{ base: 'center', lg: 'left' }}
             maxW={{ base: '100%', lg: '50%' }}>
             <Heading size="2xl">
-              Learn how to use the <Box as="span">Korean Keyboard</Box>
+              KeyKorea
+              {/* Learn how to use the <Box as="span">Korean Keyboard</Box> */}
             </Heading>
             <Text
               pt="4"
               fontSize="xl"
               color={useColorModeValue('gray.600', 'gray.300')}>
-              Placeholder Subheading Placeholder Subheading Placeholder
-              Subheading Placeholder Subheading Placeholder Subheading
-              Placeholder Subheading Placeholder Placeholder{' '}
+              Learn how to use the korean keyboard with KeyKorea!{' '}
             </Text>
             <ButtonGroup pt="4">
               <NextLink
