@@ -10,6 +10,7 @@ from django.db.models import Avg, Count
 from datetime import timedelta
 from django.utils import timezone
 import math
+from rest_framework.exceptions import APIException
 
 
 class UserProfileAPIView(APIView):
@@ -94,8 +95,17 @@ class DeleteAccountAPIView(APIView):
 class BanUserAPIView(APIView):
     permission_classes = [permissions.IsAdminUser]
 
-    def delete(self, _, id):
-        user = User.objects.filter(id=id)
+    def delete(self, request, id):
+        if(not request.user.is_staff or not request.user.is_superuser):
+            raise APIException(
+                detail='Only super admins and admins can ban users')
+
+        user = User.objects.get(id=id)
+
+        if(user.is_superuser):
+            raise APIException(
+                detail='You cannot ban a super admin')
+
         user.delete()
 
         return Response({}, status=status.HTTP_200_OK)
@@ -104,8 +114,12 @@ class BanUserAPIView(APIView):
 class PromoteUserAPIView(APIView):
     permission_classes = [permissions.IsAdminUser]
 
-    def patch(self, _, id):
+    def patch(self, request, id):
+        if(not request.user.is_superuser):
+            raise APIException(detail='Only super admins can promote users')
+
         user = generics.get_object_or_404(User, pk=id)
+
         serializer = UsersSerializer(
             user,  data={'is_staff': True}, partial=True)
 
@@ -119,7 +133,10 @@ class PromoteUserAPIView(APIView):
 class DemoteUserAPIView(APIView):
     permission_classes = [permissions.IsAdminUser]
 
-    def patch(self, _, id):
+    def patch(self, request, id):
+        if(not request.user.is_superuser):
+            raise APIException(detail='Only super admins can demote users')
+
         user = generics.get_object_or_404(User, pk=id)
         serializer = UsersSerializer(
             user,  data={'is_staff': False}, partial=True)
