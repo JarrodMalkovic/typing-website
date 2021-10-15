@@ -145,7 +145,10 @@ const AddExerciseModal = ({ isOpen, onOpen, onClose }) => {
                       {({ field, form }) => (
                         <FormControl isInvalid={form.errors.image_file}>
                           <FormLabel>Exercise Image</FormLabel>
-                          <ImageUpload setFieldValue={setFieldValue} />
+                          <ImageUpload
+                            isInvalid={!!form.errors.image_file}
+                            setFieldValue={setFieldValue}
+                          />
                           <FormErrorMessage>
                             {form.errors.image_file}
                           </FormErrorMessage>
