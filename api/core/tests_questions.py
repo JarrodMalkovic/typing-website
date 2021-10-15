@@ -211,8 +211,11 @@ class QuestionTestCase(TestCase):
 
         response = self.client.get(
             "http://127.0.0.1:8000/api/questions/subexercise/inexistent/")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, [])
+        expected_response = {
+            'detail': 'This subexercise does not exist'
+        }      
+        self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
+        self.assertEqual(response.data, expected_response)
 
     # Get questions for challenge mode - expect it to return 10 questions
     def test_get_API_challenge_questions(self):
@@ -232,6 +235,56 @@ class QuestionTestCase(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # Check if it generated 10 random questions
         self.assertEqual(len(response.data), 10)
+        
+    def test_admin_delete_question(self):
+        print("---> Test: API Test Admin Deleting Question")
+        self.client = APIClient()
+        access_token = self.get_access_token()
+
+        expected_response = {
+            "detail": "Authentication credentials were not provided."
+        }
+        response = self.client.get("http://127.0.0.1:8000/api/questions/")
+        self.assertEqual(response.data, expected_response)
+
+        q_id = Question.objects.get(question="This is korean sentence 2")
+        q_ids = [q_id.id]
+        
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + access_token)
+        response = self.client.delete("http://127.0.0.1:8000/api/questions/", json.dumps({"questions":q_ids}), content_type="application/json")
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, q_ids)
+        
+        try: 
+            Question.objects.get(question="This is korean sentence 2")
+        except:
+            self.assertRaises(Question.DoesNotExist)
+            
+    def test_admin_create_question(self):
+        print("---> Test: API Test Admin Creating Question")
+        self.client = APIClient()
+        access_token = self.get_access_token()
+
+        expected_response = {
+            "detail": "Authentication credentials were not provided."
+        }
+        response = self.client.get("http://127.0.0.1:8000/api/questions/")
+        self.assertEqual(response.data, expected_response)
+
+        data = {
+            "question": "This is a new question",
+            "subexercise_slug": "short-sentences",
+            "translation": "New question translation"
+        }
+        
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + access_token)
+        response = self.client.post("http://127.0.0.1:8000/api/questions/", json.dumps(data), content_type="application/json")
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['question'], data['question'])
+        self.assertEqual(response.data['subexercise_slug'], data['subexercise_slug'])
+        self.assertEqual(response.data['translation'], data['translation'])
         
 if __name__ == '__main__':
     TestCase.main(verbosity=2)

@@ -108,7 +108,6 @@ const generateSampleTemplate = async (setIsGeneratingSampleTemplate) => {
   });
 
   FileSaver.saveAs(data, `KeyKoreaSampleTemplate.xlsx`);
-
   setIsGeneratingSampleTemplate(false);
 };
 
