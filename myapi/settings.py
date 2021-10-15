@@ -105,13 +105,13 @@ DATABASES = {
         'NAME': os.environ.get('DB_NAME', 'postgres'),
         'USER': os.environ.get('DB_USER', 'postgres'),
         'PASSWORD': os.environ.get('DB_PW', 'development'),
-        'HOST': os.environ.get('DB_HOST', 'localhost'),
-        'PORT': os.environ.get('DB_PORT', '3001')
+        'HOST': os.environ.get('DB_HOST', 'postgres'),
+        'PORT': os.environ.get('DB_PORT', '5432')
     }
 }
 
-# DATABASES['default'] = dj_database_url.config(
-#     default="postgresql://postgres:@localhost:3001/postgres")
+DATABASES['default'] = dj_database_url.config(
+    default="postgresql://postgres:development@postgres:5432/postgres")
 
 AUTH_USER_MODEL = 'core_user.User'
 
