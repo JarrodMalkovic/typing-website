@@ -236,5 +236,43 @@ class QuestionTestCase(TestCase):
         # Check if it generated 10 random questions
         self.assertEqual(len(response.data), 10)
         
+    def test_admin_delete_question(self):
+        print("---> Test: API Test Admin deleting question")
+        self.client = APIClient()
+        access_token = self.get_access_token()
+
+        expected_response = {
+            "detail": "Authentication credentials were not provided."
+        }
+        response = self.client.get("http://127.0.0.1:8000/api/challenge/")
+        self.assertEqual(response.data, expected_response)
+
+        q_id = Question.objects.get(question="This is korean sentence 2")
+        q_ids = [q_id.id]
+        
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + access_token)
+        response = self.client.delete("http://127.0.0.1:8000/api/questions/", json.dumps({"questions":q_ids}), content_type="application/json")
+        
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, q_ids)
+        
+        try: 
+            Question.objects.get(question="This is korean sentence 2")
+        except:
+            self.assertRaises(Question.DoesNotExist)
+    
+    
+    
+    
+    # exercise = Exercise.objects.create(exercise_slug="short-sentences", exercise_name="Short Sentences",
+    #                                        allow_in_challenge_mode=True, allow_audio_files_in_questions=True, hidden=False)
+    # subexercise = Subexercise.objects.create(
+    #     exercise_slug=exercise, subexercise_slug="short-sentences", subexercise_name="Short Sentences", level=1)
+    # Question.objects.create(
+    #     subexercise_slug=subexercise, question="This is korean sentence 1")
+    # Question.objects.create(
+    #     subexercise_slug=subexercise, question="This is korean sentence 2")
+    # questions = Question.objects.all() 
+        
 if __name__ == '__main__':
     TestCase.main(verbosity=2)
