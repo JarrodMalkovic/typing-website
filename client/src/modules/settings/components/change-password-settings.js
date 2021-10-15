@@ -71,8 +71,7 @@ const ChangePasswordSettings = () => {
                 mt={1}
                 fontSize="sm"
                 color={useColorModeValue('gray.600', 'gray.400')}>
-                This information will be displayed publicly so be careful what
-                you share.
+                You can change your own password at any time
               </Text>
             </Box>
           </GridItem>

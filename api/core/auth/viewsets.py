@@ -82,7 +82,9 @@ class CurrentUserViewSet(ViewSet):
             'username': request.user.username,
             'email': request.user.email,
             'avatar': request.user.avatar,
-            'isAdmin': request.user.is_staff
+            'isAdmin': request.user.is_staff,
+            'id': request.user.id,
+            'isSuperAdmin': request.user.is_superuser
         }
 
         return Response(res, status=status.HTTP_200_OK)

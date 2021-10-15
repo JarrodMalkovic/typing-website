@@ -315,7 +315,7 @@ class QuestionExcelUpload(APIView):
     # Two ways:
     # 1. upload the excel and make the database represent the excel (replace)
     # 2. uplaod the excel and append the questions to database (add)
-    
+
     def remove_empty_questions(self, data):
         new_data = data
         try:
@@ -324,7 +324,8 @@ class QuestionExcelUpload(APIView):
                     if question['subexercise'] == '' or question['subexercise'] == "":
                         exercise[1].remove(question)
         except:
-            raise APIException(detail='Specify all subexercises - some are blank. No questions added.')
+            raise APIException(
+                detail='Specify all subexercises - some are blank. No questions added.')
         return new_data
 
     # Checks if there any duplicate questions provided in the excel document
@@ -332,7 +333,7 @@ class QuestionExcelUpload(APIView):
         new_data = []
         for exercise in data:
             new_data.append([exercise[0], []])
-                        
+
         for i in range(len(data)):
             for j in range(len(data[i][1])):
                 try:
@@ -347,7 +348,8 @@ class QuestionExcelUpload(APIView):
                     if found == 0:
                         new_data[i][1].append(data[i][1][j])
                 except:
-                    raise APIException(detail='Specify all questions and translations - some are blank. No questions added.')
+                    raise APIException(
+                        detail='Specify all questions and translations - some are blank. No questions added.')
         return new_data
 
     '''
@@ -361,9 +363,11 @@ class QuestionExcelUpload(APIView):
     [{"subexercise":"C + V", "question":"hello", "meaning":"hello-meaning"},
     {"subexercise":"Shift C + V", "question":"new", "meaning":"new-meaning"}]],
     '''
+
     def post(self, request):
         filled_data = self.remove_empty_questions(request.data['data'])
         filtered_data = self.check_duplicates(filled_data)
+
         all_questions = []
         for exercise in filtered_data:
             for question in exercise[1]:
@@ -374,24 +378,28 @@ class QuestionExcelUpload(APIView):
                 except Subexercise.DoesNotExist:
                     raise APIException(detail='Subexercise "{}" does not exist'.format(
                         subexercise_name))
-                    
+
                 try:
                     # Prevents adding a question that exists in database already
-                    question_exist = Question.objects.get(question=question['question'], translation=question['translation'])
+                    question_exist = Question.objects.get(
+                        question=question['question'], translation=question['translation'])
                     continue
                 except:
                     if question['question'] is '':
                         # print("ENTER")
-                        raise APIException(detail='Specify all questions - some are blank. No questions added.')
+                        raise APIException(
+                            detail='Specify all questions - some are blank. No questions added.')
                     elif question['translation'] is '':
-                        raise APIException(detail='Specify all translations - some are blank. No questions added.')
+                        raise APIException(
+                            detail='Specify all translations - some are blank. No questions added.')
                     elif subexercise.subexercise_slug is '':
-                        raise APIException(detail='Specify all subexercises - some are blank. No questions added.')
-                        
+                        raise APIException(
+                            detail='Specify all subexercises - some are blank. No questions added.')
+
                     new_question = {
-                    "subexercise_slug": subexercise.subexercise_slug,
-                    "question": question['question'],
-                    "translation": question['translation']
+                        "subexercise_slug": subexercise.subexercise_slug,
+                        "question": question['question'],
+                        "translation": question['translation']
                     }
                     all_questions.append(new_question)
 

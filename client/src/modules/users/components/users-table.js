@@ -26,6 +26,7 @@ import BanUserButton from './ban-user-button';
 import { humanReadableDateString } from '../../../common/utils/human-readable-date-string';
 import PaginationButtons from '../../../common/components/pagination-buttons';
 import Spinner from '../../../common/components/spinner';
+import { useAuth } from '../../auth/hooks/use-auth';
 
 const getUsers = async (page, limit, search) => {
   const { data } = await axios.get(
@@ -37,6 +38,7 @@ const getUsers = async (page, limit, search) => {
 
 const UsersTable = ({ search, setRefetch }) => {
   const [data, setData] = React.useState({ users: [], pages: 0 });
+  const { state } = useAuth();
 
   const columns = React.useMemo(
     () => [
@@ -70,7 +72,6 @@ const UsersTable = ({ search, setRefetch }) => {
         Header: 'Role',
         Cell: ({ cell }) => (
           <>
-            {' '}
             {cell.row.original.is_superuser
               ? 'Super Admin'
               : cell.row.original.is_staff
@@ -82,28 +83,53 @@ const UsersTable = ({ search, setRefetch }) => {
       {
         Header: '',
         accessor: 'buttons',
-        Cell: ({ cell }) => (
-          <ButtonGroup float="right">
-            {cell.row.original.is_superuser ? null : cell.row.original
-                .is_staff ? (
-              <DemoteUserButton
-                username={cell.row.original.username}
-                userId={cell.row.original.id}
-              />
-            ) : (
-              <PromoteUserButton
-                username={cell.row.original.username}
-                userId={cell.row.original.id}
-              />
-            )}
-            {!cell.row.original.is_superuser && (
+        Cell: ({ cell }) => {
+          if (
+            state.user.id == cell.row.original.id ||
+            (cell.row.original.is_staff && !state.user.isSuperAdmin)
+          ) {
+            return null;
+          }
+
+          if (cell.row.original.is_staff && state.user.isSuperAdmin) {
+            return (
+              <ButtonGroup float="right">
+                <DemoteUserButton
+                  username={cell.row.original.username}
+                  userId={cell.row.original.id}
+                />
+                <BanUserButton
+                  username={cell.row.original.username}
+                  userId={cell.row.original.id}
+                />
+              </ButtonGroup>
+            );
+          }
+
+          if (!cell.row.original.is_staff && state.user.isSuperAdmin) {
+            return (
+              <ButtonGroup float="right">
+                <PromoteUserButton
+                  username={cell.row.original.username}
+                  userId={cell.row.original.id}
+                />
+                <BanUserButton
+                  username={cell.row.original.username}
+                  userId={cell.row.original.id}
+                />
+              </ButtonGroup>
+            );
+          }
+
+          return (
+            <ButtonGroup float="right">
               <BanUserButton
                 username={cell.row.original.username}
                 userId={cell.row.original.id}
               />
-            )}
-          </ButtonGroup>
-        ),
+            </ButtonGroup>
+          );
+        },
       },
     ],
     [],

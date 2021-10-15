@@ -7,7 +7,7 @@ class CreateExerciseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Exercise
         fields = ['exercise_name', 'description', 'image',
-                  'exercise_slug', 'allow_audio_files_in_questions', 'hidden', 'allow_in_challenge_mode', 'created_at']
+                  'exercise_slug', 'allow_audio_files_in_questions', 'hidden', 'allow_in_challenge_mode', 'created_at', 'level']
 
 
 class UpdateExerciseSerializer(serializers.ModelSerializer):

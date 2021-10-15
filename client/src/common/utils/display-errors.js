@@ -20,11 +20,10 @@ import {
   ListItem,
 } from '@chakra-ui/react';
 
-const displayErrors = (error) => {
-  console.log(error);
+const displayErrors = (error, mb = '6') => {
   if (!error || !error.response || !error.response.data) {
     return (
-      <Alert marginBottom="6" status="error">
+      <Alert marginBottom={mb} status="error">
         <AlertIcon /> Internal Server Error
       </Alert>
     );
@@ -32,7 +31,7 @@ const displayErrors = (error) => {
 
   if (error.response.data.detail) {
     return (
-      <Alert marginBottom="6" status="error">
+      <Alert marginBottom={mb} status="error">
         <AlertIcon /> {error.response.data.detail}
       </Alert>
     );
@@ -44,7 +43,7 @@ const displayErrors = (error) => {
     error.response.data != null
   ) {
     return (
-      <Alert marginBottom="6" status="error">
+      <Alert marginBottom={mb} status="error">
         <Stack>
           <HStack ml="0" pl="0">
             <AlertIcon />
@@ -66,7 +65,7 @@ const displayErrors = (error) => {
   }
 
   return (
-    <Alert marginBottom="6" status="error">
+    <Alert marginBottom={mb} status="error">
       <AlertIcon /> Internal Server Error
     </Alert>
   );

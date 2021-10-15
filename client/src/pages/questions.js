@@ -58,8 +58,7 @@ const Dashboard = () => {
             <Box>
               <Heading>Question Dashboard</Heading>
               <Text>
-                This is a short sentence which describes what this dashboard is
-                all about
+                Add new questions or edit and delete existing questions
               </Text>
             </Box>
           </Flex>
@@ -92,12 +91,11 @@ const Dashboard = () => {
             variant="enclosed"
             index={tabIndex}
             onChange={handleTabsChange}>
-            <Select display={{ base: 'flex', lg: 'none' }}>
+            <Select
+              onChange={(e) => setTabIndex(e.target.value * 1)}
+              display={{ base: 'flex', lg: 'none' }}>
               {Object.entries(exercises).map(([key, value], idx) => (
-                <option
-                  key={idx}
-                  value={value.exercise_name}
-                  onClick={() => setTabIndex(idx)}>
+                <option key={idx} value={idx}>
                   {value.exercise_name}
                 </option>
               ))}

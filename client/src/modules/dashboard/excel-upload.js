@@ -1,27 +1,37 @@
 import * as React from 'react';
 import * as XLSX from 'xlsx';
 import { useDropzone } from 'react-dropzone';
-import { Text, Box, Flex } from '@chakra-ui/react';
+import { Text, Box, Flex, useColorModeValue } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 
-const getColor = ({ isDragAccept, isDragReject, isDragActive }) => {
+const getColor = ({
+  isDragAccept,
+  isDragReject,
+  isDragActive,
+  defaultColor,
+  isInvalid,
+}) => {
   if (isDragAccept) {
     return '#00e676';
   }
 
-  if (isDragReject) {
-    return '#ff1744';
+  if (isDragReject || isInvalid) {
+    return 'rgb(252, 129, 129)';
   }
 
   if (isDragActive) {
     return '#2196f3';
   }
 
-  return 'rgba(255, 255, 255, 0.16)';
+  return defaultColor;
 };
 
-const ExcelUpload = ({ setFieldValue }) => {
+const ExcelUpload = ({ setFieldValue, isInvalid }) => {
   const [file, setFile] = React.useState(null);
+  const defaultColor = useColorModeValue(
+    'rgb(226, 232, 240)',
+    'rgba(255, 255, 255, 0.16)',
+  );
 
   const readExcel = (file) => {
     const fileReader = new FileReader();
@@ -39,7 +49,7 @@ const ExcelUpload = ({ setFieldValue }) => {
         questions.push(data);
       });
 
-      setFieldValue('questions', questions);
+      setFieldValue('data', questions);
     };
 
     fileReader.onerror = (error) => {
@@ -75,6 +85,8 @@ const ExcelUpload = ({ setFieldValue }) => {
           isDragActive,
           isDragAccept,
           isDragReject,
+          defaultColor,
+          isInvalid,
         })}
         {...getRootProps({
           isDragActive,
@@ -84,7 +96,7 @@ const ExcelUpload = ({ setFieldValue }) => {
         <input {...getInputProps()} />
 
         <Text size="sm">
-          Drag and drop some files here, or click to select files
+          Drag and drop an excel file here, or click to select a file
         </Text>
       </Flex>
       {file && (

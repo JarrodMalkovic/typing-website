@@ -44,8 +44,8 @@ const Dashboard = () => {
           <Box>
             <Heading>Subxercise Dashboard</Heading>
             <Text>
-              This is a short sentence which describes what this dashboard is
-              all about
+              Add new subexercise modules or edit, delete and reorder existing
+              modules
             </Text>
           </Box>
 
@@ -67,12 +67,11 @@ const Dashboard = () => {
             variant="enclosed"
             index={tabIndex}
             onChange={handleTabsChange}>
-            <Select display={{ base: 'flex', lg: 'none' }}>
+            <Select
+              onChange={(e) => setTabIndex(e.target.value * 1)}
+              display={{ base: 'flex', lg: 'none' }}>
               {Object.entries(exercises).map(([key, value], idx) => (
-                <option
-                  key={idx}
-                  value={value.exercise_name}
-                  onClick={() => setTabIndex(idx)}>
+                <option key={idx} value={idx}>
                   {value.exercise_name}
                 </option>
               ))}

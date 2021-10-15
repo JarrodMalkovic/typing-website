@@ -217,7 +217,7 @@ const Profile = () => {
                       (acc, curr) => (acc += curr.count),
                       0,
                     )}{' '}
-                    submissions in the last year
+                    attempts in the last year
                   </Heading>
                 </Box>
                 <Box px={{ base: 2, md: 4 }} py="2" pt="2">
@@ -240,7 +240,7 @@ const Profile = () => {
                       const date = new Date(value.date);
 
                       return {
-                        'data-tip': `${value.count} submission${
+                        'data-tip': `${value.count} attempt${
                           value.count >= 1 && 's'
                         } on ${date.toDateString()} `,
                       };
@@ -260,12 +260,12 @@ const Profile = () => {
                   py="2"
                   borderBottom="1px solid"
                   borderColor={useColorModeValue('gray.200', 'gray.700')}>
-                  <Heading size="sm">Most Recent Submissions</Heading>
+                  <Heading size="sm">Most Recent Attempts</Heading>
                 </Box>
                 <Box px={{ base: 2, md: 4 }} py="2" pt="2">
                   {data.recent_attempts.length === 0 && (
                     <Center>
-                      <Text>This user has made no submissions yet.</Text>
+                      <Text>This user has made no attempts yet.</Text>
                     </Center>
                   )}
                   {data.recent_attempts.map((attempt, idx) => (

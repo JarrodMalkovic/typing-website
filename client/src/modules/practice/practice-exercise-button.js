@@ -126,14 +126,18 @@ const PracticeExerciseButton = ({ name, img, slug, description }) => {
                         <Text color={useColorModeValue('gray.600', 'gray.300')}>
                           {subExercise.description}
                         </Text>
+
                         <Link
                           href={`/practice/${subExercise.exercise_slug}/subexercise/${subExercise.subexercise_slug}`}>
                           <a>
                             <Button
+                              maxW="80"
+                              h="auto"
+                              py="2"
+                              whiteSpace="initial"
                               variant="ghost"
                               color="blue.400"
-                              flex="1"
-                              textAlign="left"
+                              textAlign="center"
                               margin="10px">
                               Start {subExercise.subexercise_name}
                             </Button>

@@ -6,9 +6,12 @@ import {
   ModalFooter,
   FormControl,
   ButtonGroup,
+  Checkbox,
   FormLabel,
   Box,
   FormErrorMessage,
+  Alert,
+  AlertIcon,
   Button,
 } from '@chakra-ui/react';
 import ExcelUpload from './excel-upload';
@@ -18,14 +21,16 @@ import { BASE_API_URL } from '../../common/contstants/base-api-url';
 import { useMutation, useQueryClient } from 'react-query';
 import * as FileSaver from 'file-saver';
 import * as XLSX from 'xlsx';
-import { getRelatedCacheKeys } from '../../common/utils/get-related-cache-keys';
 import { displayErrors } from '../../common/utils/display-errors';
+import * as Yup from 'yup';
+
+const validationSchema = Yup.object({
+  data: Yup.mixed().required('Required'),
+  replace: Yup.bool().required(),
+});
 
 const createQuestions = async (body) => {
-  const { data } = await axios.post(
-    `${BASE_API_URL}/api/upload-questions/`,
-    {'data': body.questions},
-  );
+  await axios.post(`${BASE_API_URL}/api/upload-questions/`, body);
 
   return body;
 };
@@ -43,10 +48,11 @@ const getQuestions = async (slug) => {
   return data;
 };
 
-const generateEmptyTemplate = async () => {
+const generateEmptyTemplate = async (setIsGeneratingEmptyTemplate) => {
+  setIsGeneratingEmptyTemplate(true);
+
   const wb = { SheetNames: [], Sheets: [] };
   const exercises = await getExercises();
-  console.log(exercises);
 
   exercises.forEach((exercise) => {
     if (exercise.allow_audio_files_in_questions) {
@@ -71,36 +77,46 @@ const generateEmptyTemplate = async () => {
   });
 
   FileSaver.saveAs(data, `KeyKoreaEmptyTemplate.xlsx`);
+
+  setIsGeneratingEmptyTemplate(false);
 };
 
-const generateSampleTemplate = async () => {
+const generateSampleTemplate = async (setIsGeneratingSampleTemplate) => {
+  setIsGeneratingSampleTemplate(true);
+
   const wb = { SheetNames: [], Sheets: [] };
   const exercises = await getExercises();
 
-  // for each exercise, create a worksheet and append that to the workbook
-  for (const exercise of exercises) {
-    const exercise_name = exercise['exercise_name'];
-    const exercise_slug = exercise['exercise_slug'];
+  await Promise.all(
+    exercises.map(async (exercise) => {
+      const exercise_name = exercise['exercise_name'];
+      const exercise_slug = exercise['exercise_slug'];
 
-    // Does not work with dictation
-    if (!exercise.allow_audio_files_in_questions) {
-      const questions = await getQuestions(exercise_slug);
+      if (!exercise.allow_audio_files_in_questions) {
+        const questions = await getQuestions(exercise_slug);
 
-      const currentWs = XLSX.utils.json_to_sheet(questions);
-      wb.SheetNames.push(exercise_name);
-      wb.Sheets[exercise_name] = currentWs;
-    }
-  }
+        const currentWs = XLSX.utils.json_to_sheet(questions);
+        wb.SheetNames.push(exercise_name);
+        wb.Sheets[exercise_name] = currentWs;
+      }
+    }),
+  );
 
   const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' });
   const data = new Blob([excelBuffer], {
     type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8',
   });
+
   FileSaver.saveAs(data, `KeyKoreaSampleTemplate.xlsx`);
+  setIsGeneratingSampleTemplate(false);
 };
 
 const AddMultipleQuestions = ({ onClose }) => {
   const queryClient = useQueryClient();
+  const [isGeneratingSampleTemplate, setIsGeneratingSampleTemplate] =
+    React.useState(false);
+  const [isGeneratingEmptyTemplate, setIsGeneratingEmptyTemplate] =
+    React.useState(false);
 
   const { mutate, isError, isLoading, error } = useMutation(createQuestions, {
     onSuccess: async () => {
@@ -113,61 +129,102 @@ const AddMultipleQuestions = ({ onClose }) => {
   return (
     <Formik
       initialValues={{
-        questions: null,
+        data: null,
+        replace: false,
       }}
+      validationSchema={validationSchema}
       onSubmit={mutate}>
       {({ values, setFieldValue }) => (
         <Form>
           <ModalBody>
             <VStack w="full" textAlign="left" spacing="4">
-              <Text textAlign="left" w="full">
-                {isError && displayErrors(error)}
-                Placeholder text which describes this form asdas das dasd
-              </Text>
+              {isError && displayErrors(error, 0)}
+              {values.replace && (
+                <Alert status="warning">
+                  <AlertIcon />
+                  You have selected "Replace all current questions". This option
+                  will delete all questions currently stored in the database and
+                  replace them with the new questions in the provided excel file
+                </Alert>
+              )}
+
               <Box textAlign="left" w="full">
                 <Button
-                  onClick={generateEmptyTemplate}
+                  onClick={() =>
+                    generateEmptyTemplate(setIsGeneratingEmptyTemplate)
+                  }
                   color="blue.400"
                   size="sm"
                   variant="ghost">
-                  Download empty template
+                  {isGeneratingEmptyTemplate
+                    ? 'Generating...'
+                    : 'Download empty template'}
                 </Button>
               </Box>
               <Box textAlign="left" w="full">
                 <Button
-                  onClick={generateSampleTemplate}
+                  onClick={() =>
+                    generateSampleTemplate(setIsGeneratingSampleTemplate)
+                  }
                   color="blue.400"
                   size="sm"
                   variant="ghost">
-                  Download sample template
+                  {isGeneratingSampleTemplate
+                    ? 'Generating...'
+                    : 'Download sample template'}
                 </Button>
               </Box>
-              <Field name="questions">
+              <Field name="data">
                 {({ field, form }) => (
-                  <FormControl>
-                    <ExcelUpload setFieldValue={setFieldValue} />
-                    <FormErrorMessage>{form.errors.questions}</FormErrorMessage>
+                  <FormControl
+                    isInvalid={values.data == null && form.errors.data}>
+                    <ExcelUpload
+                      isInvalid={values.data == null && form.errors.data}
+                      setFieldValue={setFieldValue}
+                    />
+                    <FormErrorMessage>{form.errors.data}</FormErrorMessage>
                   </FormControl>
                 )}
               </Field>
               <Box maxH="200px" overflowY="auto" w="full">
                 <VStack w="full" spacing={4}>
-                  {values.questions &&
-                    values.questions.map((exercise) => (
+                  {values.data &&
+                    values.data.map((exercise) => (
                       <Box w="full">
                         <Text>
                           {exercise[0].exercise} questions to be added:
                         </Text>
-                        {exercise[1].map((question) => (
-                          <Text fontSize="sm">
-                            {question.subexercise} - {question.question} -{' '}
-                            {question.translation}
-                          </Text>
-                        ))}
+                        {exercise[1].length ? (
+                          exercise[1].map((question) => (
+                            <Text fontSize="sm">
+                              {question.subexercise} - {question.question} -{' '}
+                              {question.translation}
+                            </Text>
+                          ))
+                        ) : (
+                          <Text fontSize="sm">None</Text>
+                        )}
                       </Box>
                     ))}
                 </VStack>
               </Box>
+              <Field name="replace">
+                {({ field, form }) => (
+                  <FormControl
+                    isInvalid={form.errors.replace && form.touched.replace}>
+                    <Checkbox
+                      {...field}
+                      id="replace"
+                      onChange={(e) =>
+                        setFieldValue('replace', e.target.checked)
+                      }>
+                      Replace all current questions
+                    </Checkbox>
+
+                    <FormErrorMessage>{form.errors.replace}</FormErrorMessage>
+                  </FormControl>
+                )}
+              </Field>
             </VStack>
           </ModalBody>
           <ModalFooter>

@@ -19,7 +19,7 @@ const Menu = () => {
   return (
     <Box position="relative" mt={10}>
       <VStack padding="20px" width="100%">
-        <Heading fontSize="45px" padding="20px">
+        <Heading textAlign="center" fontSize="45px" padding="20px">
           Begin Your Journey!
         </Heading>
 
@@ -37,12 +37,8 @@ const Menu = () => {
                   <Container
                     padding="20px"
                     maxW="container.lg"
-                    _hover={{ color: '#39aae1' }}>
-                    <Box
-                      border="4px"
-                      borderRadius="5%"
-                      borderColor="gray"
-                      _hover={{ borderColor: '#39aae1' }}>
+                    _hover={{ color: 'blue.400' }}>
+                    <Box>
                       <Image
                         src="/images/menu_setup.png"
                         boxSize="250px"
@@ -71,12 +67,8 @@ const Menu = () => {
                   <Container
                     padding="20px"
                     maxW="container.lg"
-                    _hover={{ color: '#39aae1' }}>
-                    <Box
-                      border="4px"
-                      borderRadius="5%"
-                      borderColor="gray"
-                      _hover={{ borderColor: '#39aae1' }}>
+                    _hover={{ color: 'blue.400' }}>
+                    <Box>
                       <Image
                         src="/images/menu_practice.png"
                         boxSize="250px"
@@ -105,12 +97,8 @@ const Menu = () => {
                   <Container
                     padding="20px"
                     maxW="container.lg"
-                    _hover={{ color: '#39aae1' }}>
-                    <Box
-                      border="4px"
-                      borderRadius="5%"
-                      borderColor="gray"
-                      _hover={{ borderColor: '#39aae1' }}>
+                    _hover={{ color: 'blue.400' }}>
+                    <Box>
                       <Image
                         src="/images/menu_challenge.png"
                         boxSize="250px"

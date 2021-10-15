@@ -6,7 +6,7 @@ import {
   Text,
   Box,
   Flex,
-  ButtonGroup,
+  useColorModeValue,
   Center,
   Tabs,
   Tab,
@@ -21,25 +21,36 @@ import { RiRecordCircleLine, RiStopCircleLine } from 'react-icons/ri';
 import ReactAudioPlayer from 'react-audio-player';
 import PropTypes from 'prop-types';
 
-const getColor = ({ isDragAccept, isDragReject, isDragActive }) => {
+const getColor = ({
+  isDragAccept,
+  isDragReject,
+  isDragActive,
+  defaultColor,
+  isInvalid,
+}) => {
   if (isDragAccept) {
     return '#00e676';
   }
 
-  if (isDragReject) {
-    return '#ff1744';
+  if (isDragReject || isInvalid) {
+    return 'rgb(252, 129, 129)';
   }
 
   if (isDragActive) {
     return '#2196f3';
   }
 
-  return 'rgba(255, 255, 255, 0.16)';
+  return defaultColor;
 };
 
-const AudioUpload = ({ setFieldValue }) => {
+const AudioUpload = ({ setFieldValue, isInvalid }) => {
   const [audioBlobUrl, setAudioBlobUrl] = React.useState(null);
   const [isRecording, setIsRecording] = React.useState(false);
+
+  const defaultColor = useColorModeValue(
+    'rgb(226, 232, 240)',
+    'rgba(255, 255, 255, 0.16)',
+  );
 
   React.useEffect(() => {
     return () => setFieldValue('audio_file', null);
@@ -83,6 +94,8 @@ const AudioUpload = ({ setFieldValue }) => {
                     isDragActive,
                     isDragAccept,
                     isDragReject,
+                    defaultColor,
+                    isInvalid,
                   })}
                   {...getRootProps({
                     isDragActive,
@@ -143,7 +156,7 @@ const AudioUpload = ({ setFieldValue }) => {
           </TabPanels>
         </Tabs>
         {audioBlobUrl && (
-          <FormControl>
+          <FormControl mt="2">
             <FormLabel>Audio Preview</FormLabel>
             <Box w="full" as={ReactAudioPlayer} src={audioBlobUrl} controls />
           </FormControl>

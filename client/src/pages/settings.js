@@ -71,12 +71,11 @@ const Dashboard = () => {
           variant="enclosed"
           index={tabIndex}
           onChange={handleTabsChange}>
-          <Select display={{ base: 'flex', lg: 'none' }}>
+          <Select
+            onChange={(e) => setTabIndex(e.target.value * 1)}
+            display={{ base: 'flex', lg: 'none' }}>
             {tabs.map((value, idx) => (
-              <option
-                key={idx}
-                value={value.name}
-                onClick={() => setTabIndex(idx)}>
+              <option key={idx} value={idx}>
                 {value.name}
               </option>
             ))}

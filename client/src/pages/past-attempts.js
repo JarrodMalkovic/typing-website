@@ -50,8 +50,8 @@ const PastAttempts = () => {
           <Heading>Past Attempts</Heading>
         </Flex>
         <Text>
-          This is a short sentence which describes what this dashboard is all
-          about
+          View the statistics for all past attempts you have made for each
+          module
         </Text>
         {isLoading ? (
           <Spinner />
@@ -61,12 +61,11 @@ const PastAttempts = () => {
             variant="enclosed"
             index={tabIndex}
             onChange={handleTabsChange}>
-            <Select display={{ base: 'flex', lg: 'none' }}>
+            <Select
+              onChange={(e) => setTabIndex(e.target.value * 1)}
+              display={{ base: 'flex', lg: 'none' }}>
               {tabs.map((value, idx) => (
-                <option
-                  key={idx}
-                  value={value.name}
-                  onClick={() => setTabIndex(idx)}>
+                <option key={idx} value={idx}>
                   {value.name}
                 </option>
               ))}

@@ -69,8 +69,7 @@ const DeleteAccountSettings = () => {
                 mt={1}
                 fontSize="sm"
                 color={useColorModeValue('gray.600', 'gray.400')}>
-                This information will be displayed publicly so be careful what
-                you share.
+                You can delete your account at any time
               </Text>
             </Box>
           </GridItem>

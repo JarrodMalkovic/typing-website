@@ -56,10 +56,6 @@ const Dashboard = () => {
           justifyContent={{ base: '', md: 'space-between' }}>
           <Box>
             <Heading>User Management</Heading>
-            <Text>
-              This is a short sentence which describes what this dashboard is
-              all about
-            </Text>
           </Box>
           <HStack spacing={-8}>
             <InputGroup>
