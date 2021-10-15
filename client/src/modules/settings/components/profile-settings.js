@@ -92,8 +92,7 @@ const ProfileSettings = () => {
                 mt={1}
                 fontSize="sm"
                 color={useColorModeValue('gray.600', 'gray.400')}>
-                This information will be displayed publicly so be careful what
-                you share.
+                This information will be displayed publicly
               </Text>
             </Box>
           </GridItem>

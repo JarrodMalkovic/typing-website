@@ -154,7 +154,11 @@ const AttemptsTable = ({ category }) => {
             <Tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
                 <Th
-                  isNumeric={column.render('Header') !== 'User'}
+                  isNumeric={
+                    column.render('Header') != 'User' &&
+                    column.render('Header') != 'Subexercise' &&
+                    column.render('Header') != 'Completed At'
+                  }
                   {...column.getHeaderProps()}>
                   {column.render('Header')}
                 </Th>
@@ -169,7 +173,13 @@ const AttemptsTable = ({ category }) => {
               <Tr {...row.getRowProps()}>
                 {row.cells.map((cell) => {
                   return (
-                    <Td isNumeric {...cell.getCellProps()}>
+                    <Td
+                      isNumeric={
+                        cell.column.render('Header') != 'User' &&
+                        cell.column.render('Header') != 'Subexercise' &&
+                        cell.column.render('Header') != 'Completed At'
+                      }
+                      {...cell.getCellProps()}>
                       {cell.render('Cell')}
                     </Td>
                   );
