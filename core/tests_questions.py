@@ -211,8 +211,11 @@ class QuestionTestCase(TestCase):
 
         response = self.client.get(
             "http://127.0.0.1:8000/api/questions/subexercise/inexistent/")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data, [])
+        expected_response = {
+            'detail': 'This subexercise does not exist'
+        }      
+        self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
+        self.assertEqual(response.data, expected_response)
 
     # Get questions for challenge mode - expect it to return 10 questions
     def test_get_API_challenge_questions(self):
