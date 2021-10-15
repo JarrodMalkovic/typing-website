@@ -40,7 +40,10 @@ const Dashboard = () => {
           justifyContent={{ base: '', lg: 'space-between' }}>
           <Box>
             <Heading>Exercise Dashboard</Heading>{' '}
-            <Text>Add new exercise modules or edit existing modules.</Text>
+            <Text>
+              Add new exercise modules or edit, delete and reorder existing
+              modules
+            </Text>
           </Box>
           <Flex flexDir={{ base: 'column', md: 'row' }}>
             <Flex>
