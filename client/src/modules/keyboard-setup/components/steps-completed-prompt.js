@@ -36,23 +36,12 @@ const StepsCompletedPrompt = ({ os }) => {
         </Heading>
         {isKoreanText !== null ? (
           isKoreanText ? (
-            <Container>
-              <Text textAlign="center" color="#39aae1">
-                Everything looks setup correctly! Have fun practicing your
-                korean typing skills!
-              </Text>
-              <Link href="/practice">
-                <Button
-                  top="400px"
-                  left="45vw"
-                  right="45vw"
-                  position="absolute">
-                  Continue to Practice!
-                </Button>
-              </Link>
-            </Container>
+            <Text color="blue.400">
+              Everything looks setup correctly! Have fun practicing your korean
+              typing skills!
+            </Text>
           ) : (
-            <Text textAlign="center" color="#f52d56">
+            <Text textAlign="center" color="red.400">
               Oh no! You are not typing in Hangul. Ensure that your keyboard is
               setup in Korean.
             </Text>
@@ -74,6 +63,13 @@ const StepsCompletedPrompt = ({ os }) => {
             <Input onChange={handleChange} />
           </Stack>
         </Box>
+        {isKoreanText !== null && isKoreanText ? (
+          <Link href="/practice">
+            <Button variant="ghost" mt="4">
+              Continue to Practice!
+            </Button>
+          </Link>
+        ) : null}
       </VStack>
     </Box>
   );
