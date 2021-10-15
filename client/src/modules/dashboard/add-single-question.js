@@ -216,7 +216,10 @@ const AddSingleQuestion = ({ onClose }) => {
                       <Field name="audio_file">
                         {({ field, form }) => (
                           <FormControl isInvalid={form.errors.audio_file}>
-                            <AudioUpload setFieldValue={setFieldValue} />
+                            <AudioUpload
+                              isInvalid={form.errors.audio_file}
+                              setFieldValue={setFieldValue}
+                            />
                             <FormErrorMessage>
                               {form.errors.audio_file}
                             </FormErrorMessage>
