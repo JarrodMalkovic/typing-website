@@ -43,9 +43,8 @@ const HeroSection = ({ learnMoreRef }) => {
             pt="4"
             fontSize="xl"
             color={useColorModeValue('gray.600', 'gray.300')}>
-            Placeholder Subheading Placeholder Subheading Placeholder Subheading
-            Placeholder Subheading Placeholder Subheading Placeholder Subheading
-            Placeholder Placeholder{' '}
+            Imrpove your typing skills in Korean with our easy-to-follow yet
+            interactive and helpful modules!
           </Text>
           <ButtonGroup pt="4">
             <NextLink
