@@ -449,6 +449,50 @@ class UserTestCase(APITestCase):
         for user in response.data['users']:
             self.assertEqual(user['email'], "testingUser" + str(index) + "@test.com")
             index += 1
+            
+    def create_attempts(self):
+        user = User.objects.get(email="newuser2@test.com")
+        exercise = Exercise.objects.create(exercise_slug="short-sentences", exercise_name="Short Sentences",
+                                           allow_in_challenge_mode=True, allow_audio_files_in_questions=True, hidden=False)
+        subexercise = Subexercise.objects.create(
+            exercise_slug=exercise, subexercise_slug="short-sentences", subexercise_name="Short Sentences", level=1)
+
+        attempt1 = PracticeAttempt.objects.create(
+            subexercise_slug=subexercise, user=user, wpm=60.0, time_elapsed=10.533, accuracy=95.3, score=57.18)
+        attempt2 = PracticeAttempt.objects.create(
+            subexercise_slug=subexercise, user=user, wpm=70.0, time_elapsed=12.743, accuracy=92.1, score=64.47)
+            
+    # Tests that the correct info returned for user
+    def test_get_user_profile(self):
+        print("---> Test: API Users Profile Information")
+        self.client = APIClient()
+        user = User.objects.create_user(username="testUser2", email="newuser2@test.com", password="forttst123")      
+        data = {
+            "email": "newuser2@test.com",
+            "password": "forttst123"
+        }
+        response = self.client.post("http://127.0.0.1:8000/api/auth/login/", data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        access_token = response.data["access"]
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + access_token)
+        
+        response = self.client.get("http://127.0.0.1:8000/api/user/profile/testUser2/")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['recent_attempts'], [])
+        self.assertEqual(response.data['user']['username'], 'testUser2')
+        self.assertIsNone(response.data['stats']['wpm__avg'])
+        self.assertIsNone(response.data['stats']['score__avg'])
+        self.assertIsNone(response.data['stats']['time_elapsed__avg'])
+        
+        
+        self.create_attempts()
+        response = self.client.get("http://127.0.0.1:8000/api/user/profile/testUser2/")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data['recent_attempts']), 2)
+        self.assertEqual(response.data['user']['username'], 'testUser2')
+        self.assertEqual(response.data['stats']['wpm__avg'], 65)
+        self.assertEqual(response.data['stats']['score__avg'], 60.825)
+        self.assertEqual(response.data['stats']['time_elapsed__avg'], 11.638)
         
         
 if __name__ == '__main__':
