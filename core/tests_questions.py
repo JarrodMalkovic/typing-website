@@ -237,14 +237,14 @@ class QuestionTestCase(TestCase):
         self.assertEqual(len(response.data), 10)
         
     def test_admin_delete_question(self):
-        print("---> Test: API Test Admin deleting question")
+        print("---> Test: API Test Admin Deleting Question")
         self.client = APIClient()
         access_token = self.get_access_token()
 
         expected_response = {
             "detail": "Authentication credentials were not provided."
         }
-        response = self.client.get("http://127.0.0.1:8000/api/challenge/")
+        response = self.client.get("http://127.0.0.1:8000/api/questions/")
         self.assertEqual(response.data, expected_response)
 
         q_id = Question.objects.get(question="This is korean sentence 2")
@@ -260,19 +260,31 @@ class QuestionTestCase(TestCase):
             Question.objects.get(question="This is korean sentence 2")
         except:
             self.assertRaises(Question.DoesNotExist)
-    
-    
-    
-    
-    # exercise = Exercise.objects.create(exercise_slug="short-sentences", exercise_name="Short Sentences",
-    #                                        allow_in_challenge_mode=True, allow_audio_files_in_questions=True, hidden=False)
-    # subexercise = Subexercise.objects.create(
-    #     exercise_slug=exercise, subexercise_slug="short-sentences", subexercise_name="Short Sentences", level=1)
-    # Question.objects.create(
-    #     subexercise_slug=subexercise, question="This is korean sentence 1")
-    # Question.objects.create(
-    #     subexercise_slug=subexercise, question="This is korean sentence 2")
-    # questions = Question.objects.all() 
+            
+    def test_admin_create_question(self):
+        print("---> Test: API Test Admin Creating Question")
+        self.client = APIClient()
+        access_token = self.get_access_token()
+
+        expected_response = {
+            "detail": "Authentication credentials were not provided."
+        }
+        response = self.client.get("http://127.0.0.1:8000/api/questions/")
+        self.assertEqual(response.data, expected_response)
+
+        data = {
+            "question": "This is a new question",
+            "subexercise_slug": "short-sentences",
+            "translation": "New question translation"
+        }
+        
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + access_token)
+        response = self.client.post("http://127.0.0.1:8000/api/questions/", json.dumps(data), content_type="application/json")
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response.data['question'], data['question'])
+        self.assertEqual(response.data['subexercise_slug'], data['subexercise_slug'])
+        self.assertEqual(response.data['translation'], data['translation'])
         
 if __name__ == '__main__':
     TestCase.main(verbosity=2)
