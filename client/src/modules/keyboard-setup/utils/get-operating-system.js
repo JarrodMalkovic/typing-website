@@ -7,9 +7,9 @@ const getOperatingSystem = () => {
     { name: LINUX, appVersion: 'X11' },
   ];
 
-  const userOs = os.find(v => navigator.appVersion.includes(v.appVersion));
+  const userOs = os.find((v) => navigator.appVersion.includes(v.appVersion));
 
-  return userOs.name || WINDOWS;
+  return userOs == null ? WINDOWS : userOs.name;
 };
 
 export { getOperatingSystem };
