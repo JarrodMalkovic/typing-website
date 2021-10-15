@@ -1,43 +1,43 @@
 import * as React from 'react';
 import { useDropzone } from 'react-dropzone';
 import {
-  FormControl,
-  FormLabel,
   Text,
   Box,
   Flex,
-  ButtonGroup,
   Center,
-  Tabs,
-  Tab,
   Image,
-  TabList,
-  TabPanels,
-  VStack,
-  TabPanel,
-  IconButton,
-  Tooltip,
+  useColorModeValue,
 } from '@chakra-ui/react';
 import PropTypes from 'prop-types';
 
-const getColor = ({ isDragAccept, isDragReject, isDragActive }) => {
+const getColor = ({
+  isDragAccept,
+  isDragReject,
+  isDragActive,
+  defaultColor,
+  isInvalid,
+}) => {
   if (isDragAccept) {
     return '#00e676';
   }
 
-  if (isDragReject) {
-    return '#ff1744';
+  if (isDragReject || isInvalid) {
+    return 'rgb(252, 129, 129)';
   }
 
   if (isDragActive) {
     return '#2196f3';
   }
 
-  return 'rgba(255, 255, 255, 0.16)';
+  return defaultColor;
 };
 
-const ImageUpload = ({ setFieldValue }) => {
+const ImageUpload = ({ setFieldValue, isInvalid }) => {
   const [file, setFile] = React.useState(null);
+  const defaultColor = useColorModeValue(
+    'rgb(226, 232, 240)',
+    'rgba(255, 255, 255, 0.16)',
+  );
 
   const {
     getRootProps,
@@ -46,7 +46,7 @@ const ImageUpload = ({ setFieldValue }) => {
     isDragAccept,
     isDragReject,
   } = useDropzone({
-    accept: 'image/png',
+    accept: 'image/*',
     onDrop: (acceptedFiles) => {
       setFieldValue('image_file', acceptedFiles[0]);
       setFile(URL.createObjectURL(acceptedFiles[0]));
@@ -67,6 +67,8 @@ const ImageUpload = ({ setFieldValue }) => {
           isDragActive,
           isDragAccept,
           isDragReject,
+          defaultColor,
+          isInvalid,
         })}
         {...getRootProps({
           isDragActive,
@@ -76,7 +78,7 @@ const ImageUpload = ({ setFieldValue }) => {
         <input {...getInputProps()} />
 
         <Text size="sm">
-          Drag and drop some files here, or click to select files
+          Drag and drop an image here, or click to select an image
         </Text>
       </Flex>{' '}
       {file && (
