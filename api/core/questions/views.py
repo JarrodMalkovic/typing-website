@@ -328,7 +328,7 @@ class QuestionExcelUpload(APIView):
     '''
 
     def post(self, request):
-        data = request.data
+        data = request.data.get('data')
         all_questions = []
 
         for exercise in data:
