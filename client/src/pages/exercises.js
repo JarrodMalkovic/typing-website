@@ -46,22 +46,6 @@ const Dashboard = () => {
             </Text>
           </Box>
           <Flex flexDir={{ base: 'column', md: 'row' }}>
-            <Flex>
-              <InputGroup>
-                <InputLeftElement
-                  pointerEvents="none"
-                  children={<SearchIcon />}
-                />
-                <Input
-                  w={{ base: '100%', md: 'xs' }}
-                  mr={{ base: '0', md: '4' }}
-                  mt={{ base: '2', md: '0' }}
-                  placeholder="Search exercises..."
-                  value={filter}
-                  onChange={handleChange}
-                />
-              </InputGroup>
-            </Flex>
             <AddExerciseButton mt={{ base: '2', md: '0' }} />
           </Flex>
         </Box>
