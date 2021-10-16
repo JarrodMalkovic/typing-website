@@ -1,3 +1,5 @@
+[//]: <> (Generated from: https://www.termsofservicegenerator.net/)
+
 # Terms and Conditions of Use for KeyKorea
 
 ## 1\. Terms

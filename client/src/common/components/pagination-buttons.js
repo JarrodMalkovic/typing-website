@@ -19,6 +19,7 @@ import {
   ArrowRightIcon,
 } from '@chakra-ui/icons';
 
+// Adapted from: https://codesandbox.io/s/fxx0v
 const PaginationButtons = ({
   canPreviousPage,
   previousPage,

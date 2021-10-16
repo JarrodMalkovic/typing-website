@@ -16,7 +16,12 @@ import {
 const Step1 = (
   <Wrap justify="center" pt="8">
     <VStack>
-      <Image src="/images/Windows_1.png" width="auto" maxH="400px" />
+      <Image
+        src="/images/Windows_1.png"
+        width="auto"
+        maxH="400px"
+        borderRadius="2%"
+      />
       <Container minW="60vw">
         <Text size="md" pt="8" textAlign="center">
           Click the "Start" button and select "Settings"
@@ -29,7 +34,12 @@ const Step1 = (
 const Step2 = (
   <Wrap justify="center" pt="8">
     <VStack>
-      <Image src="/images/Windows_2.png" width="auto" maxH="400px" />
+      <Image
+        src="/images/Windows_2.png"
+        width="auto"
+        maxH="400px"
+        borderRadius="2%"
+      />
       <Container minW="60vw">
         <Text size="md" pt="8" textAlign="center">
           Select "Time & Language"
@@ -42,10 +52,20 @@ const Step2 = (
 const Step3 = (
   <Wrap justify="center" pt="8">
     <Box>
-      <Image src="/images/Windows_3.png" width="auto" maxH="500px" />
+      <Image
+        src="/images/Windows_3.png"
+        width="auto"
+        maxH="500px"
+        borderRadius="2%"
+      />
     </Box>
     <Box>
-      <Image src="/images/Windows_4.png" width="auto" maxH="500px" />
+      <Image
+        src="/images/Windows_4.png"
+        width="auto"
+        maxH="500px"
+        borderRadius="2%"
+      />
     </Box>
 
     <Container minW="60vw">
@@ -59,10 +79,20 @@ const Step3 = (
 const Step4 = (
   <Wrap justify="center" pt="8">
     <Box>
-      <Image src="/images/Windows_5.png" width="auto" maxH="400px" />
+      <Image
+        src="/images/Windows_5.png"
+        width="auto"
+        maxH="400px"
+        borderRadius="2%"
+      />
     </Box>
     <Box>
-      <Image src="/images/Windows_6.png" width="auto" maxH="400px" />
+      <Image
+        src="/images/Windows_6.png"
+        width="auto"
+        maxH="400px"
+        borderRadius="2%"
+      />
     </Box>
     <Container minW="60vw">
       <Text size="md" pt="8" textAlign="center">
@@ -75,10 +105,20 @@ const Step4 = (
 const Step5 = (
   <Wrap justify="center" pt="8">
     <Box>
-      <Image src="/images/Windows_7.png" width="auto" maxH="400px" />
+      <Image
+        src="/images/Windows_7.png"
+        width="auto"
+        maxH="400px"
+        borderRadius="2%"
+      />
     </Box>
     <Box>
-      <Image src="/images/Windows_8.png" width="auto" maxH="400px" />
+      <Image
+        src="/images/Windows_8.png"
+        width="auto"
+        maxH="400px"
+        borderRadius="2%"
+      />
     </Box>
     <Container minW="60vw">
       <Text size="md" pt="8" textAlign="center">

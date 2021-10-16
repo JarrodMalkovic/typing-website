@@ -6,7 +6,12 @@ const Step1 = (
   <Wrap justify="center" pt="8">
     <VStack>
       <Box maxW="500px">
-        <Image src="/images/ubunutu1.png" width="100%" height="auto" />
+        <Image
+          src="/images/ubunutu1.png"
+          width="100%"
+          height="auto"
+          borderRadius="2%"
+        />
       </Box>
       <Text size="md" pt="8" textAlign="center">
         Install the ibus-hangul plugin from the Ubuntu Software app, and restart
@@ -19,7 +24,12 @@ const Step1 = (
 const Step2 = (
   <Wrap justify="center" pt="8">
     <Box maxW="500px">
-      <Image src="/images/Linux 1.png" width="100%" height="auto" />
+      <Image
+        src="/images/Linux 1.png"
+        width="100%"
+        height="auto"
+        borderRadius="2%"
+      />
     </Box>
     <Container minW="60vw">
       <Text size="md" pt="8" textAlign="center">
@@ -32,10 +42,20 @@ const Step2 = (
 const Step3 = (
   <Wrap justify="center" pt="8">
     <Box maxW="500px">
-      <Image src="/images/Linux 2.png" width="100%" height="auto" />
+      <Image
+        src="/images/Linux 2.png"
+        width="100%"
+        height="auto"
+        borderRadius="2%"
+      />
     </Box>
     <Box maxW="500px">
-      <Image src="/images/ubuntu2.png" width="100%" height="auto" />
+      <Image
+        src="/images/ubuntu2.png"
+        width="100%"
+        height="auto"
+        borderRadius="2%"
+      />
     </Box>
 
     <Container minW="60vw">
@@ -53,7 +73,12 @@ const Step4 = (
   <Wrap justify="center" pt="8">
     <VStack>
       <Box maxW="500px">
-        <Image src="/images/ubuntu3.png" width="100%" height="auto" />
+        <Image
+          src="/images/ubuntu3.png"
+          width="100%"
+          height="auto"
+          borderRadius="2%"
+        />
       </Box>
       <Container minW="60vw">
         <Text size="md" pt="8" textAlign="center">

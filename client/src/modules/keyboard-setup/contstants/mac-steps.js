@@ -1,16 +1,12 @@
 import * as React from 'react';
 
-import { Text, Image, Container, Wrap } from '@chakra-ui/react';
+import { Text, Image, Container, Wrap, Box } from '@chakra-ui/react';
 
 const Step1 = (
   <Wrap justify="center" pt="8">
-    <Image
-      src="/images/Mac - Step 1.png"
-      minW="40%"
-      mawW="40%"
-      height={300}
-      borderRadius="2%"
-    />
+    <Box maxW="500px">
+      <Image src="/images/Mac - Step 1.png" width="100%" borderRadius="2%" />
+    </Box>
     <Container minW="60vw">
       <Text size="md" pt="8" textAlign="center">
         Click on the Apple logo in the upper left corner of the screen and
@@ -22,14 +18,9 @@ const Step1 = (
 
 const Step2 = (
   <Wrap justify="center" pt="8">
-    <Image
-      src="/images/Mac - Step 2.png"
-      minW="40%"
-      mawW="40%"
-      height={300}
-      borderRadius="2%"
-    />
-
+    <Box maxW="500px">
+      <Image src="/images/Mac - Step 2.png" width="100%" borderRadius="2%" />
+    </Box>
     <Container minW="60vw">
       <Text size="md" pt="8" textAlign="center">
         Under system preferences, first select "Keyboard", then under the "Input
@@ -41,13 +32,9 @@ const Step2 = (
 
 const Step3 = (
   <Wrap justify="center" pt="8">
-    <Image
-      src="/images/Mac - Step 3.png"
-      minW="40%"
-      mawW="40%"
-      height={300}
-      borderRadius="2%"
-    />
+    <Box maxW="500px">
+      <Image src="/images/Mac - Step 3.png" width="100%" borderRadius="2%" />
+    </Box>
 
     <Container minW="60vw">
       <Text size="md" pt="8" textAlign="center">
@@ -62,14 +49,9 @@ const Step3 = (
 
 const Step4 = (
   <Wrap justify="center" pt="8">
-    <Image
-      src="/images/Mac - Step 4.png"
-      minW="40%"
-      mawW="40%"
-      height={300}
-      borderRadius="2%"
-    />
-
+    <Box maxW="500px">
+      <Image src="/images/Mac - Step 4.png" width="100%" borderRadius="2%" />{' '}
+    </Box>
     <Container minW="60vw">
       <Text size="md" pt="8" textAlign="center">
         Ensure that your the 2-Set Korean Keyboard is your default keyboard.
