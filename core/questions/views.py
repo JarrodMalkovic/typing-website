@@ -265,19 +265,19 @@ class QuestionAttemptsAPIView(APIView):
         if category == 'all':
             count = len(PracticeAttempt.objects.all())
             attempts = PracticeAttempt.objects.select_related(
-                'user')[skip:skip + limit]
+                'user').order_by('-created_at')[skip:skip + limit]
             serializers = PracticeAttemptSerializer(attempts, many=True)
         elif category == 'challenge':
             count = len(ChallengeAttempt.objects.all())
             attempts = ChallengeAttempt.objects.select_related(
-                'user')[skip:skip + limit]
+                'user').order_by('-created_at')[skip:skip + limit]
             serializers = ChallengeAttemptSerializer(attempts, many=True)
         else:
             count = len(PracticeAttempt.objects.filter(
                 subexercise_slug_id__exercise_slug_id=category))
             attempts = PracticeAttempt.objects.filter(
                 subexercise_slug_id__exercise_slug_id=category).select_related(
-                'user')[skip:skip + limit]
+                'user').order_by('-created_at')[skip:skip + limit]
             serializers = PracticeAttemptSerializer(attempts, many=True)
 
         return Response({'pages': math.ceil(count / limit), 'attempts': serializers.data}, status=status.HTTP_200_OK)
@@ -351,7 +351,7 @@ class QuestionExcelUpload(APIView):
                     raise APIException(
                         detail='Specify all questions and translations - some are blank. No questions added.')
         return new_data
-    
+
     def clear_database(self):
         questions = Question.objects.all()
         for question in questions:
