@@ -19,7 +19,7 @@ class UserAttemptsTestCase(TestCase):
         user = User.objects.create_user(
             username="testUser1", email="newuser@test.com", password="forttst123")
         exercise = Exercise.objects.create(exercise_slug="short-sentences", exercise_name="Short Sentences",
-                                           allow_in_challenge_mode=True, allow_audio_files_in_questions=True, hidden=False)
+                                           allow_in_challenge_mode=True, allow_audio_files_in_questions=True, hidden=False, level=1)
         subexercise = Subexercise.objects.create(
             exercise_slug=exercise, subexercise_slug="short-sentences", subexercise_name="Short Sentences", level=1)
 

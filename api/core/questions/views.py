@@ -385,14 +385,14 @@ class QuestionExcelUpload(APIView):
                         question=question['question'], translation=question['translation'])
                     continue
                 except:
-                    if question['question'] is '':
+                    if question['question'] == '':
                         # print("ENTER")
                         raise APIException(
                             detail='Specify all questions - some are blank. No questions added.')
-                    elif question['translation'] is '':
+                    elif question['translation'] == '':
                         raise APIException(
                             detail='Specify all translations - some are blank. No questions added.')
-                    elif subexercise.subexercise_slug is '':
+                    elif subexercise.subexercise_slug == '':
                         raise APIException(
                             detail='Specify all subexercises - some are blank. No questions added.')
 
