@@ -19,10 +19,10 @@ class ExcelDocumentTestCase(TestCase):
         print("Setting Up Test Environment")
         # Exercise = short-sentences
         exercise1 = Exercise.objects.create(exercise_slug="short-sentences", exercise_name="Short Sentences",
-                                            allow_in_challenge_mode=True, allow_audio_files_in_questions=False, hidden=False)
+                                            allow_in_challenge_mode=True, allow_audio_files_in_questions=False, hidden=False, level=2)
         # Exercise = letters
         exercise2 = Exercise.objects.create(exercise_slug="letters", exercise_name="Letters",
-                                            allow_in_challenge_mode=True, allow_audio_files_in_questions=False, hidden=False)
+                                            allow_in_challenge_mode=True, allow_audio_files_in_questions=False, hidden=False, level=1)
 
         # Subexercise = short-sentences
         subexercise1 = Subexercise.objects.create(
