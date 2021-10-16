@@ -453,7 +453,7 @@ class UserTestCase(APITestCase):
     def create_attempts(self):
         user = User.objects.get(email="newuser2@test.com")
         exercise = Exercise.objects.create(exercise_slug="short-sentences", exercise_name="Short Sentences",
-                                           allow_in_challenge_mode=True, allow_audio_files_in_questions=True, hidden=False)
+                                           allow_in_challenge_mode=True, allow_audio_files_in_questions=True, hidden=False, level=4)
         subexercise = Subexercise.objects.create(
             exercise_slug=exercise, subexercise_slug="short-sentences", subexercise_name="Short Sentences", level=1)
 
