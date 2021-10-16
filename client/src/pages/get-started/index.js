@@ -11,22 +11,26 @@ import {
   Box,
   useColorModeValue,
 } from '@chakra-ui/react';
-
+import ProgressiveImage from 'react-progressive-image';
 import Link from 'next/link';
 import { Tooltip } from '@chakra-ui/react';
 
 const Menu = () => {
   return (
-    <Box position="relative" mt={10}>
-      <VStack padding="20px" width="100%">
-        <Heading textAlign="center" fontSize="45px" padding="20px">
-          Begin Your Journey!
-        </Heading>
+    <Container pt="8" maxW="container.xl">
+      <VStack spacing={5} width="100%">
+        <VStack spacing="1">
+          <Heading textAlign="center" fontSize="45px">
+            Begin Your Journey
+          </Heading>
 
-        <Text fontSize="20px" color={useColorModeValue('gray.600', 'gray.200')}>
-          Choose Your Path!
-        </Text>
-
+          <Text
+            textAlign="center"
+            fontSize="20px"
+            color={useColorModeValue('gray.600', 'gray.200')}>
+            Choose Your Path!
+          </Text>
+        </VStack>
         <Wrap justify="center">
           <HStack>
             <Link href="/setup">
@@ -34,16 +38,25 @@ const Menu = () => {
                 <Tooltip
                   label="Set your keyboard to Korean!"
                   placement="bottom">
-                  <Container
-                    padding="20px"
-                    maxW="container.lg"
-                    _hover={{ color: 'blue.400' }}>
-                    <Box>
+                  <Box padding="20px" _hover={{ color: 'blue.400' }}>
+                    <Box marginBottom="20px">
                       <Image
-                        src="/images/menu_setup.png"
+                        as={ProgressiveImage}
                         boxSize="250px"
                         margin="10px"
-                      />
+                        objectFit="cover"
+                        placeholder="./images/menu_setup_small.webp"
+                        src="./images/menu_setup.webp">
+                        {(src, loading) => (
+                          <Image
+                            style={{ filter: loading ? 'blur(5px)' : '' }}
+                            boxSize="250px"
+                            margin="10px"
+                            objectFit="cover"
+                            src={src}
+                          />
+                        )}
+                      </Image>
                     </Box>
                     <Text
                       mt="10px"
@@ -52,7 +65,7 @@ const Menu = () => {
                       fontSize="xl">
                       Keyboard Setup
                     </Text>
-                  </Container>
+                  </Box>
                 </Tooltip>
               </a>
             </Link>
@@ -64,16 +77,25 @@ const Menu = () => {
                 <Tooltip
                   label="Begin practicing your keyboard typing skills!"
                   placement="bottom">
-                  <Container
-                    padding="20px"
-                    maxW="container.lg"
-                    _hover={{ color: 'blue.400' }}>
-                    <Box>
+                  <Box padding="20px" _hover={{ color: 'blue.400' }}>
+                    <Box marginBottom="20px">
                       <Image
-                        src="/images/menu_practice.png"
+                        as={ProgressiveImage}
                         boxSize="250px"
                         margin="10px"
-                      />
+                        objectFit="cover"
+                        placeholder="./images/menu_practice_small.webp"
+                        src="./images/menu_practice.webp">
+                        {(src, loading) => (
+                          <Image
+                            style={{ filter: loading ? 'blur(5px)' : '' }}
+                            boxSize="250px"
+                            margin="10px"
+                            objectFit="cover"
+                            src={src}
+                          />
+                        )}
+                      </Image>
                     </Box>
                     <Text
                       mt="10px"
@@ -82,7 +104,7 @@ const Menu = () => {
                       fontSize="xl">
                       Practice
                     </Text>
-                  </Container>
+                  </Box>
                 </Tooltip>
               </a>
             </Link>
@@ -94,16 +116,25 @@ const Menu = () => {
                 <Tooltip
                   label="Put your typing skills to the ultimate test!"
                   placement="bottom">
-                  <Container
-                    padding="20px"
-                    maxW="container.lg"
-                    _hover={{ color: 'blue.400' }}>
-                    <Box>
+                  <Box padding="20px" _hover={{ color: 'blue.400' }}>
+                    <Box marginBottom="20px">
                       <Image
-                        src="/images/menu_challenge.png"
+                        as={ProgressiveImage}
                         boxSize="250px"
                         margin="10px"
-                      />
+                        objectFit="cover"
+                        placeholder="./images/menu_challenge_small.webp"
+                        src="./images/menu_challenge.webp">
+                        {(src, loading) => (
+                          <Image
+                            style={{ filter: loading ? 'blur(5px)' : '' }}
+                            boxSize="250px"
+                            margin="10px"
+                            objectFit="cover"
+                            src={src}
+                          />
+                        )}
+                      </Image>
                     </Box>
                     <Text
                       mt="10px"
@@ -112,14 +143,14 @@ const Menu = () => {
                       fontSize="xl">
                       Challenge
                     </Text>
-                  </Container>
+                  </Box>
                 </Tooltip>
               </a>
             </Link>
           </HStack>
         </Wrap>
       </VStack>
-    </Box>
+    </Container>
   );
 };
 

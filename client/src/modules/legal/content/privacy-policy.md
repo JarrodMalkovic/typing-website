@@ -1,3 +1,5 @@
+[//]: <> (Generated from: https://www.privacypolicygenerator.info/)
+
 # Privacy Policy for KeyKorea
 
 At KeyKorea, accessible from KeyKorea.com, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by KeyKorea and how we use it.

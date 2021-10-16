@@ -10,7 +10,7 @@ const PrivacyPolicy = ({ source }) => {
   useTitle('KeyKorea - Privacy Policy');
 
   return (
-    <Container pt="8" maxW="container.xl">
+    <Container pt="5" maxW="container.xl">
       <ReactMarkdown components={ChakraUIRenderer()}>{source}</ReactMarkdown>
     </Container>
   );
