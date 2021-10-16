@@ -6,6 +6,7 @@ import {
   ModalFooter,
   FormControl,
   ButtonGroup,
+  useToast,
   Checkbox,
   FormLabel,
   Box,
@@ -112,7 +113,9 @@ const generateSampleTemplate = async (setIsGeneratingSampleTemplate) => {
 };
 
 const AddMultipleQuestions = ({ onClose }) => {
+  const toast = useToast();
   const queryClient = useQueryClient();
+
   const [isGeneratingSampleTemplate, setIsGeneratingSampleTemplate] =
     React.useState(false);
   const [isGeneratingEmptyTemplate, setIsGeneratingEmptyTemplate] =
@@ -121,6 +124,15 @@ const AddMultipleQuestions = ({ onClose }) => {
   const { mutate, isError, isLoading, error } = useMutation(createQuestions, {
     onSuccess: async () => {
       onClose();
+
+      toast({
+        title: 'Created Questions',
+        description: 'You have successfully created new questions',
+        status: 'success',
+        position: 'top-right',
+        duration: 4000,
+        isClosable: true,
+      });
 
       await queryClient.refetchQueries(['dashboard'], { active: true });
     },
