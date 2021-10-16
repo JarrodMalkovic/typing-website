@@ -18,7 +18,7 @@ class QuestionTestCase(TestCase):
     def setUp(self):
         print("Setting Up Test Environment")
         exercise = Exercise.objects.create(exercise_slug="short-sentences", exercise_name="Short Sentences",
-                                           allow_in_challenge_mode=True, allow_audio_files_in_questions=True, hidden=False)
+                                           allow_in_challenge_mode=True, allow_audio_files_in_questions=True, hidden=False, level=1)
         subexercise = Subexercise.objects.create(
             exercise_slug=exercise, subexercise_slug="short-sentences", subexercise_name="Short Sentences", level=1)
         Question.objects.create(
@@ -125,7 +125,7 @@ class QuestionTestCase(TestCase):
     def test_API_Question_by_xercise_Name(self):
         print("---> Test: API Get question by specifying question's exercise")
         exercise = Exercise.objects.create(exercise_slug="words", exercise_name="Words",
-                                           allow_in_challenge_mode=True, allow_audio_files_in_questions=False, hidden=False)
+                                           allow_in_challenge_mode=True, allow_audio_files_in_questions=False, hidden=False, level=2)
         subexercise = Subexercise.objects.create(
             exercise_slug=exercise, subexercise_slug="two-syllables", subexercise_name="Two Syllables", level=1)
         subexercise2 = Subexercise.objects.create(
@@ -165,7 +165,7 @@ class QuestionTestCase(TestCase):
     def test_API_Question_by_Subxercise_Name(self):
         print("---> Test: API Get question by specifying question's subexercise")
         exercise = Exercise.objects.create(exercise_slug="words", exercise_name="Words",
-                                           allow_in_challenge_mode=True, allow_audio_files_in_questions=False, hidden=False)
+                                           allow_in_challenge_mode=True, allow_audio_files_in_questions=False, hidden=False, level=3)
         subexercise = Subexercise.objects.create(
             exercise_slug=exercise, subexercise_slug="two-syllables", subexercise_name="Two Syllables", level=1)
         subexercise2 = Subexercise.objects.create(
