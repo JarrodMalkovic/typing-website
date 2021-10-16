@@ -19,10 +19,10 @@ class ExcelDocumentTestCase(TestCase):
         print("Setting Up Test Environment")
         # Exercise = short-sentences
         exercise1 = Exercise.objects.create(exercise_slug="short-sentences", exercise_name="Short Sentences",
-                                            allow_in_challenge_mode=True, allow_audio_files_in_questions=False, hidden=False)
+                                            allow_in_challenge_mode=True, allow_audio_files_in_questions=False, hidden=False, level=2)
         # Exercise = letters
         exercise2 = Exercise.objects.create(exercise_slug="letters", exercise_name="Letters",
-                                            allow_in_challenge_mode=True, allow_audio_files_in_questions=False, hidden=False)
+                                            allow_in_challenge_mode=True, allow_audio_files_in_questions=False, hidden=False, level=1)
 
         # Subexercise = short-sentences
         subexercise1 = Subexercise.objects.create(
@@ -131,8 +131,11 @@ class ExcelDocumentTestCase(TestCase):
                   [{"subexercise":"C + V", "question":"hello", "translation":"hello-meaning"}, {"subexercise":"Shift C + V", "question":"new", "translation":"new-meaning"}]],
                 [{"exercise": "letters"}, 
                   [{"subexercise":"C + V", "question":"hello", "translation":"hello-meaning"}, {"subexercise":"Shift C + V", "question":"new", "translation":"new-meaning"}]]]
-            
-        response = self.client.post("http://127.0.0.1:8000/api/upload-questions/", json.dumps({"data":data}), content_type="application/json")
+        data_to_dump = {
+            "data": data,
+            "replace": False
+        }
+        response = self.client.post("http://127.0.0.1:8000/api/upload-questions/", json.dumps(data_to_dump), content_type="application/json")
         expected_response = 'Subexercise "C + V" does not exist'
         self.assertEqual(response.status_code, status.HTTP_500_INTERNAL_SERVER_ERROR)
         self.assertEqual((response.data['detail']), expected_response)
@@ -148,7 +151,11 @@ class ExcelDocumentTestCase(TestCase):
                   [{"subexercise":"Short Sentences", "question":"sentence one", "translation":"s-one-meaning"}, {"subexercise":"Short Sentences", "question":"sentence two", "translation":"s-two-meaning"}]],
                 [{"exercise": "letter"}, 
                   [{"subexercise":"Basic Left Hand", "question":"letters one", "translation":"l-one-meaning"}, {"subexercise":"Basic Left Hand", "question":"letters two", "translation":"l-two-meaning"}]]]
-        response = self.client.post("http://127.0.0.1:8000/api/upload-questions/", json.dumps({"data":data}),  content_type="application/json")
+        data_to_dump = {
+            "data": data,
+            "replace": False
+        }
+        response = self.client.post("http://127.0.0.1:8000/api/upload-questions/", json.dumps(data_to_dump),  content_type="application/json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)        
         
         questions = Question.objects.all()
@@ -192,7 +199,11 @@ class ExcelDocumentTestCase(TestCase):
                   [{"subexercise":"Short Sentences", "question":"This is korean sentence: 1", "translation":"This is sentence translation: 1"}, {"subexercise":"Short Sentences", "question":"sentence two", "translation":"s-two-meaning"}]],
                 [{"exercise": "letter"}, 
                   [{"subexercise":"Basic Left Hand", "question":"letters one", "translation":"l-one-meaning"}, {"subexercise":"Basic Left Hand", "question":"letters two", "translation":"l-two-meaning"}]]]
-        response = self.client.post("http://127.0.0.1:8000/api/upload-questions/", json.dumps({"data":data}), content_type="application/json")
+        data_to_dump = {
+            "data": data,
+            "replace": False
+        }
+        response = self.client.post("http://127.0.0.1:8000/api/upload-questions/", json.dumps(data_to_dump), content_type="application/json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)        
         
         questions = Question.objects.all()
@@ -209,7 +220,11 @@ class ExcelDocumentTestCase(TestCase):
                   [{"subexercise":"Short Sentences", "question":"sentence one", "translation":"s-one-meaning"}, {"subexercise":"Short Sentences", "question":"sentence two", "translation":"s-two-meaning"}]],
                 [{"exercise": "letter"}, 
                   [{"subexercise":"Basic Left Hand", "question":"letters one", "translation":"l-one-meaning"}, {"subexercise":"Basic Left Hand", "question":"letters one", "translation":"l-one-meaning"}]]]
-        response = self.client.post("http://127.0.0.1:8000/api/upload-questions/", json.dumps({"data":data}), content_type="application/json")
+        data_to_dump = {
+            "data": data,
+            "replace": False
+        }
+        response = self.client.post("http://127.0.0.1:8000/api/upload-questions/", json.dumps(data_to_dump), content_type="application/json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         questions = Question.objects.all()
         self.assertEqual(len(questions), 9)
@@ -222,8 +237,11 @@ class ExcelDocumentTestCase(TestCase):
         access_token = self.get_superuser_access_token()
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + access_token)
         data = [[{'exercise': 'Letters'}, [{'subexercise': '', 'question': '', 'translation': ''}]], [{'exercise': 'Syllables'}, [{'subexercise': '', 'question': '', 'translation': ''}]], [{'exercise': 'Words'}, [{'subexercise': '', 'question': '', 'translation': ''}]], [{'exercise': 'Short Sentences'}, [{'subexercise': '', 'question': '', 'translation': ''}]], [{'exercise': 'Long Sentences'}, [{'subexercise': '', 'question': '', 'translation': ''}]]]
-        
-        response = self.client.post("http://127.0.0.1:8000/api/upload-questions/", json.dumps({"data":data}), content_type="application/json")
+        data_to_dump = {
+            "data": data,
+            "replace": False
+        }
+        response = self.client.post("http://127.0.0.1:8000/api/upload-questions/", json.dumps(data_to_dump), content_type="application/json")
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         questions = Question.objects.all()
         self.assertEqual(len(questions), 6)
@@ -239,9 +257,11 @@ class ExcelDocumentTestCase(TestCase):
         data = [[{'exercise': 'Letters'}, 
                  [{'subexercise': 'Basic Left Hand', 'question': '', 'translation': 'blank'},
                     {'subexercise': 'Basic Left Hand', 'question': 'not blank', 'translation': 'not blank'}]]]
-        
-        
-        response = self.client.post("http://127.0.0.1:8000/api/upload-questions/", json.dumps({"data":data}), content_type="application/json")
+        data_to_dump = {
+            "data": data,
+            "replace": False
+        }
+        response = self.client.post("http://127.0.0.1:8000/api/upload-questions/", json.dumps(data_to_dump), content_type="application/json")
         
         expected_response = {
             'detail': 'Specify all questions - some are blank. No questions added.'
@@ -262,9 +282,11 @@ class ExcelDocumentTestCase(TestCase):
         data = [[{'exercise': 'Letters'}, 
                  [{'subexercise': 'Basic Left Hand', 'question': 'not blank', 'translation': 'blank'},
                     {'subexercise': 'Basic Left Hand', 'question': 'not blank', 'translation': ''}]]]
-        
-        
-        response = self.client.post("http://127.0.0.1:8000/api/upload-questions/", json.dumps({"data":data}), content_type="application/json")
+        data_to_dump = {
+            "data": data,
+            "replace": False
+        }
+        response = self.client.post("http://127.0.0.1:8000/api/upload-questions/", json.dumps(data_to_dump), content_type="application/json")
         
         expected_response = {
             'detail': 'Specify all translations - some are blank. No questions added.'
@@ -285,8 +307,11 @@ class ExcelDocumentTestCase(TestCase):
         data = [[{'exercise': 'Letters'}, 
                  [{'question': 'not blank', 'translation': 'blank'},
                     {'subexercise': 'Basic Left Hand', 'question': 'not blank', 'translation': 'blank'}]]]
-        
-        response = self.client.post("http://127.0.0.1:8000/api/upload-questions/", json.dumps({"data":data}), content_type="application/json")
+        data_to_dump = {
+            "data": data,
+            "replace": False
+        }
+        response = self.client.post("http://127.0.0.1:8000/api/upload-questions/", json.dumps(data_to_dump), content_type="application/json")
         
         expected_response = {
             'detail': 'Specify all subexercises - some are blank. No questions added.'
@@ -304,15 +329,59 @@ class ExcelDocumentTestCase(TestCase):
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + access_token)
         
         data = [[{'exercise': 'Long Sentences'}, [{'subexercise': '', 'question': '', 'translation': ''}]]]
-        
-        response = self.client.post("http://127.0.0.1:8000/api/upload-questions/", json.dumps({"data":data}), content_type="application/json")
+        data_to_dump = {
+            "data": data,
+            "replace": False
+        }
+        response = self.client.post("http://127.0.0.1:8000/api/upload-questions/", json.dumps(data_to_dump), content_type="application/json")
         expected_response = {
             "detail": "You do not have permission to perform this action."
         }
         self.assertEqual(response.data, expected_response)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-                 
-         
+      
+    # Tests if, when the replace checkmark is ticked, the database
+    # is cleared and is populated with the new questions in excel document 
+    def test_database_replacement(self):
+        print("---> Test: API Excel Upload with Database Replacement")
+        self.client = APIClient()
+        access_token = self.get_superuser_access_token()
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + access_token)
 
+        data = [[{'exercise': 'Letters'}, 
+                 [{'subexercise': 'Basic Left Hand', 'question': 'first question', 'translation': 'first translation'},
+                    {'subexercise': 'Basic Left Hand', 'question': 'second question', 'translation': 'second translation'}]]]
+        data_to_dump = {
+            "data": data,
+            "replace": True
+        }
+        response = self.client.post("http://127.0.0.1:8000/api/upload-questions/", json.dumps(data_to_dump), content_type="application/json")
+        
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        questions = Question.objects.all()
+        self.assertEqual(len(questions), 2)
+        
+        self.assertEqual(questions[0].question, "first question")
+        self.assertEqual(questions[0].translation, "first translation")
+        self.assertEqual(questions[1].question, "second question")
+        self.assertEqual(questions[1].translation, "second translation")
+        
+        for i in range(1, 4):
+            ques = "This is korean sentence: " + str(i)
+            translation = "This is sentence translation: " + str(i)
+            try: 
+                Question.objects.get(question=ques, translation=translation)
+            except:
+                self.assertRaises(Question.DoesNotExist)
+            
+        for i in range(1, 4):
+            ques = "This is korean letter: " + str(i)
+            translation = "This is letter translation: " + str(i)
+            try: 
+                Question.objects.get(question=ques, translation=translation)
+            except:
+                self.assertRaises(Question.DoesNotExist)
+                
+                
 if __name__ == '__main__':
     TestCase.main(verbosity=2)

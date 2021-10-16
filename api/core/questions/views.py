@@ -351,6 +351,11 @@ class QuestionExcelUpload(APIView):
                     raise APIException(
                         detail='Specify all questions and translations - some are blank. No questions added.')
         return new_data
+    
+    def clear_database(self):
+        questions = Question.objects.all()
+        for question in questions:
+            question.delete()
 
     '''
     Takes a list of lists
@@ -365,6 +370,9 @@ class QuestionExcelUpload(APIView):
     '''
 
     def post(self, request):
+        # print(request.data)
+        if request.data['replace']:
+            self.clear_database()
         filled_data = self.remove_empty_questions(request.data['data'])
         filtered_data = self.check_duplicates(filled_data)
 
@@ -385,14 +393,14 @@ class QuestionExcelUpload(APIView):
                         question=question['question'], translation=question['translation'])
                     continue
                 except:
-                    if question['question'] is '':
+                    if question['question'] == '':
                         # print("ENTER")
                         raise APIException(
                             detail='Specify all questions - some are blank. No questions added.')
-                    elif question['translation'] is '':
+                    elif question['translation'] == '':
                         raise APIException(
                             detail='Specify all translations - some are blank. No questions added.')
-                    elif subexercise.subexercise_slug is '':
+                    elif subexercise.subexercise_slug == '':
                         raise APIException(
                             detail='Specify all subexercises - some are blank. No questions added.')
 
