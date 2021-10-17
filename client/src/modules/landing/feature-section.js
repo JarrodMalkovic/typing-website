@@ -23,12 +23,12 @@ const FeatureSection = ({ learnMoreRef }) => {
             src="/images/challenge-small-icon.webp"
           />
           <Text fontWeight={600}>Who are we?</Text>
-          <Text color={useColorModeValue('gray.600', 'gray.400')}>
+          <Text textAlign="justify" color={useColorModeValue('gray.600', 'gray.400')}>
             KeyKorea is a student designed website to help you learn the Korean
-            Keyboard. Wether you're just starting out, or want some extra
+            Keyboard. Whether you are just starting out, or want some extra
             practice, KeyKorea is the best place for you to learn! With an
-            intuitive and easy to use interface, you'll be a master of the
-            Korean Keybaord in no time!
+            intuitive and easy to use interface, you will be a master of the
+            Korean Keyboard in no time!
           </Text>
         </Stack>
         <Stack textAlign={{ base: 'center', lg: 'left' }}>
@@ -40,7 +40,7 @@ const FeatureSection = ({ learnMoreRef }) => {
             src="/images/practice-small-icon.webp"
           />
           <Text fontWeight={600}> Designed For Your Success</Text>
-          <Text color={useColorModeValue('gray.600', 'gray.400')}>
+          <Text textAlign="justify" color={useColorModeValue('gray.600', 'gray.400')}>
             Everyone learns in different ways. For the first time in history, we
             can analyze how millions of people learn at once to create the most
             effective educational system possible and tailor it to each student.
@@ -57,7 +57,7 @@ const FeatureSection = ({ learnMoreRef }) => {
             src="/images/keyboard-small-icon.webp"
           />
           <Text fontWeight={600}> Enhance Your Korean Typing Skills</Text>
-          <Text color={useColorModeValue('gray.600', 'gray.400')}>
+          <Text textAlign="justify" color={useColorModeValue('gray.600', 'gray.400')}>
             A passion for learning is the heart of everything we do. KeyKorea
             allows you to work through examples directly set by your lecturer!
             Either in our chill practice mode, or our challenge mode, where you
