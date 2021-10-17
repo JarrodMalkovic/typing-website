@@ -88,7 +88,6 @@ class QuestionSubexerciseOrderedAPIView(APIView):
 class QuestionExerciseAPIView(APIView):
     def get(self, request, exercise):
         try:
-            print('x')
             questions = Question.objects.filter(
                 subexercise_slug_id__exercise_slug_id=exercise).order_by('created_at')
 
