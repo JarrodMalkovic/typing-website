@@ -62,16 +62,15 @@ const UserProfileDropdown = () => {
           {state.user.isAdmin && (
             <>
               <MenuDivider />
-              <Link href="/questions">
-                <MenuItem>Question Dashboard</MenuItem>
-              </Link>
               <Link href="/exercises">
                 <MenuItem>Exercise Dashboard</MenuItem>
               </Link>
               <Link href="/subexercises">
                 <MenuItem>Subexercise Dashboard</MenuItem>
               </Link>
-
+              <Link href="/questions">
+                <MenuItem>Question Dashboard</MenuItem>
+              </Link>
               <Link href="/statistics">
                 <MenuItem>Exercise Statistics</MenuItem>
               </Link>
