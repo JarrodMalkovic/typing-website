@@ -67,9 +67,26 @@ class LeaderboardTestCase(TestCase):
             self.assertEqual(response.status_code, status.HTTP_200_OK)
             access_token = response.data["access"]
             return access_token
-        
+    
+    # Testing that all categories leaderboard returns correct data
     def test_all_categories(self):
-        pass
+        print("---> Test: API Test All Categories Leaderboard")
+        self.client = APIClient()
+        access_token = self.get_user_access_token()
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + access_token)
+        
+        response = self.client.get("http://127.0.0.1:8000/api/questions/leaderboard/")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+        expected_scores = [68.475, 61.566, 60.645, 56.745, 54.173, 50.18]
+        expected_order_of_users = ['newUserTest3', 'newUserTest2', 'newUserTest2', 'newUserTest1', 'newUserTest3', 'newUserTest1']
+        
+        i = 0
+        for q in response.data:
+            self.assertEqual(q['score'], expected_scores[i])
+            self.assertEqual(q['user']['username'], expected_order_of_users[i])
+            i += 1
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_challenge_mode(self):
         pass
