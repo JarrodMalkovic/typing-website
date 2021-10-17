@@ -48,7 +48,7 @@ class QuestionSubexerciseAPIView(APIView):
                     detail="You must complete previous subexercises before this one", code=status.HTTP_400_BAD_REQUEST)
 
             questions = Question.objects.filter(
-                subexercise_slug=subexercise)
+                subexercise_slug=subexercise).order_by('created_at')
 
             serializers = QuestionSerializer(questions, many=True)
 
@@ -89,7 +89,7 @@ class QuestionExerciseAPIView(APIView):
     def get(self, request, exercise):
         try:
             questions = Question.objects.filter(
-                subexercise_slug_id__exercise_slug_id=exercise)
+                subexercise_slug_id__exercise_slug_id=exercise).order_by('created_at')
 
             serializers = GetQuestionsSerializer(questions, many=True)
 
@@ -296,7 +296,7 @@ class QuestionExcelDownload(APIView):
 
         for subexercise in subexercises:
             questions = Question.objects.filter(
-                subexercise_slug=subexercise.subexercise_slug)
+                subexercise_slug=subexercise.subexercise_slug).order_by('created_at')
 
             for question in questions:
                 data = {
@@ -330,7 +330,6 @@ class QuestionExcelUpload(APIView):
 
     # Checks if there any duplicate questions provided in the excel document
     def check_duplicates(self, data):
-        print(data)
         new_data = []
         for exercise in data:
             new_data.append([exercise[0], []])
@@ -343,9 +342,7 @@ class QuestionExcelUpload(APIView):
                     for k in range(len(new_data)): # For every exercise
                         for l in range(len(new_data[k][1])): # For every question
                             if(len(new_data[k][1]) != 0):
-                                print("K: {} | L: {}".format(k, l))
                                 if question == new_data[k][1][l]['question'] and translation == new_data[k][1][l]['translation']:
-                                    print("ENTERED")
                                     found = 1
                     if found == 0:
                         new_data[i][1].append(data[i][1][j])
