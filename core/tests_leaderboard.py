@@ -88,8 +88,27 @@ class LeaderboardTestCase(TestCase):
             i += 1
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
+    # Testing that leaderboard for challenge mode returns correct data
     def test_challenge_mode(self):
-        pass
+        print("---> Test: API Test Challenge Mode Leaderboard")
+        self.client = APIClient()
+        access_token = self.get_user_access_token()
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + access_token)
+        response = self.client.get("http://127.0.0.1:8000/api/questions/leaderboard/?category=challenge")
+        # print(response)
+        # print(response.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+        expected_scores = [67.479, 53.109, 50.589]
+        expected_order_of_users = ['newUserTest1', 'newUserTest2', 'newUserTest3']
+        
+        i = 0
+        for q in response.data:
+            self.assertEqual(q['score'], expected_scores[i])
+            self.assertEqual(q['user']['username'], expected_order_of_users[i])
+            i += 1
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
 
     def test_specified_category(self):
         pass
