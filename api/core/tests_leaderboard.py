@@ -59,14 +59,14 @@ class LeaderboardTestCase(TestCase):
         challenge_attempt3 = ChallengeAttempt.objects.create(user=user3, wpm=73.0, time_elapsed=14.739, accuracy=69.3, score=50.589)
         
     def get_user_access_token(self):
-            data = {
-                "email": "newuser1@test.com",
-                "password": "forttst123"
-            }
-            response = self.client.post("http://127.0.0.1:8000/api/auth/login/", data)
-            self.assertEqual(response.status_code, status.HTTP_200_OK)
-            access_token = response.data["access"]
-            return access_token
+        data = {
+            "email": "newuser1@test.com",
+            "password": "forttst123"
+        }
+        response = self.client.post("http://127.0.0.1:8000/api/auth/login/", data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        access_token = response.data["access"]
+        return access_token
     
     # Testing that all categories leaderboard returns correct data
     def test_all_categories(self):
@@ -77,7 +77,6 @@ class LeaderboardTestCase(TestCase):
         
         response = self.client.get("http://127.0.0.1:8000/api/questions/leaderboard/")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        
         expected_scores = [68.475, 61.566, 60.645, 56.745, 54.173, 50.18]
         expected_order_of_users = ['newUserTest3', 'newUserTest2', 'newUserTest2', 'newUserTest1', 'newUserTest3', 'newUserTest1']
         
@@ -86,7 +85,6 @@ class LeaderboardTestCase(TestCase):
             self.assertEqual(q['score'], expected_scores[i])
             self.assertEqual(q['user']['username'], expected_order_of_users[i])
             i += 1
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     # Testing that leaderboard for challenge mode returns correct data
     def test_challenge_mode(self):
@@ -95,10 +93,7 @@ class LeaderboardTestCase(TestCase):
         access_token = self.get_user_access_token()
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + access_token)
         response = self.client.get("http://127.0.0.1:8000/api/questions/leaderboard/?category=challenge")
-        # print(response)
-        # print(response.data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        
         expected_scores = [67.479, 53.109, 50.589]
         expected_order_of_users = ['newUserTest1', 'newUserTest2', 'newUserTest3']
         
@@ -107,11 +102,23 @@ class LeaderboardTestCase(TestCase):
             self.assertEqual(q['score'], expected_scores[i])
             self.assertEqual(q['user']['username'], expected_order_of_users[i])
             i += 1
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
         
-
+    # Testing that leaderboard for letters mode returns correct data
     def test_specified_category(self):
-        pass
+        print("---> Test: API Test Basic Left Hand Mode Leaderboard")
+        self.client = APIClient()
+        access_token = self.get_user_access_token()
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + access_token)
+        response = self.client.get("http://127.0.0.1:8000/api/questions/leaderboard/?category=letters")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        expected_scores = [60.645, 54.173, 50.18]
+        expected_order_of_users = ['newUserTest2', 'newUserTest3', 'newUserTest1']
+        
+        i = 0
+        for q in response.data:
+            self.assertEqual(q['score'], expected_scores[i])
+            self.assertEqual(q['user']['username'], expected_order_of_users[i])
+            i += 1
         
         
 if __name__ == '__main__':
