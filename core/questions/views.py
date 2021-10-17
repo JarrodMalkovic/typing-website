@@ -355,7 +355,8 @@ class QuestionExcelUpload(APIView):
     def clear_database(self):
         questions = Question.objects.all()
         for question in questions:
-            question.delete()
+            if not question.audio_url:
+                question.delete()
 
     '''
     Takes a list of lists
