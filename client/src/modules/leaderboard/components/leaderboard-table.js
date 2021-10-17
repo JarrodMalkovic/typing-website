@@ -89,7 +89,7 @@ const LeaderboardTable = ({ category }) => {
 
                 <Td isNumeric>{row.score.toFixed(2)}</Td>
                 <Td isNumeric>{row.wpm.toFixed(2)}</Td>
-                <Td isNumeric>%{row.accuracy.toFixed(2)}</Td>
+                <Td isNumeric>{row.accuracy.toFixed(2)}%</Td>
                 <Td isNumeric>
                   {calculateHumanReadableTimeString(row.time_elapsed * 1000)}
                 </Td>

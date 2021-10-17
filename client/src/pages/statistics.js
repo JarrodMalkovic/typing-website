@@ -92,7 +92,7 @@ const Dashboard = () => {
                 title="Average Accuracy"
                 stat={
                   typeof data.recent_stats.accuracy__avg == 'number'
-                    ? `%${data.recent_stats.accuracy__avg.toFixed(2)}`
+                    ? `${data.recent_stats.accuracy__avg.toFixed(2)}%`
                     : 'N/A'
                 }
                 time="Last 30 days"

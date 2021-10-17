@@ -25,10 +25,10 @@ const FeatureSection = ({ learnMoreRef }) => {
           <Text fontWeight={600}>Who are we?</Text>
           <Text color={useColorModeValue('gray.600', 'gray.400')}>
             KeyKorea is a student designed website to help you learn the Korean
-            Keyboard. Wether you're just starting out, or want some extra
+            Keyboard. Whether you are just starting out, or want some extra
             practice, KeyKorea is the best place for you to learn! With an
-            intuitive and easy to use interface, you'll be a master of the
-            Korean Keybaord in no time!
+            intuitive and easy to use interface, you will be a master of the
+            Korean Keyboard in no time!
           </Text>
         </Stack>
         <Stack textAlign={{ base: 'center', lg: 'justify' }}>
