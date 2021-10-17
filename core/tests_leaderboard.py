@@ -16,6 +16,15 @@ from rest_framework.authtoken.models import Token
 class LeaderboardTestCase(TestCase):
     def setUp(self):
         pass
+    
+def test_all_categories(self):
+    pass
+
+def test_challenge_mode(self):
+    pass
+
+def test_specified_category(self):
+    pass
         
         
 if __name__ == '__main__':
