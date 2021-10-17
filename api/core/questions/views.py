@@ -333,15 +333,14 @@ class QuestionExcelUpload(APIView):
         new_data = []
         for exercise in data:
             new_data.append([exercise[0], []])
-
-        for i in range(len(data)):
-            for j in range(len(data[i][1])):
+        for i in range(len(data)): # For every exercise
+            for j in range(len(data[i][1])): # For every question
                 try:
                     question = data[i][1][j]['question']
                     translation = data[i][1][j]['translation']
                     found = 0
-                    for k in range(len(new_data)):
-                        for l in range(len(new_data[k][1])):
+                    for k in range(len(new_data)): # For every exercise
+                        for l in range(len(new_data[k][1])): # For every question
                             if(len(new_data[k][1]) != 0):
                                 if question == new_data[k][1][l]['question'] and translation == new_data[k][1][l]['translation']:
                                     found = 1
@@ -352,6 +351,7 @@ class QuestionExcelUpload(APIView):
                         detail='Specify all questions and translations - some are blank. No questions added.')
         return new_data
 
+    # Clears the questions in the database
     def clear_database(self):
         questions = Question.objects.all()
         for question in questions:
@@ -370,7 +370,6 @@ class QuestionExcelUpload(APIView):
     '''
 
     def post(self, request):
-        # print(request.data)
         if request.data['replace']:
             self.clear_database()
         filled_data = self.remove_empty_questions(request.data['data'])
