@@ -12,11 +12,12 @@ class UserSerializer(serializers.ModelSerializer):
     created = serializers.DateTimeField(read_only=True)
     updated = serializers.DateTimeField(read_only=True)
     isAdmin = serializers.BooleanField(source='is_staff')
+    isSuperAdmin = serializers.BooleanField(source='is_superuser')
 
     class Meta:
         model = User
         fields = ['id', 'username', 'email', 'avatar',
-                  'is_active', 'created', 'updated', 'bio', 'isAdmin']
+                  'is_active', 'created', 'updated', 'bio', 'isAdmin', 'isSuperAdmin']
         read_only_field = ['is_active']
 
 
