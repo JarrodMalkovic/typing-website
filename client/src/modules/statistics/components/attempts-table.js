@@ -91,7 +91,7 @@ const AttemptsTable = ({ category }) => {
       {
         Header: 'Accuracy',
         accessor: 'accuracy',
-        Cell: (cell) => `%${cell.row.original.accuracy.toFixed(2)}`,
+        Cell: (cell) => `${cell.row.original.accuracy.toFixed(2)}%`,
       },
       {
         Header: 'Time Elapsed',
