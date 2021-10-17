@@ -15,7 +15,21 @@ from rest_framework.authtoken.models import Token
 
 class LeaderboardTestCase(TestCase):
     def setUp(self):
-        pass
+        User.objects.create_user(
+            username="newUserTest", email="newuser@test.com", password="forttst123")
+        
+def get_user_access_token(self):
+        user = User.objects.create_user(
+            username="newUserTest", email="newuser@test.com", password="forttst123")
+        data = {
+            "email": "newuser@test.com",
+            "password": "forttst123"
+        }
+        response = self.client.post(
+            "http://127.0.0.1:8000/api/auth/login/", data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        access_token = response.data["access"]
+        return access_token
     
 def test_all_categories(self):
     pass
