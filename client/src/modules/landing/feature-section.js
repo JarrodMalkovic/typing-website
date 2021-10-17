@@ -14,7 +14,7 @@ const FeatureSection = ({ learnMoreRef }) => {
   return (
     <Container ref={learnMoreRef} pt="20" maxW="7xl">
       <SimpleGrid columns={{ base: 1, lg: 3 }} spacing={10}>
-        <Stack textAlign={{ base: 'center', lg: 'left' }}>
+        <Stack textAlign={{ base: 'center', lg: 'justify' }}>
           <Image
             ml={{ base: 'auto', lg: '0' }}
             mr={{ base: 'auto', lg: '0' }}
@@ -31,7 +31,7 @@ const FeatureSection = ({ learnMoreRef }) => {
             Korean Keybaord in no time!
           </Text>
         </Stack>
-        <Stack textAlign={{ base: 'center', lg: 'left' }}>
+        <Stack textAlign={{ base: 'center', lg: 'justify' }}>
           <Image
             ml={{ base: 'auto', lg: '0' }}
             mr={{ base: 'auto', lg: '0' }}
@@ -48,7 +48,7 @@ const FeatureSection = ({ learnMoreRef }) => {
             experience through technology.
           </Text>
         </Stack>
-        <Stack textAlign={{ base: 'center', lg: 'left' }}>
+        <Stack textAlign={{ base: 'center', lg: 'justify' }}>
           <Image
             ml={{ base: 'auto', lg: '0' }}
             mr={{ base: 'auto', lg: '0' }}
