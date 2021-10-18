@@ -19,12 +19,17 @@ import { exercises } from '../../common/contstants/exercises';
 const Practice = () => {
   return (
     <Box position="relative">
-      <VStack spacing={5} width="100%">
+      <VStack spacing={5}>
         <Image
-          minW="full"
+          maxW="100%"
+          height="auto"
+          resize="both"
+          border="10px"
           opacity="30%"
+          overflow="hidden"
           linear-gradient="(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.25))"
           src="/images/Basic.png"
+          position="absolute"
         />
         <Heading fontSize="45px" padding="20px" position="absolute" top={0}>
           Practice Mode

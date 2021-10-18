@@ -120,7 +120,7 @@ const Home = (props) => {
                   align="right"
                   src="/images/challenge.png"
                   minW="40%"
-                  mawW="40%"
+                  maxW="40%"
                   height={300}
                   borderRadius="2%"
                 />

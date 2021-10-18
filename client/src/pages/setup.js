@@ -10,6 +10,9 @@ import {
   VStack,
   Box,
   Image,
+  extendTheme,
+  ChakraProvider,
+  App,
 } from '@chakra-ui/react';
 import {
   kk,
@@ -39,6 +42,18 @@ const getSteps = (os) => {
       return windowsSteps;
   }
 };
+
+const theme = extendTheme({
+  colors: {
+    brand: {
+      100: '#39aae1',
+    },
+  },
+});
+
+<ChakraProvider theme={theme}>
+  <App />
+</ChakraProvider>;
 
 const Setup = () => {
   const [os, setOs] = React.useState(null);
@@ -72,6 +87,7 @@ const Setup = () => {
             <Box position="absolute" minW="60%" maxW="60%">
               <Steps
                 activeStep={activeStep}
+                colorScheme="brand"
                 top="80px"
                 position="absolute"
                 textAlign="center">

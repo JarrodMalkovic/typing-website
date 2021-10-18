@@ -64,7 +64,8 @@
     "import-sort-style-module": "^6.0.0",
     "prettier": "2.3.2",
     "react-excel-renderer": "^1.1.0",
-    "xlsx": "^0.17.2"
+    "xlsx": "^0.17.2",
+    "cypress": "^8.5.0"
   },
   "importSort": {
     ".js, .jsx, .es6, .es, .mjs, .ts, .tsx": {
