@@ -42,7 +42,7 @@ const Dashboard = () => {
           alignItems={{ base: '', md: 'flex' }}
           justifyContent={{ base: '', md: 'space-between' }}>
           <Box>
-            <Heading>Subxercise Dashboard</Heading>
+            <Heading>Subexercise Dashboard</Heading>
             <Text>
               Add new subexercise modules or edit, delete and reorder existing
               modules
