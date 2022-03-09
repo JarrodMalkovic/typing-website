@@ -102,7 +102,7 @@ const VirtualKeyboard = ({ inputRef }) => {
                 dimensions.width < 500
                   ? {
                       default: [
-                        'ㅂ ㅈ ㄷ ㅅ ㅛ ㅕ ㅑ ㅐ ㅔ',
+                        'ㅂ ㅈ ㄷ ㄱ ㅅ ㅛ ㅕ ㅑ ㅐ ㅔ',
                         'ㅁ ㄴ ㅇ ㄹ ㅎ ㅗ ㅓ ㅏ ㅣ',
                         '{shift} ㅋ ㅌ ㅊ ㅍ ㅠ ㅜ ㅡ {bksp}',
                         '{numbers} {space} {ent}',
@@ -118,7 +118,7 @@ const VirtualKeyboard = ({ inputRef }) => {
                   : {
                       default: [
                         '` 1 2 3 4 5 6 7 8 9 0 - = {bksp}',
-                        '{tab} ㅂ ㅈ ㄷ ㅅ ㅛ ㅕ ㅑ ㅐ ㅔ \\',
+                        '{tab} ㅂ ㅈ ㄷ ㄱ ㅅ ㅛ ㅕ ㅑ ㅐ ㅔ \\',
                         '{capslock} ㅁ ㄴ ㅇ ㄹ ㅎ ㅗ ㅓ ㅏ ㅣ [ ] {ent}',
                         '{shift} ㅋ ㅌ ㅊ ㅍ ㅠ ㅜ ㅡ , . / {shift}',
                         '{space}',
