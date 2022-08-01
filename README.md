@@ -1,3 +1,3 @@
-# CITS3200
+# Korean Typing Website
 
 Improve your Korean typing skills
