@@ -12,6 +12,8 @@ import ActiveNavLink from './active-nav-link';
 
 // Adapted from: https://chakra-templates.dev/page-sections/footer
 const Footer = () => {
+  const currentYear = new Date().getFullYear();
+
   return (
     <Box
       pt={'20'}
@@ -25,7 +27,7 @@ const Footer = () => {
         spacing={4}
         justify={{ base: 'center', md: 'space-between' }}
         align={{ base: 'center', md: 'center' }}>
-        <Text>© 2022 KeyKorea. All rights reserved</Text>
+        <Text>© {currentYear} KeyKorea. All rights reserved</Text>
         <Stack direction={'row'} spacing={6}>
           <ActiveNavLink
             name="Terms of Service"

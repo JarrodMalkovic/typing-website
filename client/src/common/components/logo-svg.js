@@ -11,7 +11,8 @@ const Logo = () => {
           <Image
             display={{ base: 'none', md: 'flex' }}
             src="/images/logo.webp"
-            boxSize="40px"
+            minWidth="40px"
+            maxWidth="40px"
           />
           <Text fontWeight="bold" fontSize="2xl">
             KeyKorea
