@@ -1,7 +1,7 @@
 <h1 align="center">KeyKorea</h1>
 
 <h3 align="center">
-  <a href="https://keykorea.vercel.app/">Visit the live app</a> |
+  <a href="https://keykorea.app/">Visit the live app</a> |
   <a href="https://github.com/JarrodMalkovic/typing-website/issues">Report Bug</a> |
   <a href="https://github.com/JarrodMalkovic/typing-website/issues">Request Feature</a>
 </h3>
@@ -66,7 +66,7 @@ This project is licensed under the MIT License
 <hr>
 
 <h3>
-  <a href="https://keykorea.vercel.app/">Visit the live app</a> |
+  <a href="https://keykorea.app/">Visit the live app</a> |
   <a href="https://github.com/JarrodMalkovic/typing-website/issues">Report Bug</a> |
   <a href="https://github.com/JarrodMalkovic/typing-website/issues">Request Feature</a>
 </h3>
