@@ -114,13 +114,13 @@ DATABASES = {
 external_db = os.environ.get('EXTERNAL_DATABASE_URL')
 heroku_db = os.environ.get('DATABASE_URL')
 if external_db:
-      DATABASES['default'] = dj_database_url.parse(external_db)
-  elif heroku_db:
-      DATABASES['default'] = dj_database_url.parse(heroku_db)
-  else:
-      # Local development fallback
-      DATABASES['default'] = dj_database_url.parse(
-          "postgresql://postgres:development@postgres:5432/postgres")
+    DATABASES['default'] = dj_database_url.parse(external_db)
+elif heroku_db:
+    DATABASES['default'] = dj_database_url.parse(heroku_db)
+else:
+    # Local development fallback
+    DATABASES['default'] = dj_database_url.parse(
+        "postgresql://postgres:development@postgres:5432/postgres")
 
 AUTH_USER_MODEL = 'core_user.User'
 
