@@ -192,3 +192,8 @@ cloudinary.config(cloud_name=os.environ.get(
 TEST_WITHOUT_MIGRATIONS_COMMAND = 'django_nose.management.commands.test.Command'
 
 django_on_heroku.settings(locals())
+
+# Override database if EXTERNAL_DATABASE_URL is set (must be after django_on_heroku)
+external_db = os.environ.get('EXTERNAL_DATABASE_URL')
+if external_db:
+    DATABASES['default'] = dj_database_url.parse(external_db)
