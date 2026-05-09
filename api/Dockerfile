@@ -5,9 +5,9 @@ WORKDIR /app
 # Install PostgreSQL client libraries
 RUN apt-get update && apt-get install -y libpq5 && rm -rf /var/lib/apt/lists/*
 
-COPY requirements.txt .
+COPY api/requirements.txt .
 RUN pip install -r requirements.txt
 
-COPY . .
+COPY api . 
 
 CMD ["gunicorn", "myapi.wsgi"]
